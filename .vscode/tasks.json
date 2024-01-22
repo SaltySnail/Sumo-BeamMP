@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compress client",
+            "type": "shell",
+            "command": "zip -r C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client/SumoGamemode.zip art levels lua scripts ui LICENSE",
+            "windows": {
+                "command": "7z a -tzip C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client/SumoGamemode.zip art levels lua scripts ui LICENSE -aoa -r"
+            },
+            "options": {
+                "cwd": "Client"
+            }
+        },
+        {
+            "label": "Copy server",
+            "type": "shell",
+            "command": "cp 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/CobaltEssentials/extensions/Sumo.lua'",
+            "windows": {
+                "command": "Copy-Item 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/CobaltEssentials/extensions/Sumo.lua'"
+            },
+            "options": {
+                "cwd": "Server/CobaltEssentials/extensions"
+            }
+        },
+        {
+            "label": "Compress Release",
+            "type": "shell",
+            "command": "zip -r ../SumoBeamMP.zip Resources",
+            "windows": {
+                "command": "7z a -tzip ../SumoBeamMP.zip Resources -aoa -r"
+            },
+            "options": {
+                "cwd": "export"
+            }
+        }
+    ]
+}

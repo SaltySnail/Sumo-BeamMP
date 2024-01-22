@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Sumo-BeamMP",
+			"path": "../Sumo-BeamMP"
+		}
+	],
+	"settings": {}
+}
