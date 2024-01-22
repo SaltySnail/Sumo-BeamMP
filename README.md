@@ -1,5 +1,8 @@
 # Sumo-BeamMP
-Sumo gamemode from GTA V in BeamMP. The gamemode teleports you to the arena. Once there you will see a blue marker, which is the safe zone. Whenever 30 seconds pass all cars outside the safezone will explode. If you fall off the arena you will also explode. Last car alive wins!
+Sumo gamemode from GTA V in BeamMP. This can be played on any map (some textures are from west coast usa, still figuring out how to get them in every map).
+
+ The gamemode teleports you to the arena. Once there you will see a blue marker, which is the safe zone. Whenever 30 seconds pass all cars outside the safezone will explode. If you fall off the arena you will also explode. Last car alive wins!
+
 Available Commands:
   - `/sumo help`
   - `/sumo start`
