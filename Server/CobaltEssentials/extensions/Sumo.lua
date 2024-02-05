@@ -632,7 +632,7 @@ end
 
 --called whenever a player disconnects from the server
 local function onPlayerDisconnect(player)
-
+	gameState.players[player.name] = nil
 end
 
 --called whenever a player sends a chat message
