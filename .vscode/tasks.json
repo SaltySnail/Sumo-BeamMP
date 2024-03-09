@@ -17,12 +17,12 @@
         {
             "label": "Copy server",
             "type": "shell",
-            "command": "cp 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/CobaltEssentials/extensions/Sumo.lua'",
+            "command": "cp 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/Sumo.lua'",
             "windows": {
-                "command": "Copy-Item 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/CobaltEssentials/extensions/Sumo.lua'"
+                "command": "Copy-Item 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/Sumo.lua'"
             },
             "options": {
-                "cwd": "Server/CobaltEssentials/extensions"
+                "cwd": "Server/Sumo"
             }
         },
         {

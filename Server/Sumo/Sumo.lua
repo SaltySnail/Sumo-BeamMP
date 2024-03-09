@@ -1,8 +1,8 @@
 --Sumo by Julianstap, 2023
 
 local M = {}
-M.COBALT_VERSION = "1.7.6"
-utils.setLogType("SUMO",93)
+-- M.COBALT_VERSION = "1.7.6"
+-- utils.setLogType("SUMO",93)
 
 local floor = math.floor
 local mod = math.fmod
@@ -41,10 +41,10 @@ local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
 
-local SumoCommands = {
-	sumo = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Enables the .zip with the filename specified."},
-	SUMO = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Alias for sumo."}
-}
+-- local SumoCommands = {
+-- 	sumo = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Enables the .zip with the filename specified."},
+-- 	SUMO = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Alias for sumo."}
+-- }
 
 function dump(o)
     if type(o) == 'table' then
@@ -59,21 +59,21 @@ function dump(o)
     end
 end
 
-local function applyStuff(targetDatabase, tables)
-	local appliedTables = {}
-	for tableName, table in pairs(tables) do
-		if targetDatabase[tableName]:exists() == false then
-			for key, value in pairs(table) do
-				targetDatabase[tableName][key] = value
-			end
-			appliedTables[tableName] = tableName
-		end
-	end
-	return appliedTables
-end
+-- function applyStuff(targetDatabase, tables)
+-- 	local appliedTables = {}
+-- 	for tableName, table in pairs(tables) do
+-- 		if targetDatabase[tableName]:exists() == false then
+-- 			for key, value in pairs(table) do
+-- 				targetDatabase[tableName][key] = value
+-- 			end
+-- 			appliedTables[tableName] = tableName
+-- 		end
+-- 	end
+-- 	return appliedTables
+-- end
 
 --called whenever the extension is loaded
-local function onInit(stateData)
+function onInit()
     MP.RegisterEvent("requestSumoGameState","requestSumoGameState")
     MP.RegisterEvent("sumo","sumo")
     MP.RegisterEvent("SUMO","SUMO")
@@ -85,6 +85,7 @@ local function onInit(stateData)
 	MP.RegisterEvent("sumoSecond", "sumoTimer")
 
 	MP.RegisterEvent("onSumoContact", "onSumoContact")
+	MP.RegisterEvent("onChatMessage", "onChatMessage")
 	-- MP.RegisterEvent("setSumoLevelName", "setSumoLevelName")
 	MP.RegisterEvent("onSumoGoal", "onSumoGoal")
 	MP.RegisterEvent("setSumoArenaNames", "setSumoArenaNames")
@@ -93,9 +94,22 @@ local function onInit(stateData)
 	MP.RegisterEvent("markSumoVehicleToExplode", "markSumoVehicleToExplode")
 	MP.RegisterEvent("unmarkSumoVehicleToExplode", "unmarkSumoVehicleToExplode")
 	MP.RegisterEvent("onPlayerExplode", "onPlayerExplode")
-
-	applyStuff(commands, SumoCommands)
-	CElog("onInit done" .. dump(gameState))
+	MP.RegisterEvent("onPlayerFirstAuth", "onPlayerFirstAuth")
+	MP.RegisterEvent("onPlayerAuth", "onPlayerAuth")
+	MP.RegisterEvent("onPlayerJoining", "onPlayerJoining")
+	MP.RegisterEvent("onPlayerJoin", "onPlayerJoin")
+	MP.RegisterEvent("onPlayerDisconnect", "onPlayerDisconnect")
+	MP.RegisterEvent("onVehicleSpawn", "onVehicleSpawn")
+	MP.RegisterEvent("onVehicleEdited", "onVehicleEdited")
+	MP.RegisterEvent("onVehicleEdited", "onVehicleEdited")
+	MP.RegisterEvent("onVehicleReset", "onVehicleReset")
+	MP.RegisterEvent("onVehicleDeleted", "onVehicleDeleted")
+	MP.RegisterEvent("onRconCommand", "onRconCommand")
+	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
+	MP.RegisterEvent("onStopServer", "onStopServer")
+	 
+	-- applyStuff(commands, SumoCommands)
+	print("--------------Sumo Loaded------------------")
 end
 
 function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code from https://stackoverflow.com/questions/45364628/lua-4-script-to-convert-seconds-elapsed-to-days-hours-minutes-seconds
@@ -119,7 +133,7 @@ function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code fr
     return time_days ,time_hours , time_minutes , time_seconds
 end
 
-local function sumoGameStarting()
+function sumoGameStarting()
 	local days, hours , minutes , seconds = seconds_to_days_hours_minutes_seconds(roundLength)
 	local amount = 0
 	if days then
@@ -206,7 +220,7 @@ local function sumoGameStarting()
 	MP.SendChatMessage(-1,"Sumo game started, you have to survive for "..(days or "")..""..(hours or "")..""..(minutes or "")..""..(seconds or "").."")
 end
 
-local function compareTable(gameState,tempTable,laststate)
+function compareTable(gameState,tempTable,laststate)
 	for variableName,variable in pairs(gameState) do
 		if type(variable) == "table" then
 			if not laststate[variableName] then
@@ -230,17 +244,17 @@ local function compareTable(gameState,tempTable,laststate)
 	end
 end
 
-local function updateSumoClients()
+function updateSumoClients()
 	local tempTable = {}
 	compareTable(gameState,tempTable,laststate)
-	CElog("updateSumoClients: " .. dump(tempTable))
+	print("updateSumoClients: " .. dump(tempTable))
 
 	if tempTable and next(tempTable) ~= nil then
 		MP.TriggerClientEventJson(-1, "updateSumoGameState", tempTable)
 	end
 end
 
-local function spawnSumoGoal()
+function spawnSumoGoal()
 	-- gameState.goalScale = (gameState.goalScale or 1) - gameState.goalScaleResize
 	gameState.goalScale = gameState.goalScale * 0.7
 	rand() --Some implementation need this before the numbers become random
@@ -251,30 +265,30 @@ local function spawnSumoGoal()
 		newGoalID = rand(1,goalPrefabCount)
 	end
 	goalID = newGoalID
-	CElog("Chosen goal: levels/goal" .. goalID .. ".prefab.json")
+	print("Chosen goal: levels/goal" .. goalID .. ".prefab.json")
 	MP.TriggerClientEvent(-1, "spawnSumoGoal", "levels/goal" .. goalID .. ".prefab.json") --flagPrefabTable[rand(1, flagPrefabTable.size())]
 end
 
 
 -- function setSumoLevelName(playerID, name)
 -- 	levelName = name
--- 	CElog("level name: " .. levelName)
+-- 	print("level name: " .. levelName)
 -- end
 
-local function onSumoArenaChange()	
+function onSumoArenaChange()	
 	local foundArena = false
 	for key,arenaName in pairs(arenaNames) do
 		if arenaName == requestedArena then
 			arena = arenaName
 			foundArena = true
 		else
-			CElog("Arena: " .. arenaName .. " doesn\'t match requested arena: " .. requestedArena)
+			print("Arena: " .. arenaName .. " doesn\'t match requested arena: " .. requestedArena)
 		end
 	end
 	if arena == "" or not foundArena then
 		if arenaNames[1] then
 			arena = arenaNames[1]
-			CElog("The requested arena for the sumo gamemode was not on this map, so it will default to the arena " .. arena)
+			print("The requested arena for the sumo gamemode was not on this map, so it will default to the arena " .. arena)
 		else
 			MP.SendChatMessage(-1, "Could not find an arena to play on")
 		end
@@ -283,11 +297,11 @@ local function onSumoArenaChange()
 	MP.TriggerClientEvent(-1, "requestSumoGoalCount", "nil")
 end
 
-local function sumoTeamAlreadyChosen(team)
+function sumoTeamAlreadyChosen(team)
 	return chosenTeams[team].chosen
 end
 
-local function sumoGameSetup()
+function sumoGameSetup()
 	math.randomseed(os.time())
 	onSumoArenaChange()
 	for k,v in pairs(possibleTeams) do
@@ -373,8 +387,8 @@ local function sumoGameSetup()
 	MP.TriggerClientEventJson(-1, "receiveSumoGameState", gameState)
 end
 
-local function sumoGameEnd(reason)
-	-- CElog("Sumo round ending...")
+function sumoGameEnd(reason)
+	-- print("Sumo round ending...")
 	gameState.gameEnding = true
 	gameState.goalScale = 1
 	if reason == nil or reason == "nil" then
@@ -398,7 +412,7 @@ local function sumoGameEnd(reason)
 	-- if teams and chosenTeams then
 	-- 	for teamName, teamData in pairs(chosenTeams) do
 	-- 		if chosenTeams[teamName].chosen then
-	-- 			-- CElog(dump(chosenTeams))
+	-- 			-- print(dump(chosenTeams))
 	-- 			chosenTeams[teamName].score = 0
 	-- 			for playername,player in pairs(gameState.players) do
 	-- 				if teamName == player.team then
@@ -416,7 +430,7 @@ local function sumoGameEnd(reason)
 	
 end
 
-local function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
+function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
 	-- MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "levels/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json") 
 	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "levels/" .. arena .. "/obstacles.prefab.json")
 	for goalID=1,goalPrefabCount do
@@ -424,7 +438,7 @@ local function showSumoPrefabs(player) --shows the prefabs belonging to this map
 	end
 end
 
-local function createSumoGoal(player)
+function createSumoGoal(player)
 	MP.TriggerClientEvent(player.playerID, "onSumoCreateGoal", "nil")
 end
 
@@ -452,7 +466,7 @@ function sumo(player, argument)
 		if string.find(argument, "start %d") then
 			number = tonumber(string.sub(argument,7,10000))
 			roundLength = number * 60
-			CElog("Sumo game starting with duration: " .. number)
+			print("Sumo game starting with duration: " .. number)
 		end
 		if not gameState.gameRunning then
 			if gameState.scoreLimit and gameState.scoreLimit > 0 then
@@ -466,11 +480,11 @@ function sumo(player, argument)
 	elseif string.find(argument, "time limit %d") then
 		local number = tonumber(string.sub(argument,11,10000))
 		roundLength = number * 60
-		CElog("Sumo game time limit is now: " .. roundLength)
+		print("Sumo game time limit is now: " .. roundLength)
 	elseif string.find(argument, "score limit %d") then
 		local number = tonumber(string.sub(argument,12,10000))
 		requestedScoreLimit = number
-		CElog("Sumo game score limit is now: " .. number)
+		print("Sumo game score limit is now: " .. number)
 	elseif string.find(argument, "teams %S") then
 		local teamsString = string.sub(argument,7,10000)
 		if teamsString == "true" then
@@ -515,7 +529,7 @@ function SUMO(player, argument) --alias for sumo
 	sumo(player, argument)
 end
 
-local function sumoGameRunningLoop()
+function sumoGameRunningLoop()
 	if gameState.time < 0 then
 		MP.SendChatMessage(-1,"Sumo game starting in "..math.abs(gameState.time).." second")
 
@@ -536,13 +550,13 @@ local function sumoGameRunningLoop()
 		local playercount = 0
 		for playername,player in pairs(players) do
 			playercount = playercount + 1
-			CElog(dump(player))
+			print(dump(player))
 			if not player.dead then
 				aliveCount = aliveCount + 1
 			end
 		end
 		gameState.playerCount = playercount
-		if gameState.time >= 5 and aliveCount == 0 then
+		if gameState.time >= 5 and aliveCount == 1 then
 			sumoGameEnd("last alive")
 		end
 	end
@@ -577,7 +591,7 @@ local function sumoGameRunningLoop()
 			MP.TriggerClientEvent(-1, "removeSumoPrefabs", "goal")
 			spawnSumoGoal()
 			goalEndTime = gameState.time + goalTime
-			CElog("It's time to blow some stuff up " .. dump(vehiclesToExplode))
+			print("It's time to blow some stuff up " .. dump(vehiclesToExplode))
 		end
 		timeSinceLastContact = timeSinceLastContact + 1
 		gameState.time = gameState.time + 1
@@ -599,79 +613,88 @@ function sumoTimer()
 end
 
 
-local function onUnload()
+function onUnload()
 
 end
 
 --called whenever a player is authenticated by the server for the first time.
-local function onPlayerFirstAuth(player)
+function onPlayerFirstAuth(player)
 
 end
 
 --called whenever the player is authenticated by the server.
-local function onPlayerAuth(player)
+function onPlayerAuth(player)
 
 end
 
 --called whenever someone begins connecting to the server
-local function onPlayerConnecting(player)
-	MP.TriggerClientEventJson(player.playerID, "receiveSumoGameState", gameState)
-end
+-- function onPlayerConnecting(playerID)
+-- 	MP.TriggerClientEventJson(playerID, "receiveSumoGameState", gameState)
+-- end
 
 --called when a player begins loading
-local function onPlayerJoining(player)
+function onPlayerJoining(player)
 
 end
 
 --called whenever a player has fully joined the session
-local function onPlayerJoin(player)
+function onPlayerJoin(playerID)
 	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
 	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
 	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
 
 --called whenever a player disconnects from the server
-local function onPlayerDisconnect(player)
-	gameState.players[player.name] = nil
+function onPlayerDisconnect(playerID)
+	gameState.players[MP.GetPlayerName(playerID)] = nil
 end
 
 --called whenever a player sends a chat message
-local function onChatMessage(player, chatMessage)
-
+function onChatMessage(playerID, playerName, chatMessage)
+	local player = {}
+	player.playerID = playerID
+	print("onChatMessage( " .. dump(player) .. ", " .. chatMessage .. ")")
+	if string.find(chatMessage, "/sumo ") then
+		chatMessage = string.gsub(chatMessage, "/sumo ", "")
+		sumo(player, chatMessage)
+	elseif string.find(chatMessage, "/SUMO ") then
+		chatMessage = string.gsub(chatMessage, "/SUMO ", "")
+		sumo(player, chatMessage)
+	end
 end
 
 --called whenever a player spawns a vehicle.
-local function onVehicleSpawn(player, vehID,  data)
+function onVehicleSpawn(player, vehID,  data)
 	-- markSumoVehicleToExplode(vehID)
 end
 
 --called whenever a player applies their vehicle edits.
-local function onVehicleEdited(player, vehID,  data)
+function onVehicleEdited(player, vehID,  data)
 
 end
 
 --called whenever a player resets their vehicle, holding insert spams this function.
-local function onVehicleReset(player, vehID, data)
+function onVehicleReset(player, vehID, data)
 
 end
 
 --called whenever a vehicle is deleted
-local function onVehicleDeleted(player, vehID,  source)
+function onVehicleDeleted(player, vehID,  source)
 
 end
 
 --whenever a message is sent to the Rcon
-local function onRconCommand(player, message, password, prefix)
+function onRconCommand(player, message, password, prefix)
 
 end
 
 --whenever a new client interacts with the RCON
-local function onNewRconClient(client)
+function onNewRconClient(client)
 
 end
 
 --called when the server is stopped through the stopServer() function
-local function onStopServer()
+function onStopServer()
 
 end
 
@@ -693,7 +716,7 @@ end
 
 function setSumoArenaNames(playerID, data)
 	arenaNames = {} 
-	CElog("Available arenas: " .. data)
+	print("Available arenas: " .. data)
 	for name in data:gmatch("%S+") do 
 		table.insert(arenaNames, name)
 	end
@@ -707,7 +730,7 @@ end
 -- 	end
 -- end
 function onPlayerExplode(playerID, playerName)
-	CElog(playerName .. "   " .. dump(gameState))
+	print(playerName .. "   " .. dump(gameState))
 	gameState.players[playerName].dead = true
 end
 
@@ -717,12 +740,12 @@ end
 
 function markSumoVehicleToExplode(playerID, vehID)
 	vehiclesToExplode["" .. vehID] = true
-	CElog("Veh marked for exploding: " .. vehID)
+	print("Veh marked for exploding: " .. vehID)
 end
 
 function unmarkSumoVehicleToExplode(playerID, vehID)
 	vehiclesToExplode["" .. vehID] = false
-	CElog("Veh unmarked for exploding: " .. vehID)
+	print("Veh unmarked for exploding: " .. vehID)
 end
 
 M.onInit = onInit
@@ -731,7 +754,7 @@ M.onUnload = onUnload
 M.onPlayerFirstAuth = onPlayerFirstAuth
 
 M.onPlayerAuth = onPlayerAuth
-M.onPlayerConnecting = onPlayerConnecting
+-- M.onPlayerConnecting = onPlayerConnecting
 M.onPlayerJoining = onPlayerJoining
 M.onPlayerJoin = onPlayerJoin
 M.onPlayerDisconnect = onPlayerDisconnect
@@ -760,8 +783,6 @@ M.setSumoGoalCount = setSumoGoalCount
 M.markSumoVehicleToExplode = markSumoVehicleToExplode
 M.unmarkSumoVehicleToExplode = unmarkSumoVehicleToExplode
 M.onPlayerExplode = onPlayerExplode
-
-
 
 M.sumo = sumo
 M.SUMO = SUMO

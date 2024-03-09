@@ -11,7 +11,7 @@ local blockedInputActions = {'slower_motion','faster_motion','toggle_slow_motion
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local thisArenaData = {}
-local mapData = {} --TODO: this should be a txt file for easily adding arenas
+local mapData = {} --TODO: this should be a txt file for easily adding arenas + this is stupid
 mapData.arenaData = {}
 mapData.arenas = "" 
 
@@ -814,9 +814,9 @@ local function spawnSumoGoal(filepath, offset, scale)
 	-- if not file then return end
 	-- local jsonString = file:read("*all")
 	-- file:close()
-	-- log('D', logTag, "prefab json after modifying: " .. dump(jsonString))	
+	-- print( "prefab json after modifying: " .. dump(jsonString))	
 
-	log('D', logTag, filepath)
+	-- print( filepath)
 	local offsetString = '0 0 0'
 	local scaleString = '1 1 1'
 	if offset then
@@ -831,17 +831,17 @@ local function spawnSumoGoal(filepath, offset, scale)
 	if gamestate.goalScale then
 		scaleString = "" .. gamestate.goalScale .. " " .. gamestate.goalScale .. " 1" --.. gamestate.goalScale
 	end
-	log('D', logTag, "Offset: " .. offsetString)
-	log('D', logTag, "Scale: " .. scaleString)
+	-- print( "Offset: " .. offsetString)
+	-- print( "Scale: " .. scaleString)
 	goalPrefabObj    = spawnPrefab(goalPrefabName, goalPrefabPath,  offsetString, '0 0 1', scaleString)
-	log('D', logTag, "goalPrefabObj: " .. dump(goalPrefabObj))
+	-- print( "goalPrefabObj: " .. dump(goalPrefabObj))
 	-- -- -- read local file 
 	-- local file = io.open(goalPrefabPath, "rb")
 	-- if not file then return end
 	-- local jsonString = file:read("*all")
 	-- file:close()
 	-- local data = jsonDecode(jsonString)
-	-- log('D', logTag, "prefab json: " .. dump(jsonString))	
+	-- print( "prefab json: " .. dump(jsonString))	
 	-- if data and gamestate.goalScale then 
 	-- 	for _, entry in ipairs(data) do
 	-- 		if entry.name == "goalTrigger" then
@@ -868,7 +868,7 @@ local function onSumoCreateGoal()
 end
 
 local function spawnSumoObstacles(filepath) 
-	log('D', logTag, filepath)
+	print( filepath)
 	obstaclesPrefabActive = true
 	obstaclesPrefabPath   = filepath
 	obstaclesPrefabName   = string.gsub(obstaclesPrefabPath, "(.*/)(.*)", "%2"):sub(1, -13)
@@ -877,38 +877,38 @@ local function spawnSumoObstacles(filepath)
 end
 
 local function removeSumoPrefabs(type)
-	log('D', logTag, "removeSumoPrefabs(" .. type .. ") Called" )
+	print( "removeSumoPrefabs(" .. type .. ") Called" )
 	if type == "goal" and goalPrefabActive then 
 		removePrefab(goalPrefabName)
-		-- log('D', logTag, "Removing: " .. goalPrefabName)
+		-- print( "Removing: " .. goalPrefabName)
 		goalPrefabActive = false
 	elseif type == "all" then
 		if goalPrefabActive then
 			removePrefab(goalPrefabName)
-			-- log('D', logTag, "Removing: " .. goalPrefabName)
+			-- print( "Removing: " .. goalPrefabName)
 			goalPrefabActive = false
 		end
 		if obstaclesPrefabActive then
 			removePrefab(obstaclesPrefabName)
-			-- log('D', logTag, "Removing: " .. obstaclesPrefabName)
+			-- print( "Removing: " .. obstaclesPrefabName)
 			obstaclesPrefabActive = false
 			be:reloadStaticCollision(true)
 		end
 		local prefabPath = ""
 		local levelName = core_levels.getLevelName(getMissionFilename())
 		local goals = "1"
-		log('D', logTag, "Removing everything in; Map: " .. levelName .. " and Arena: " .. currentArena)
-		-- log('D', logTag, "mapData: " .. dump(mapData))
+		print( "Removing everything in; Map: " .. levelName .. " and Arena: " .. currentArena)
+		-- print( "mapData: " .. dump(mapData))
 		local levelData = {}
 		levelData = mapData.arenaData
-		-- log('D', logTag, "levelData: " .. dump(levelData))
+		-- print( "levelData: " .. dump(levelData))
 		local arenaData = {}
 		arenaData = levelData[currentArena]
-		-- log('D', logTag, "arenaData (" .. currentArena .. "): " .. dump(arenaData))
+		-- print( "arenaData (" .. currentArena .. "): " .. dump(arenaData))
 		goals = arenaData["goalcount"]
 		for goalID=1,tonumber(goals) do
 			prefabPath = "goal" .. goalID
-			-- log('D', logTag, "Removing: " .. prefabPath)
+			-- print( "Removing: " .. prefabPath)
 			removePrefab(prefabPath)
 		end
 	end
@@ -929,7 +929,7 @@ function onSumoGameEnd()
 	goalScale = 1
 	removeSumoPrefabs("all")
 	resetSumoCarColors()
-	-- log('D', logtag, "Sumo game ended")
+	-- print( "Sumo game ended")
 end
 
 local function onScore()
@@ -939,7 +939,7 @@ end
 
 -- Function to explode a car by its vehicle ID
 function explodeSumoCar(vehID)
-	-- log('D', logTag, "explodeSumoCar called " .. dump(vehID))
+	-- print( "explodeSumoCar called " .. dump(vehID))
 	-- local veh = be:getObjectByID(vehID)
 	-- if vehID and MPVehicleGE.getVehicleByGameID(vehID) then
 	-- 	local ownerName = MPVehicleGE.getVehicleByGameID(vehID).ownerName
@@ -949,24 +949,24 @@ function explodeSumoCar(vehID)
 	-- end
 	for vid, veh in activeVehiclesIterator() do
 	-- for k,veh in pairs(MPVehicleGE.getVehicles()) do
-	-- log('D', logtag, "Seeing if a car should explode.")
-	-- log('D', logtag, "Seeing if car with the following ID should explode: " .. vid)
-	-- log('D', logtag, "vid: " .. vid .. " vehID: " .. tonumber(vehID))
+	-- print( "Seeing if a car should explode.")
+	-- print( "Seeing if car with the following ID should explode: " .. vid)
+	-- print( "vid: " .. vid .. " vehID: " .. tonumber(vehID))
 		if vid == tonumber(vehID) then
 		-- local vehicle = scenetree.findObjectById(veh.ID)
-		-- log('D', logtag, "BOOM goes the dynamite!")
+		-- print( "BOOM goes the dynamite!")
 			veh:queueLuaCommand("fire.explodeVehicle()")
 			veh:queueLuaCommand("fire.igniteVehicle()")
 			veh:queueLuaCommand("beamstate.breakAllBreakgroups()")
 			if vid == be:getPlayerVehicleID(0) then
 				disallowSumoResets()
-				-- log('D', logtag, vehID)
+				-- print( vehID)
 				local vehicle = MPVehicleGE.getVehicleByGameID(vid)
-				-- log('D', logtag, MPVehicleGE.getVehicleByGameID(vehID).ownerName) 
-				-- log('D', logtag, gamestate.players[MPVehicleGE.getVehicleByGameID(vehID).ownerName].playerID)
+				-- print( MPVehicleGE.getVehicleByGameID(vehID).ownerName) 
+				-- print( gamestate.players[MPVehicleGE.getVehicleByGameID(vehID).ownerName].playerID)
 				if TriggerServerEvent and vehicle and vehicle.ownerName then
-					-- log('D', logtag, dump(vehicle)) 
-					-- log('D', logtag, vehicle.ownerName) 
+					-- print( dump(vehicle)) 
+					-- print( vehicle.ownerName) 
 					TriggerServerEvent("onPlayerExplode", vehicle.ownerName) 
 				end
 			end
@@ -983,10 +983,10 @@ function onSumoTrigger(data)
 		if data.event == "enter" then
 			-- mark player to not explode
 			if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
-			-- log('D', logtag, "Unmarked " .. data.subjectID .. " for exploding")
+			-- print( "Unmarked " .. data.subjectID .. " for exploding")
 		elseif data.event == "exit" then
 			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
-			-- log('D', logtag, "Marked " .. data.subjectID .. " for exploding")
+			-- print( "Marked " .. data.subjectID .. " for exploding")
 			--mark player to explode
 		-- else
 		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
@@ -995,10 +995,10 @@ function onSumoTrigger(data)
 		--explode player
 		explodeSumoCar(data.subjectID)
 		if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", data.subjectID) end
-		-- log('D', logtag, "outOfBoundTrigger was triggered")
+		-- print( "outOfBoundTrigger was triggered")
 	end
     -- end
-	-- log('D', logtag, "trigger data: " .. dump(data))
+	-- print( "trigger data: " .. dump(data))
 end
 
 -- local function requestSumoLevelName()
@@ -1023,16 +1023,16 @@ end
 local function requestSumoGoalCount()
 	local levelName = core_levels.getLevelName(getMissionFilename())	
 	local goals = "1"
-	log('D', logTag, "mapData: " .. dump(mapData))	
+	print( "mapData: " .. dump(mapData))	
 	local levelData = {}
 	levelData = mapData.arenaData
-	log('D', logTag, "levelData: " .. dump(levelData))
+	print( "levelData: " .. dump(levelData))
 	local arenaData = {}
 	arenaData = levelData[currentArena]
 	if not arenaData then return end
-	log('D', logTag, "arenaData (" .. currentArena .. "): " .. dump(arenaData))
+	print( "arenaData (" .. currentArena .. "): " .. dump(arenaData))
 	goals = arenaData["goalcount"]
-	log('D', logTag, "There are " .. goals .. " goals in " .. levelName .. ", " .. currentArena)
+	print( "There are " .. goals .. " goals in " .. levelName .. ", " .. currentArena)
 	if TriggerServerEvent then TriggerServerEvent("setSumoGoalCount", goals) end
 end
 
@@ -1105,7 +1105,7 @@ function SumoNametags(ownerName,player,vehicle) --draws flag SumoNametags on peo
 end
 
 -- local function onVehicleResetted(gameVehicleID)
--- 	log('D', logtag, "OnVehicleResetted called")
+-- 	print( "OnVehicleResetted called")
 -- 	if MPVehicleGE then
 -- 		if MPVehicleGE.isOwn(gameVehicleID) then
 -- 			local veh = be:getObjectByID(gameVehicleID)
@@ -1220,7 +1220,7 @@ local function onPreRender(dt)
 		return 
 	end
 	resetSumoCarColors()
-	-- log('D', logtag, "onPreRender called")
+	-- print( "onPreRender called")
 
 	local closestOpponent = 100000000
 
@@ -1268,10 +1268,10 @@ local function onPreRender(dt)
 			if core_camera.getForward() then
 				local camVec = core_camera.getForward()
 				local camPos = core_camera.getPosition()
-				-- log('D', logtag, "camVec: " .. dump(camVec))
+				-- print( "camVec: " .. dump(camVec))
 				local origin = vec3(0,0,0)
 				local camRot = angle2D(camVec, origin)
-				-- log('D', logtag, "vehRot: " .. dump(camRot))
+				-- print( "vehRot: " .. dump(camRot))
 				goalMarker.arrowAngle = angle2D(camPos, goalLocation)
 				-- goalMarker.arrowAngle = goalMarker.arrowAngle + camRot
 				goalMarker.arrowAngle = (goalMarker.arrowAngle - camRot) - 180 --apparently it is offset with 180 degrees for some reason
@@ -1318,11 +1318,11 @@ local function onPreRender(dt)
 	if veh then
 		veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
 	end
-	-- log('D', logtag, "Resolution: " .. screenWidth .. "x" .. screenHeight)
+	-- print( "Resolution: " .. screenWidth .. "x" .. screenHeight)
 end
 
 local function onResetGameplay(id)
-	-- log('D', logtag, "onResetGameplay called")
+	-- print( "onResetGameplay called")
 end
 
 local function onExtensionUnloaded()
