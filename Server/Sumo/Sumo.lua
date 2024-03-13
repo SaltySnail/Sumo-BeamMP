@@ -40,6 +40,7 @@ local defaultColorPulse = true -- if the car color should pulse between the car 
 local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
+local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
 
 -- local SumoCommands = {
 -- 	sumo = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Enables the .zip with the filename specified."},
@@ -556,7 +557,7 @@ function sumoGameRunningLoop()
 			end
 		end
 		gameState.playerCount = playercount
-		if gameState.time >= 5 and aliveCount == 1 then
+		if gameState.time >= 5 and aliveCount == MAX_ALIVE then
 			sumoGameEnd("last alive")
 		end
 	end
@@ -640,6 +641,7 @@ end
 --called whenever a player has fully joined the session
 function onPlayerJoin(playerID)
 	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
+	print("onPlayerJoin called")
 	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
 	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
@@ -716,6 +718,7 @@ end
 
 function setSumoArenaNames(playerID, data)
 	arenaNames = {} 
+	-- print("setSumoArenaNames " .. playerID .. " " ..  data)
 	print("Available arenas: " .. data)
 	for name in data:gmatch("%S+") do 
 		table.insert(arenaNames, name)

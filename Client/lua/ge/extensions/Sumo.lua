@@ -11,7 +11,7 @@ local blockedInputActions = {'slower_motion','faster_motion','toggle_slow_motion
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local thisArenaData = {}
-local mapData = {} --TODO: this should be a txt file for easily adding arenas + this is stupid
+local mapData = {} --TODO: this should be a json file or something for easily adding arenas + this is stupid
 mapData.arenaData = {}
 mapData.arenas = "" 
 
@@ -688,7 +688,7 @@ function dump(o)
     end
 end
 
-local function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code from https://stackoverflow.com/questions/45364628/lua-4-script-to-convert-seconds-elapsed-to-days-hours-minutes-seconds
+function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code from https://stackoverflow.com/questions/45364628/lua-4-script-to-convert-seconds-elapsed-to-days-hours-minutes-seconds
     local time_minutes  = floor(mod(total_seconds, 3600) / 60)
     local time_seconds  = floor(mod(total_seconds, 60))
     if (time_seconds < 10) and time_minutes > 0 then
@@ -701,11 +701,11 @@ local function seconds_to_days_hours_minutes_seconds(total_seconds) --modified c
 	end
 end
 
-local function distance(vec1, vec2)
+function distance(vec1, vec2)
 	return math.sqrt((vec2.x-vec1.x)^2 + (vec2.y-vec1.y)^2 + (vec2.z-vec1.z)^2)
 end
 
-local function angle2D(vec1, vec2) --in degrees, because I thought it would be less conversions
+function angle2D(vec1, vec2) --in degrees, because I thought it would be less conversions
 	-- if vec1 == nil or vec2 == nil then return end
 	local angle = math.atan2( vec1.y - vec2.y, vec2.x - vec1.x)
 	return angle * (180 / math.pi)
@@ -752,7 +752,7 @@ function resetSumoCarColors(data)
 	--core_input_actionFilter.addAction(0, 'resetPhysics', false)
 end
 
-local function receiveSumoGameState(data)
+function receiveSumoGameState(data)
 	local data = jsonDecode(data)
 	if not gamestate.gameRunning and data.gameRunning then
 		for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
@@ -793,7 +793,7 @@ function disallowSumoResets()
 	extensions.core_input_actionFilter.addAction(0, 'sumo', true)
 end
 
-local function spawnSumoGoal(filepath, offset, scale) 
+function spawnSumoGoal(filepath, offset, scale) 
 	goalPrefabActive = true
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
@@ -822,6 +822,7 @@ local function spawnSumoGoal(filepath, offset, scale)
 	if offset then
 		offsetString = "" .. offset.x .. " " .. offset.y .. " " .. offset.z
 	end
+	print(currentArena .. " " .. goalNumber)
 	if mapData.arenaData[currentArena].goalOffsets[goalNumber] then
 		offsetString = "" .. mapData.arenaData[currentArena].goalOffsets[goalNumber].x .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].y .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].z
 	end
@@ -860,14 +861,14 @@ local function spawnSumoGoal(filepath, offset, scale)
 	-- end
 end
 
-local function onSumoCreateGoal()
+function onSumoCreateGoal()
 	local currentVehID = be:getPlayerVehicleID(0)
 	local veh = be:getObjectByID(currentVehID)
 	if not veh then return end
 	spawnSumoGoal("levels/goal.prefab.json", veh:getPosition())
 end
 
-local function spawnSumoObstacles(filepath) 
+function spawnSumoObstacles(filepath) 
 	print( filepath)
 	obstaclesPrefabActive = true
 	obstaclesPrefabPath   = filepath
@@ -876,7 +877,7 @@ local function spawnSumoObstacles(filepath)
 	be:reloadStaticCollision(true)
 end
 
-local function removeSumoPrefabs(type)
+function removeSumoPrefabs(type)
 	print( "removeSumoPrefabs(" .. type .. ") Called" )
 	if type == "goal" and goalPrefabActive then 
 		removePrefab(goalPrefabName)
@@ -932,7 +933,7 @@ function onSumoGameEnd()
 	-- print( "Sumo game ended")
 end
 
-local function onScore()
+function onScore()
 	uiMessages.showMSGYouScored = true
 	uiMessages.showMSGYouScoredEndTime = gamestate.time + uiMessages.showForTime
 end
@@ -1001,7 +1002,7 @@ function onSumoTrigger(data)
 	-- print( "trigger data: " .. dump(data))
 end
 
--- local function requestSumoLevelName()
+-- function requestSumoLevelName()
 --   currentLevel = core_levels.getLevelName(getMissionFilename())
 --   if TriggerServerEvent then TriggerServerEvent("setSumoLevelName", currentLevel) end
 -- --   if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", currentVehID) end
@@ -1011,16 +1012,18 @@ function setSumoCurrentArena(arena)
 	currentArena = arena
 end
 
-local function requestSumoArenaNames()
+function requestSumoArenaNames()
 	-- local levelName = core_levels.getLevelName(getMissionFilename())
-	if mapData and TriggerServerEvent then TriggerServerEvent("setSumoArenaNames", mapData.arenas) end
+	print("requestSumoArenaNames called: ")
+	-- if mapData and TriggerServerEvent then TriggerServerEvent("setSumoArenaNames", mapData.arenas) end
+	if mapData then TriggerServerEvent("setSumoArenaNames", mapData.arenas) end
 end
 
--- local function requestSumoLevels()
+-- function requestSumoLevels()
 -- 	if TriggerServerEvent then TriggerServerEvent("setSumoLevels", mapData.levels) end
 -- end
 
-local function requestSumoGoalCount()
+function requestSumoGoalCount()
 	local levelName = core_levels.getLevelName(getMissionFilename())	
 	local goals = "1"
 	print( "mapData: " .. dump(mapData))	
@@ -1080,11 +1083,11 @@ function updateSumoGameState(data)
 	end
 end
 
-local function requestSumoGameState()
+function requestSumoGameState()
 	if TriggerServerEvent then TriggerServerEvent("requestSumoGameState","nil") end
 end
 
-local function onVehicleSwitched(oldID,ID)
+function onVehicleSwitched(oldID,ID)
 	local currentOwnerName = MPConfig.getNickname()
 	if ID and MPVehicleGE.getVehicleByGameID(ID) then
 		currentOwnerName = MPVehicleGE.getVehicleByGameID(ID).ownerName
@@ -1104,7 +1107,7 @@ function SumoNametags(ownerName,player,vehicle) --draws flag SumoNametags on peo
 	end
 end
 
--- local function onVehicleResetted(gameVehicleID)
+-- function onVehicleResetted(gameVehicleID)
 -- 	print( "OnVehicleResetted called")
 -- 	if MPVehicleGE then
 -- 		if MPVehicleGE.isOwn(gameVehicleID) then
@@ -1121,7 +1124,7 @@ end
 -- 	end
 -- end
 
-local function sumoColor(player,vehicle,team,dt)
+function sumoColor(player,vehicle,team,dt)
 	local teamColor
 	if gamestate.teams and player.team then
 		teamColor = colors[player.team]
@@ -1194,7 +1197,7 @@ local function sumoColor(player,vehicle,team,dt)
 	-- end
 end
 
-local function onPreRender(dt)
+function onPreRender(dt)
 	if MPCoreNetwork and not MPCoreNetwork.isMPSession() then return end
 
 	local currentVehID = be:getPlayerVehicleID(0)
@@ -1321,11 +1324,11 @@ local function onPreRender(dt)
 	-- print( "Resolution: " .. screenWidth .. "x" .. screenHeight)
 end
 
-local function onResetGameplay(id)
+function onResetGameplay(id)
 	-- print( "onResetGameplay called")
 end
 
-local function onExtensionUnloaded()
+function onExtensionUnloaded()
 	resetSumoCarColors()
 end
 
