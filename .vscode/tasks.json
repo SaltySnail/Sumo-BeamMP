@@ -28,9 +28,9 @@
         {
             "label": "Compress Release",
             "type": "shell",
-            "command": "zip -r ../SumoBeamMP.zip Resources",
+            "command": "rm -f Client && rm -f BeamMP-Sumo.zip && cd ../Client && zip -r Client/SumoGamemode.zip && cd ../export && ../Client && zip -r BeamMP-Sumo.zip Client ../Server",
             "windows": {
-                "command": "7z a -tzip ../SumoBeamMP.zip Resources -aoa -r"
+                "command": "Remove-Item -Path Client -Force -Recurse -ErrorAction SilentlyContinue ; Remove-Item -Path BeamMP-Sumo.zip -Force -ErrorAction SilentlyContinue ; Set-Location -Path ../Client ; 7z a -tzip ../export/Client/SumoGamemode.zip . -aoa -r ; Set-Location -Path ../export ; 7z a -tzip BeamMP-Sumo.zip Client ../Server -aoa -r"
             },
             "options": {
                 "cwd": "export"

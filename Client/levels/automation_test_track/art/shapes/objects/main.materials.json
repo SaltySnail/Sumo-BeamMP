@@ -1,0 +1,353 @@
+{
+  "containers_shipping": {
+    "name": "containers_shipping",
+    "mapTo": "containers_shipping",
+    "class": "Material",
+    "persistentId": "54ab4b85-e352-4833-a604-3fb87a8fddd6",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_ao.data.png",
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "baseColorMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_m.data.png",
+        "normalMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_nm.normal.png",
+        "roughnessMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_r.data.png"
+      },
+      {
+        "metallicMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_m.data.png",
+        "normalMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_nm.normal.png",
+        "opacityMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_o.data.png",
+        "roughnessMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_r.data.png",
+        "vertColor": true
+      },
+      {},
+      {}
+    ],
+    "activeLayers": 2,
+    "annotation": "OBSTACLES",
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "version": 1.5
+  },
+  "containers_shipping_branding": {
+    "name": "containers_shipping_branding",
+    "mapTo": "containers_shipping_branding",
+    "class": "Material",
+    "persistentId": "db16d184-65a8-47b8-b1c7-39e2f545323d",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "baseColorMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_branding_b.color.png",
+        "opacityMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_branding_o.data.png",
+        "roughnessFactor": 0.635999978,
+        "vertColor": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "castShadows": false,
+    "groundType": "ASPHALT_OLD",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "translucent": true,
+    "translucentZWrite": true,
+    "version": 1.5
+  },
+  "barrierfence1": {
+    "name": "barrierfence1",
+    "mapTo": "barrierfence1",
+    "class": "Material",
+    "persistentId": "0f9cb4f2-e030-4267-9777-38684ce1a8e8",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/automation_test_track/art/shapes/objects/t_barrierfence_01_ao.data.png",
+        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_barrierfence_01_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/levels/automation_test_track/art/shapes/objects/t_barrierfence_01_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/objects/barrierfence1_n.dds",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_barrierfence_01_r.data.png"
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null
+      }
+    ],
+    "alphaRef": 0,
+    "annotation": "GUARD_RAIL",
+    "cubemap": "cubemap_automation_reflection",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "catchfence": {
+    "name": "catchfence",
+    "mapTo": "catchfence",
+    "class": "Material",
+    "persistentId": "de3dd95c-bf76-4e51-8a74-a7a85ef666fc",
+    "Stages": [
+      {
+        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_catchfence_01_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/levels/automation_test_track/art/shapes/objects/t_catchfence_01_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_catchfence_01_nm.normal.png",
+        "opacityMap": "/levels/automation_test_track/art/shapes/objects/t_catchfence_01_o.data.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_catchfence_01_r.data.png",
+        "scrollDir": [
+          0,
+          0.100000001
+        ]
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "scrollDir": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "scrollDir": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "scrollDir": null
+      }
+    ],
+    "alphaRef": 39,
+    "alphaTest": true,
+    "annotation": "OBSTACLES",
+    "cubemap": "cubemap_automation_reflection",
+    "doubleSided": true,
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "chainlink": {
+    "name": "chainlink",
+    "mapTo": "chainlink",
+    "class": "Material",
+    "persistentId": "850fecef-e8ca-40d7-a9f0-fe8cf27eb9e9",
+    "Stages": [
+      {
+        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_nm.normal.png",
+        "opacityMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_o.data.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_r.data.png",
+        "vertColor": true
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
+    ],
+    "alphaRef": 33,
+    "alphaTest": true,
+    "annotation": "OBSTACLES",
+    "cubemap": "cubemap_automation_reflection",
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "guardrails": {
+    "name": "guardrails",
+    "mapTo": "guardrails",
+    "class": "Material",
+    "persistentId": "b5750195-545f-4381-baec-204df8f9e532",
+    "Stages": [
+      {
+        "baseColorMap": "/levels/automation_test_track/art/shapes/roads/t_guardrails_01_b.color.png",
+        "detailScale": [
+          4,
+          0.5
+        ],
+        "metallicFactor": 0.800000012,
+        "metallicMap": "/levels/automation_test_track/art/shapes/roads/t_guardrails_01_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/roads/guardrails_n.dds",
+        "opacityMap": "/levels/automation_test_track/art/shapes/roads/t_guardrails_01_o.data.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/roads/t_guardrails_01_r.data.png",
+        "vertColor": true
+      },
+      {
+        "detailScale": null,
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
+    ],
+    "alphaRef": 174,
+    "alphaTest": true,
+    "annotation": "GUARD_RAIL",
+    "cubemap": "cubemap_automation_reflection",
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucent": true,
+    "translucentBlendOp": "None",
+    "translucentRecvShadows": true,
+    "version": 1.5
+  },
+  "m_chainlink": {
+    "name": "m_chainlink",
+    "mapTo": "m_chainlink",
+    "class": "Material",
+    "persistentId": "19f172d3-a515-4f75-808d-608115aca5c6",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_ao.data.png",
+        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_nm.normal.png",
+        "opacityMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_o.data.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_r.data.png",
+        "vertColor": true
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
+    ],
+    "alphaRef": 37,
+    "alphaTest": true,
+    "annotation": "BUILDINGS",
+    "cubemap": "cubemap_automation_reflection",
+    "groundType": "ASPHALT",
+    "materialTag1": "building",
+    "translucentBlendOp": "None",
+    "translucentRecvShadows": true,
+    "version": 1.5
+  },
+  "poles_fences": {
+    "name": "poles_fences",
+    "mapTo": "poles_fences",
+    "class": "Material",
+    "persistentId": "034d5c80-89d9-4ac0-91aa-c0960e2cba5a",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/automation_test_track/art/shapes/objects/t_poles_fences_ao.data.png",
+        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_poles_fences_b.color.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_poles_fences_nm.normal.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.690170288,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_poles_fences_r.data.png"
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null
+      }
+    ],
+    "alphaRef": 0,
+    "annotation": "OBSTACLES",
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "tirewall": {
+    "name": "tirewall",
+    "mapTo": "tirewall",
+    "class": "Material",
+    "persistentId": "0de23ec5-8f6c-4ac8-9062-81ed2ede7965",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/automation_test_track/art/shapes/objects/t_tirewall_01_ao.data.png",
+        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_tirewall_01_b.color.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_tirewall_01_nm.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_tirewall_01_r.data.png"
+      },
+      {
+        "pixelSpecular": null
+      },
+      {
+        "pixelSpecular": null
+      },
+      {
+        "pixelSpecular": null
+      }
+    ],
+    "alphaRef": 0,
+    "annotation": "OBSTACLES",
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  }
+}

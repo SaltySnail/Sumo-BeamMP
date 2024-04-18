@@ -266,8 +266,8 @@ function spawnSumoGoal()
 		newGoalID = rand(1,goalPrefabCount)
 	end
 	goalID = newGoalID
-	print("Chosen goal: levels/goal" .. goalID .. ".prefab.json")
-	MP.TriggerClientEvent(-1, "spawnSumoGoal", "levels/goal" .. goalID .. ".prefab.json") --flagPrefabTable[rand(1, flagPrefabTable.size())]
+	print("Chosen goal: art/goal" .. goalID .. ".prefab.json")
+	MP.TriggerClientEvent(-1, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json") --flagPrefabTable[rand(1, flagPrefabTable.size())]
 end
 
 
@@ -380,8 +380,8 @@ function sumoGameSetup()
 	-- end
 
 	spawnSumoGoal()
-	-- MP.TriggerClientEvent(-1, "spawnSumoObstacles", "levels/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json")
-	MP.TriggerClientEvent(-1, "spawnSumoObstacles", "levels/" .. arena .. "/obstacles.prefab.json")
+	-- MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json")
+	MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
 	MP.TriggerClientEvent(-1, "teleportToSumoArena", "nil")
 	updateSumoClients()
 
@@ -432,10 +432,10 @@ function sumoGameEnd(reason)
 end
 
 function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
-	-- MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "levels/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json") 
-	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "levels/" .. arena .. "/obstacles.prefab.json")
+	-- MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json") 
+	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
 	for goalID=1,goalPrefabCount do
-		MP.TriggerClientEvent(player.playerID, "spawnSumoGoal", "levels/goal" .. goalID .. ".prefab.json")
+		MP.TriggerClientEvent(player.playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
 end
 

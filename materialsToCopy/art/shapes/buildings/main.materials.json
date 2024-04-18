@@ -1,0 +1,34 @@
+{
+    "canal": {
+        "name": "canal",
+        "mapTo": "canal",
+        "class": "Material",
+        "persistentId": "0b2a4111-4209-46a8-aaee-6ffd27c82c66",
+        "Stages": [
+          {
+            "colorMap": "levels/west_coast_usa/art/shapes/buildings/canal_d.dds",
+            "detailMap": "/levels/west_coast_usa/art/shapes/roads/Concrete-04-diff.dds",
+            "detailScale": [
+              6,
+              6
+            ],
+            "normalMap": "levels/west_coast_usa/art/shapes/buildings/canal_n.dds",
+            "pixelSpecular": true,
+            "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/canal_r.dds",
+            "roughnessFactor": 0.607767701,
+            "specularMap": "levels/west_coast_usa/art/shapes/buildings/canal_s.dds",
+            "useAnisotropic": true,
+            "vertColor": true
+          },
+          {},
+          {},
+          {}
+        ],
+        "alphaRef": 0,
+        "annotation": "BUILDINGS",
+        "cubemap": "global_cubemap_metalblurred",
+        "materialTag0": "beamng",
+        "materialTag1": "building",
+        "translucentBlendOp": "None"
+      }
+}

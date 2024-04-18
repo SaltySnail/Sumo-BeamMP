@@ -1,0 +1,214 @@
+{
+  "m_concrete_plain": {
+    "name": "m_concrete_plain",
+    "mapTo": "m_concrete_plain",
+    "class": "Material",
+    "persistentId": "40319074-87c9-4ffc-9d47-cf86d428ea3e",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_ao.data.png",
+        "baseColorFactor": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "baseColorMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_b.color.png",
+        "detailMap": "levels/automation_test_track/art/shapes/misc/t_macro_asphalt_b.png",
+        "detailNormalMap": "levels/automation_test_track/art/shapes/misc/t_macro_asphalt_nm.png",
+        "detailNormalMapStrength": 0.209999993,
+        "detailScale": [
+          0.100000001,
+          0.100000001
+        ],
+        "diffuseMapUseUV": null,
+        "normalMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_nm.normal.png",
+        "opacityMapUseUV": null,
+        "pixelSpecular": true,
+        "roughnessFactor": 0.607767701,
+        "roughnessMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_r.data.png",
+        "specular": [
+          0.517175972,
+          0.517170012,
+          0.517170012,
+          1
+        ],
+        "vertColor": true
+      },
+      {
+        "baseColorFactor": null,
+        "baseColorMap": "levels/automation_test_track/art/shapes/misc/t_breakup_general_b.color.png",
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "diffuseMapUseUV": 1,
+        "opacityMap": "levels/automation_test_track/art/shapes/misc/t_breakup_general_o.data.png",
+        "opacityMapUseUV": 1,
+        "pixelSpecular": null,
+        "roughnessFactor": 0.699999988,
+        "specular": null,
+        "vertColor": true
+      },
+      {
+        "baseColorFactor": null,
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "diffuseMapUseUV": null,
+        "opacityMapUseUV": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "vertColor": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "diffuseMapUseUV": null,
+        "opacityMapUseUV": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "vertColor": null
+      }
+    ],
+    "activeLayers": 2,
+    "alphaRef": 0,
+    "annotation": "BUILDINGS",
+    "groundType": "CONCRETE",
+    "materialTag0": "beamng",
+    "materialTag1": "building",
+    "materialTag2": "concrete",
+    "specularStrength0": "0.490196",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "containers_shipping": {
+    "name": "containers_shipping",
+    "mapTo": "containers_shipping",
+    "class": "Material",
+    "persistentId": "54ab4b85-e352-4833-a604-3fb87a8fddd6",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_ao.data.png",
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "baseColorMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_nm.normal.png",
+        "roughnessMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_r.data.png"
+      },
+      {
+        "metallicMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_m.data.png",
+        "normalMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_nm.normal.png",
+        "opacityMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_o.data.png",
+        "roughnessMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_r.data.png",
+        "vertColor": true
+      },
+      {},
+      {}
+    ],
+    "activeLayers": 2,
+    "annotation": "OBSTACLES",
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "version": 1.5
+  },
+  "containers_shipping_branding": {
+    "name": "containers_shipping_branding",
+    "mapTo": "containers_shipping_branding",
+    "class": "Material",
+    "persistentId": "db16d184-65a8-47b8-b1c7-39e2f545323d",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "baseColorMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_branding_b.color.png",
+        "opacityMap": "/levels/automation_test_track/art/shapes/misc/t_containers_shipping_branding_o.data.png",
+        "roughnessFactor": 0.635999978,
+        "vertColor": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "castShadows": false,
+    "groundType": "ASPHALT_OLD",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "translucent": true,
+    "translucentZWrite": true,
+    "version": 1.5
+  },
+  "m_automation_logo": {
+    "name": "m_automation_logo",
+    "mapTo": "m_automation_logo",
+    "class": "Material",
+    "persistentId": "4c24757b-3424-4048-aa95-8550d42b2672",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "metallicFactor": 1,
+        "opacityMap": "/levels/automation_test_track/art/shapes/misc/t_automation_logo_o.data.png",
+        "roughnessFactor": 0.666999996,
+        "vertColor": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "castShadows": false,
+    "groundType": "ASPHALT_OLD",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "translucent": true,
+    "translucentZWrite": true,
+    "version": 1.5
+  },
+  "sign_arrows": {
+    "name": "sign_arrows",
+    "mapTo": "sign_arrows",
+    "class": "Material",
+    "persistentId": "5f51df4d-138f-4d52-9f14-3568473af5e7",
+    "Stages": [
+      {
+        "colorMap": "arrows_sign_d.dds",
+        "diffuseColor": [
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
+          1
+        ],
+        "specular": [
+          0.5,
+          0.5,
+          0.5,
+          1
+        ],
+        "specularMap": "arrows_sign_s.dds",
+        "specularPower": 50
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "rally",
+    "translucentBlendOp": "None"
+  }
+}
