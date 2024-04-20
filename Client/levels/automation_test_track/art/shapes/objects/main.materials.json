@@ -1,29 +1,29 @@
 {
-  "containers_shipping": {
-    "name": "containers_shipping",
-    "mapTo": "containers_shipping",
+  "sumo_containers_shipping": {
+    "name": "sumo_containers_shipping",
+    "mapTo": "sumo_containers_shipping",
     "class": "Material",
     "persistentId": "54ab4b85-e352-4833-a604-3fb87a8fddd6",
     "Stages": [
       {
-        "ambientOcclusionMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_ao.data.png",
+        "ambientOcclusionMap": "/art/SumoMaterials/t_containers_shipping_ao.data.png",
         "baseColorFactor": [
           0.992156982,
           0.992156982,
           0.992156982,
           1
         ],
-        "baseColorMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_b.color.png",
+        "baseColorMap": "/art/SumoMaterials/t_containers_shipping_b.color.png",
         "metallicFactor": 1,
-        "metallicMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_m.data.png",
-        "normalMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_nm.normal.png",
-        "roughnessMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_r.data.png"
+        "metallicMap": "/art/SumoMaterials/t_containers_shipping_m.data.png",
+        "normalMap": "/art/SumoMaterials/t_containers_shipping_nm.normal.png",
+        "roughnessMap": "/art/SumoMaterials/t_containers_shipping_r.data.png"
       },
       {
-        "metallicMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_m.data.png",
-        "normalMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_nm.normal.png",
-        "opacityMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_o.data.png",
-        "roughnessMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_r.data.png",
+        "metallicMap": "/art/SumoMaterials/t_containers_shipping_m.data.png",
+        "normalMap": "/art/SumoMaterials/t_containers_shipping_nm.normal.png",
+        "opacityMap": "/art/SumoMaterials/t_containers_shipping_o.data.png",
+        "roughnessMap": "/art/SumoMaterials/t_containers_shipping_r.data.png",
         "vertColor": true
       },
       {},
@@ -36,9 +36,9 @@
     "materialTag1": "Industrial",
     "version": 1.5
   },
-  "containers_shipping_branding": {
-    "name": "containers_shipping_branding",
-    "mapTo": "containers_shipping_branding",
+  "sumo_containers_shipping_branding": {
+    "name": "sumo_containers_shipping_branding",
+    "mapTo": "sumo_containers_shipping_branding",
     "class": "Material",
     "persistentId": "db16d184-65a8-47b8-b1c7-39e2f545323d",
     "Stages": [
@@ -49,8 +49,8 @@
           0.992156982,
           1
         ],
-        "baseColorMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_branding_b.color.png",
-        "opacityMap": "levels/automation_test_track/art/shapes/objects/t_containers_shipping_branding_o.data.png",
+        "baseColorMap": "/art/SumoMaterials/t_containers_shipping_branding_b.color.png",
+        "opacityMap": "/art/SumoMaterials/t_containers_shipping_branding_o.data.png",
         "roughnessFactor": 0.635999978,
         "vertColor": true
       },

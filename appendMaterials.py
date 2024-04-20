@@ -8,10 +8,11 @@ import json
 import shutil #maybe these are not needed if I only use os...
 import glob
 
-import copy #fuck python. Why does it not deep copy by default when doing variable1 = variable2, that is so messed up
+import copy #f python. Why does it not deep copy by default when doing variable1 = variable2, that is so messed up
 
 BEAMMP_CLIENT_FOLDER = "C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client"
 BEAMNG_LEVELS_FOLDER = "I:/SteamLibrary/steamapps/common/BeamNG.drive/content/levels"
+# BEAMNG_MODS_FOLDER = "C:/Users/Julian/AppData/Local/BeamNG.drive/0.32/mods" #only for if anyone else needs this
 MATERIALS_TO_PUT_IN_EVERY_LEVEL = "materialsToCopy"
 
 level_name_pattern = "levels/([^/.]+)/info.json"
@@ -36,7 +37,7 @@ def appendMaterials(dir):
     for json_file in json_files: 
         try:
             with open(MATERIALS_TO_PUT_IN_EVERY_LEVEL + "/" + json_file, 'r') as f:
-                json_data_to_append = json.load(f)
+                original_json_data_to_append = json.load(f)
                 files_in_directory = os.listdir(dir)
                 zip_files = [file for file in files_in_directory if file.endswith('.zip')]
                 for zip_file in zip_files:
@@ -48,7 +49,9 @@ def appendMaterials(dir):
                             for s in all_files:
                                 match = re.search(level_name_pattern, s)
                                 if match:
+                                    json_data_to_append = copy.deepcopy(original_json_data_to_append)
                                     try:
+                                        # print(match.group())
                                         json_path = os.path.dirname(json_file)
                                         level = match.group()
                                         # print(match)
@@ -57,9 +60,10 @@ def appendMaterials(dir):
                                         json_path = json_path.replace('\\', "/")
                                         # print(full_file_path + '\t\t\tlevels/' + level + '/' + json_path + "/" + 'main.materials.json')    
                                         # try:
-                                        with f.open('levels/' + level + '/' + json_path + "/" + 'main.materials.json') as sf:
+                                        with f.open('levels/' + level + '/' + json_path + "/" + 'main.materials.json', 'r') as sf:
                                             original_json_data = json.load(sf)
                                             for key, value in original_json_data.items():
+                                                # print(value)
                                                 json_data_to_append[key] = value #original is now new
                                         # except Exception as e:
                                         #     print("An error occurred:", e)
@@ -74,8 +78,8 @@ def appendMaterials(dir):
                                             replace_nested_json(json_data_to_append_final, level, json_path)
                                             json.dump(json_data_to_append_final, output_file, indent=2)
                                     except FileNotFoundError:
-                                        print("no client file " + 'Client/levels/' + level + json_file)
-                                    copyMaterialFiles(MATERIALS_TO_PUT_IN_EVERY_LEVEL + "/" + json_path, 'Client/levels/' + level + "/" + json_path) 
+                                        print("Filesystem didn't create: " + 'Client/levels/' + level + json_file)
+                                    # copyMaterialFiles(MATERIALS_TO_PUT_IN_EVERY_LEVEL + "/" + json_path, 'Client/levels/' + level + "/" + json_path) 
                     except FileNotFoundError:
                         print("no original file " + full_file_path)
         except FileNotFoundError:
@@ -99,7 +103,8 @@ def replace_nested_json(json_data, level, json_path):
     for key, value in json_data.items():
         if isinstance(value, str):
             if "/REPLACE_ME/" in value:
-                new_value = value.replace("/REPLACE_ME/", 'levels/' + level + "/" + json_path + "/")
+                # new_value = value.replace("/REPLACE_ME/", 'levels/' + level + "/" + json_path + "/")
+                new_value = value.replace("/REPLACE_ME/", "/art/SumoMaterials/") #idk if the .dds and .png files are materials or textures that compose a texture
                 json_data[key] = new_value
         elif isinstance(value, dict):
             replace_nested_json(value, level, json_path)
@@ -110,3 +115,4 @@ def replace_nested_json(json_data, level, json_path):
 
 appendMaterials(BEAMMP_CLIENT_FOLDER)
 appendMaterials(BEAMNG_LEVELS_FOLDER)
+# appendMaterials(BEAMNG_MODS_FOLDER)

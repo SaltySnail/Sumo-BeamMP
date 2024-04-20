@@ -12,7 +12,7 @@
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_effects>
-    <effect id="m_concrete_plain">
+    <effect id="sumo_m_concrete_plain">
       <profile_COMMON>
         <technique sid="common">
           <phong>
@@ -37,7 +37,7 @@
     </effect>
   </library_effects>
   <library_materials>
-    <material id="m_concrete_plain-material" name="m_concrete_plain">
+    <material id="sumo_m_concrete_plain-material" name="m_concrete_plain">
       <instance_effect url="#m_concrete_plain"/>
     </material>
   </library_materials>

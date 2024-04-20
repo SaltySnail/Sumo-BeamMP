@@ -1,7 +1,7 @@
 {
-    "containers_shipping": {
-      "name": "containers_shipping",
-      "mapTo": "containers_shipping",
+    "sumo_containers_shipping": {
+      "name": "sumo_containers_shipping",
+      "mapTo": "sumo_containers_shipping",
       "class": "Material",
       "persistentId": "54ab4b85-e352-4833-a604-3fb87a8fddd6",
       "Stages": [
@@ -36,9 +36,9 @@
       "materialTag1": "Industrial",
       "version": 1.5
     },
-    "containers_shipping_branding": {
-        "name": "containers_shipping_branding",
-        "mapTo": "containers_shipping_branding",
+    "sumo_containers_shipping_branding": {
+        "name": "sumo_containers_shipping_branding",
+        "mapTo": "sumo_containers_shipping_branding",
         "class": "Material",
         "persistentId": "db16d184-65a8-47b8-b1c7-39e2f545323d",
         "Stages": [

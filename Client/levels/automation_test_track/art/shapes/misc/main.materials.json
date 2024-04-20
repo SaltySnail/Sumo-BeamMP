@@ -1,32 +1,32 @@
 {
-  "m_concrete_plain": {
-    "name": "m_concrete_plain",
-    "mapTo": "m_concrete_plain",
+  "sumo_m_concrete_plain": {
+    "name": "sumo_m_concrete_plain",
+    "mapTo": "sumo_m_concrete_plain",
     "class": "Material",
     "persistentId": "40319074-87c9-4ffc-9d47-cf86d428ea3e",
     "Stages": [
       {
-        "ambientOcclusionMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_ao.data.png",
+        "ambientOcclusionMap": "/art/SumoMaterials/t_concrete_plain_ao.data.png",
         "baseColorFactor": [
           0.992156923,
           0.992156923,
           0.992156923,
           1
         ],
-        "baseColorMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_b.color.png",
-        "detailMap": "levels/automation_test_track/art/shapes/misc/t_macro_asphalt_b.png",
-        "detailNormalMap": "levels/automation_test_track/art/shapes/misc/t_macro_asphalt_nm.png",
+        "baseColorMap": "/art/SumoMaterials/t_concrete_plain_b.color.png",
+        "detailMap": "/art/SumoMaterials/t_macro_asphalt_b.png",
+        "detailNormalMap": "/art/SumoMaterials/t_macro_asphalt_nm.png",
         "detailNormalMapStrength": 0.209999993,
         "detailScale": [
           0.100000001,
           0.100000001
         ],
         "diffuseMapUseUV": null,
-        "normalMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_nm.normal.png",
+        "normalMap": "/art/SumoMaterials/t_concrete_plain_nm.normal.png",
         "opacityMapUseUV": null,
         "pixelSpecular": true,
         "roughnessFactor": 0.607767701,
-        "roughnessMap": "levels/automation_test_track/art/shapes/misc/t_concrete_plain_r.data.png",
+        "roughnessMap": "/art/SumoMaterials/t_concrete_plain_r.data.png",
         "specular": [
           0.517175972,
           0.517170012,
@@ -37,11 +37,11 @@
       },
       {
         "baseColorFactor": null,
-        "baseColorMap": "levels/automation_test_track/art/shapes/misc/t_breakup_general_b.color.png",
+        "baseColorMap": "/art/SumoMaterials/t_breakup_general_b.color.png",
         "detailNormalMapStrength": null,
         "detailScale": null,
         "diffuseMapUseUV": 1,
-        "opacityMap": "levels/automation_test_track/art/shapes/misc/t_breakup_general_o.data.png",
+        "opacityMap": "/art/SumoMaterials/t_breakup_general_o.data.png",
         "opacityMapUseUV": 1,
         "pixelSpecular": null,
         "roughnessFactor": 0.699999988,
