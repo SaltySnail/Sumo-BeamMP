@@ -51,12 +51,13 @@ def appendMaterials(dir):
                                 if match:
                                     json_data_to_append = copy.deepcopy(original_json_data_to_append)
                                     try:
-                                        # print(match.group())
+                                        # print("/" + match.group())
                                         json_path = os.path.dirname(json_file)
                                         level = match.group()
                                         # print(match)
                                         level = level.replace("levels/", "")
                                         level = level.replace("/info.json", "")
+                                        # print(level)
                                         json_path = json_path.replace('\\', "/")
                                         # print(full_file_path + '\t\t\tlevels/' + level + '/' + json_path + "/" + 'main.materials.json')    
                                         # try:
