@@ -799,7 +799,7 @@ function spawnSumoGoal(filepath, offset, scale)
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
 	local goalNumber = string.match(goalPrefabName, "%d+") 
-	goalPrefabPath = "levels/goal.prefab.json"
+	goalPrefabPath = "art/goal.prefab.json"
 	-- 	-- local line = jsonDecode(jsonString)
 	-- 	-- if line.name == "goalTrigger" then 
 	-- 	-- 	goalLocation = vec3(line.position)
@@ -866,7 +866,7 @@ function onSumoCreateGoal()
 	local currentVehID = be:getPlayerVehicleID(0)
 	local veh = be:getObjectByID(currentVehID)
 	if not veh then return end
-	spawnSumoGoal("levels/goal.prefab.json", veh:getPosition())
+	spawnSumoGoal("art/goal.prefab.json", veh:getPosition())
 end
 
 function spawnSumoObstacles(filepath) 

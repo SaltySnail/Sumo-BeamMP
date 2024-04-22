@@ -248,7 +248,7 @@ end
 function updateSumoClients()
 	local tempTable = {}
 	compareTable(gameState,tempTable,laststate)
-	print("updateSumoClients: " .. dump(tempTable))
+	-- print("updateSumoClients: " .. dump(tempTable))
 
 	if tempTable and next(tempTable) ~= nil then
 		MP.TriggerClientEventJson(-1, "updateSumoGameState", tempTable)
@@ -551,7 +551,7 @@ function sumoGameRunningLoop()
 		local playercount = 0
 		for playername,player in pairs(players) do
 			playercount = playercount + 1
-			print(dump(player))
+			-- print(dump(player))
 			if not player.dead then
 				aliveCount = aliveCount + 1
 			end
@@ -641,7 +641,7 @@ end
 --called whenever a player has fully joined the session
 function onPlayerJoin(playerID)
 	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
-	print("onPlayerJoin called")
+	-- print("onPlayerJoin called")
 	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
 	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
@@ -655,7 +655,7 @@ end
 function onChatMessage(playerID, playerName, chatMessage)
 	local player = {}
 	player.playerID = playerID
-	print("onChatMessage( " .. dump(player) .. ", " .. chatMessage .. ")")
+	-- print("onChatMessage( " .. dump(player) .. ", " .. chatMessage .. ")")
 	if string.find(chatMessage, "/sumo ") then
 		chatMessage = string.gsub(chatMessage, "/sumo ", "")
 		sumo(player, chatMessage)
@@ -733,7 +733,7 @@ end
 -- 	end
 -- end
 function onPlayerExplode(playerID, playerName)
-	print(playerName .. "   " .. dump(gameState))
+	-- print(playerName .. "   " .. dump(gameState))
 	gameState.players[playerName].dead = true
 end
 
