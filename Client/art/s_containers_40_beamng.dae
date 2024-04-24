@@ -28,7 +28,7 @@
         </technique>
       </profile_COMMON>
     </effect>
-    <effect id="sumo_containers_shipping-effect">
+    <effect id="containers_shipping-effect">
       <profile_COMMON>
         <technique sid="common">
           <lambert>
@@ -45,7 +45,7 @@
         </technique>
       </profile_COMMON>
     </effect>
-    <effect id="sumo_containers_shipping_branding-effect">
+    <effect id="containers_shipping_branding-effect">
       <profile_COMMON>
         <technique sid="common">
           <lambert>
@@ -68,10 +68,10 @@
     <material id="lod_vertcol-material" name="lod_vertcol">
       <instance_effect url="#lod_vertcol-effect"/>
     </material>
-    <material id="sumo_containers_shipping-material" name="containers_shipping">
+    <material id="containers_shipping-material" name="containers_shipping">
       <instance_effect url="#containers_shipping-effect"/>
     </material>
-    <material id="sumo_containers_shipping_branding-material" name="containers_shipping_branding">
+    <material id="containers_shipping_branding-material" name="containers_shipping_branding">
       <instance_effect url="#containers_shipping_branding-effect"/>
     </material>
   </library_materials>

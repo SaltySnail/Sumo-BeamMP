@@ -11,7 +11,7 @@
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_effects>
-    <effect id="sumo_canal-effect">
+    <effect id="canal-effect">
       <profile_COMMON>
         <technique sid="common">
           <phong>
@@ -39,7 +39,7 @@
     </effect>
   </library_effects>
   <library_materials>
-    <material id="sumo_canal-material" name="canal">
+    <material id="canal-material" name="canal">
       <instance_effect url="#canal-effect" />
     </material>
   </library_materials>

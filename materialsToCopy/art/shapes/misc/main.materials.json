@@ -1,7 +1,7 @@
 {  
-    "sumo_m_concrete_plain": {
-    "name": "sumo_m_concrete_plain",
-    "mapTo": "sumo_m_concrete_plain",
+    "m_concrete_plain": {
+    "name": "m_concrete_plain",
+    "mapTo": "m_concrete_plain",
     "class": "Material",
     "persistentId": "40319074-87c9-4ffc-9d47-cf86d428ea3e",
     "Stages": [
