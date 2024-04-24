@@ -292,6 +292,7 @@ function onSumoArenaChange()
 			print("The requested arena for the sumo gamemode was not on this map, so it will default to the arena " .. arena)
 		else
 			MP.SendChatMessage(-1, "Could not find an arena to play on")
+			if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
 		end
 	end
 	MP.TriggerClientEvent(-1, "setSumoCurrentArena", arena)
@@ -643,6 +644,7 @@ function onPlayerJoin(playerID)
 	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
 	-- print("onPlayerJoin called")
 	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
+	if arena == "" then onSumoArenaChange() end
 	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
 

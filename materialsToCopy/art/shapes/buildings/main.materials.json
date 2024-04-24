@@ -6,17 +6,17 @@
         "persistentId": "0b2a4111-4209-46a8-aaee-6ffd27c82c66",
         "Stages": [
           {
-            "colorMap": "/REPLACE_ME/buildings/canal_d.dds",
-            "detailMap": "/REPLACE_ME/roads/Concrete-04-diff.dds",
+            "colorMap": "/REPLACE_ME/canal_d.dds",
+            "detailMap": "/REPLACE_ME/Concrete-04-diff.dds",
             "detailScale": [
               6,
               6
             ],
-            "normalMap": "/REPLACE_ME/buildings/canal_n.dds",
+            "normalMap": "/REPLACE_ME/canal_n.dds",
             "pixelSpecular": true,
-            "reflectivityMap": "/REPLACE_ME/buildings/canal_r.dds",
+            "reflectivityMap": "/REPLACE_ME/canal_r.dds",
             "roughnessFactor": 0.607767701,
-            "specularMap": "/REPLACE_ME/buildings/canal_s.dds",
+            "specularMap": "/REPLACE_ME/canal_s.dds",
             "useAnisotropic": true,
             "vertColor": true
           },
