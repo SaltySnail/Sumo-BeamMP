@@ -40,7 +40,11 @@ local defaultColorPulse = true -- if the car color should pulse between the car 
 local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
-local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
+local MAX_ALIVE = 0 --for debugging use 0, else use 1 (I miss defines :( )
+local autoStart = false
+local autoStartTimer = 0
+local SUMO_SERVER_LUA_PATH = "Resources/Server/Sumo/" --this is the path from beammp-server.exe (change this if it is in a different path)
+-- local SUMO_SERVER_LUA_PATH = "" --this is the path from beammp-server.exe (change this if it is in a different path)
 
 -- local SumoCommands = {
 -- 	sumo = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Enables the .zip with the filename specified."},
@@ -111,6 +115,7 @@ function onInit()
 	 
 	-- applyStuff(commands, SumoCommands)
 	print("--------------Sumo Loaded------------------")
+	loadSettings()
 end
 
 function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code from https://stackoverflow.com/questions/45364628/lua-4-script-to-convert-seconds-elapsed-to-days-hours-minutes-seconds
@@ -306,10 +311,12 @@ end
 function sumoGameSetup()
 	math.randomseed(os.time())
 	onSumoArenaChange()
-	for k,v in pairs(possibleTeams) do
-		chosenTeams[v] = {}
-		chosenTeams[v].chosen = false
-		chosenTeams[v].score = 0  
+	if teams then
+		for k,v in pairs(possibleTeams) do
+			chosenTeams[v] = {}
+			chosenTeams[v].chosen = false
+			chosenTeams[v].score = 0  
+		end
 	end
 	gameState = {}
 	gameState.players = {}
@@ -605,10 +612,12 @@ end
 function sumoTimer()
 	if gameState.gameRunning then
 		sumoGameRunningLoop()
-	elseif autoStart and MP.GetPlayerCount() > -1 then
+	elseif autoStart and MP.GetPlayerCount() > MAX_ALIVE then
 		autoStartTimer = autoStartTimer + 1
-		if autoStartTimer >= 30 then
+		if autoStartTimer >= 15 then
 			autoStartTimer = 0
+			selectRandomArena()
+			-- onSumoArenaChange()
 			sumoGameSetup()
 		end
 	end
@@ -753,6 +762,30 @@ function unmarkSumoVehicleToExplode(playerID, vehID)
 	print("Veh unmarked for exploding: " .. vehID)
 end
 
+function selectRandomArena()
+	-- Check if the arenaNames table is not empty
+	if next(arenaNames) ~= nil then
+		-- math.random(#arenaNames) will generate a random index in the range of the arenaNames table
+		requestedArena = arenaNames[math.random(#arenaNames)]
+	end
+	print("selectRandomArena: " .. requestedArena)
+	onSumoArenaChange()
+end
+
+function loadSettings()
+	local file = io.open(SUMO_SERVER_LUA_PATH .. "settings.json", "r") -- Open the file in read mode
+    if file then
+        local content = file:read("*all") -- Read the entire file content
+        file:close()
+        local data = Util.JsonDecode(content) -- Decode the JSON data
+		if data then
+			autoStart = data["autoStart"]
+		end
+    else
+        print("Cannot open file:", path)
+    end
+end
+
 M.onInit = onInit
 M.onUnload = onUnload
 
@@ -788,6 +821,8 @@ M.setSumoGoalCount = setSumoGoalCount
 M.markSumoVehicleToExplode = markSumoVehicleToExplode
 M.unmarkSumoVehicleToExplode = unmarkSumoVehicleToExplode
 M.onPlayerExplode = onPlayerExplode
+
+M.selectRandomArena = selectRandomArena
 
 M.sumo = sumo
 M.SUMO = SUMO
