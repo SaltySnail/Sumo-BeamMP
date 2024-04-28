@@ -305,6 +305,7 @@ function onSumoArenaChange()
 end
 
 function sumoTeamAlreadyChosen(team)
+	if not chosenTeams then return end
 	return chosenTeams[team].chosen
 end
 
@@ -619,6 +620,19 @@ function sumoTimer()
 			selectRandomArena()
 			-- onSumoArenaChange()
 			sumoGameSetup()
+		end
+	end
+	--force stopping the game when there are less players than MAX_ALIVE:
+	local aliveCount = 2 
+	if gameState.gameRunning and not gameState.gameEnding and gameState.time > 0 then
+		aliveCount = 0
+		for playername,player in pairs(gameState.players) do
+			if not player.dead then
+				aliveCount = aliveCount + 1
+			end
+		end
+		if gameState.time >= 5 and aliveCount == MAX_ALIVE then
+			sumoGameEnd("last alive")
 		end
 	end
 end
