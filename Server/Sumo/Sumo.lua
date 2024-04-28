@@ -40,16 +40,10 @@ local defaultColorPulse = true -- if the car color should pulse between the car 
 local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
-local MAX_ALIVE = 0 --for debugging use 0, else use 1 (I miss defines :( )
+local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
 local autoStart = false
 local autoStartTimer = 0
 local SUMO_SERVER_LUA_PATH = "Resources/Server/Sumo/" --this is the path from beammp-server.exe (change this if it is in a different path)
--- local SUMO_SERVER_LUA_PATH = "" --this is the path from beammp-server.exe (change this if it is in a different path)
-
--- local SumoCommands = {
--- 	sumo = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Enables the .zip with the filename specified."},
--- 	SUMO = {originModule = "Sumo", level = 0, arguments = {"argument"}, sourceLimited = 1, description = "Alias for sumo."}
--- }
 
 function dump(o)
     if type(o) == 'table' then
