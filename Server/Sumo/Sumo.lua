@@ -106,6 +106,11 @@ function onInit()
 	MP.RegisterEvent("onRconCommand", "onRconCommand")
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
+	
+	for k, v in pairs(MP.GetPlayers()) do
+        onPlayerJoin(k)
+        if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
+    end
 	 
 	-- applyStuff(commands, SumoCommands)
 	print("--------------Sumo Loaded------------------")
@@ -299,8 +304,10 @@ function onSumoArenaChange()
 end
 
 function sumoTeamAlreadyChosen(team)
-	if not chosenTeams then return end
-	return chosenTeams[team].chosen
+    if not team then return false end
+    if not chosenTeams then return false end
+    if not chosenTeams[team] then return false end
+    return chosenTeams[team].chosen
 end
 
 function sumoGameSetup()
@@ -337,12 +344,14 @@ function sumoGameSetup()
 	local chosenTeam = possibleTeams[rand(1,#possibleTeams)]
 	local teamCount = 0
 	for ID,Player in pairs(MP.GetPlayers()) do
-		if teamCount == teamSize then
-			chosenTeam = possibleTeams[rand(1,#possibleTeams)]
-			while sumoTeamAlreadyChosen(chosenTeam) do --possibility for endless loop, maybe need some better way for this
+		if teams then
+			if teamCount == teamSize then
 				chosenTeam = possibleTeams[rand(1,#possibleTeams)]
+				while sumoTeamAlreadyChosen(chosenTeam) do --possibility for endless loop, maybe need some better way for this
+					chosenTeam = possibleTeams[rand(1,#possibleTeams)]
+				end
+				chosenTeams[chosenTeam].chosen = true
 			end
-			chosenTeams[chosenTeam].chosen = true
 			teamCount = 0
 		end
 		if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
@@ -678,9 +687,11 @@ function onChatMessage(playerID, playerName, chatMessage)
 	if string.find(chatMessage, "/sumo ") then
 		chatMessage = string.gsub(chatMessage, "/sumo ", "")
 		sumo(player, chatMessage)
+		return 1
 	elseif string.find(chatMessage, "/SUMO ") then
 		chatMessage = string.gsub(chatMessage, "/SUMO ", "")
 		sumo(player, chatMessage)
+		return 1
 	end
 end
 
