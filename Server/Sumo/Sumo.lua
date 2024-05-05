@@ -506,6 +506,14 @@ function sumo(player, argument)
 			teams = false
 		end
 		MP.SendChatMessage(-1, "Playing with teams: " .. dump(teams) .. " (available options are true or false)")
+	elseif string.find(argument, "auto %S") then
+		local autoString = string.sub(argument,6,10000)
+		if autoString == "true" then
+			autoStart = true
+		elseif autoString == "false" then
+			autoStart = false
+		end
+		MP.SendChatMessage(player.playerID, "Sumo auto mode : " .. autoString)
 	elseif string.find(argument, "create %S") then
 		local createString = string.sub(argument,8,10000) 
 		if createString == "goal" then
@@ -535,7 +543,8 @@ function sumo(player, argument)
 	elseif argument == "stop" then
 		sumoGameEnd("manual")
 		MP.SendChatMessage(-1, "Sumo stopping...")
-	end	
+	end
+	return 1
 end
 
 function SUMO(player, argument) --alias for sumo
@@ -569,7 +578,7 @@ function sumoGameRunningLoop()
 			end
 		end
 		gameState.playerCount = playercount
-		if gameState.time >= 5 and aliveCount == MAX_ALIVE then
+		if gameState.time >= 5 and aliveCount <= MAX_ALIVE then
 			sumoGameEnd("last alive")
 		end
 	end
