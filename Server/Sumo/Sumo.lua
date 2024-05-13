@@ -9,6 +9,7 @@ local mod = math.fmod
 local rand = math.random
 
 local gameState = {players = {}}
+local players = {}
 local laststate = gameState
 -- local levelName = ""
 local arena = ""
@@ -17,12 +18,10 @@ local arenaNames = {}
 local requestedArena = ""
 local goalPrefabCount = 1
 local timeSinceLastContact = 0
-local requestedScoreLimit = 0
 local teamSize = 1
 local possibleTeams = {"Red", "LightBlue", "Green", "Yellow", "Purple"}
 local chosenTeams = {}
 local vehiclesToExplode = {}
-local lastCollision = {"", ""}
 local goalID = -1
 
 gameState.gameRunning = false
@@ -40,8 +39,10 @@ local defaultColorPulse = true -- if the car color should pulse between the car 
 local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
+local alivePlayers = {}
 local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
 local autoStart = false
+local scoringSystem = true
 local autoStartTimer = 0
 local SUMO_SERVER_LUA_PATH = "Resources/Server/Sumo/" --this is the path from beammp-server.exe (change this if it is in a different path)
 
@@ -111,6 +112,9 @@ function onInit()
         onPlayerJoin(k)
         if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
     end
+
+	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
+	if arena == "" then onSumoArenaChange() end
 	 
 	-- applyStuff(commands, SumoCommands)
 	print("--------------Sumo Loaded------------------")
@@ -317,11 +321,11 @@ function sumoGameSetup()
 		for k,v in pairs(possibleTeams) do
 			chosenTeams[v] = {}
 			chosenTeams[v].chosen = false
-			chosenTeams[v].score = 0  
+			-- chosenTeams[v].score = 0  
 		end
 	end
 	gameState = {}
-	gameState.players = {}
+	gameState.players = players
 	gameState.settings = {
 		redFadeDistance = defaultRedFadeDistance,
 		ColorPulse = defaultColorPulse,
@@ -356,14 +360,15 @@ function sumoGameSetup()
 		end
 		if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
 			local player = {}
-			player.ID = ID
-			player.score = 0
-			player.team = chosenTeam
-			player.dead = false
+			if not gameState.players[Player] then gameState.players[Player] = {} end
+			gameState.players[Player].ID = ID
+			-- player.score = 0
+			gameState.players[Player].team = chosenTeam
+			gameState.players[Player].dead = false
 			-- player.allowedResets = true
 			-- player.resetTimer = 3
 			-- player.resetTimerActive = false
-			gameState.players[Player] = player
+			-- gameState.players[Player] = player
 			teamCount = teamCount + 1
 		end
 	end
@@ -383,7 +388,6 @@ function sumoGameSetup()
 	gameState.teams = teams
 	gameState.currentArena = ""
 	gameState.goalCount = 1
-	gameState.scoreLimit = requestedScoreLimit
 	gameState.goalScale = 1
 	-- if playercount and playercount > 1 then
 	-- 	gameState.goalScaleResize = 0 * (playercount - 1) 
@@ -416,31 +420,35 @@ function sumoGameEnd(reason)
 			MP.SendChatMessage(-1,"Game over, score limit was reached")
 			gameState.endtime = gameState.time + 10
 		elseif reason == "last alive" then
-			MP.SendChatMessage(-1,"Game over, the survivor wins!")
+			if #alivePlayers > 0 then
+				MP.SendChatMessage(-1,"Game over, " .. alivePlayers[1] .. " wins!") --FIXME: if MAX_ALIVE is more than 1 this is fucked, don't think you should set it to more though
+				if scoringSystem then
+					print("Player:\t\t\t" .. dump(player))
+					if gameState.players[alivePlayers[1]].score then
+						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + 1
+					else
+						gameState.players[alivePlayers[1]].score = 1
+					end
+				end
+			else
+				MP.SendChatMessage(-1,"Game over, everyone died!")
+			end
 			gameState.endtime = gameState.time + 10
 		end
 	end
 
-	-- MP.SendChatMessage(-1,"The scores this round are: ")
-	-- if teams and chosenTeams then
-	-- 	for teamName, teamData in pairs(chosenTeams) do
-	-- 		if chosenTeams[teamName].chosen then
-	-- 			-- print(dump(chosenTeams))
-	-- 			chosenTeams[teamName].score = 0
-	-- 			for playername,player in pairs(gameState.players) do
-	-- 				if teamName == player.team then
-	-- 					chosenTeams[teamName].score = chosenTeams[teamName].score + player.score
-	-- 				end
-	-- 			end
-	-- 			MP.SendChatMessage(-1, "" .. teamName .. ": " .. chosenTeams[teamName].score)
-	-- 		end
-	-- 	end
-	-- else
-	-- 	for playername,player in pairs(gameState.players) do
-	-- 		MP.SendChatMessage(-1, "" .. playername .. ": " .. player.score)
-	-- 	end
-	-- end
-	
+	if scoringSystem then
+		local hasAnyoneScored = false
+		for playername, player in pairs(gameState.players) do
+			if player.score then hasAnyoneScored = true end
+		end
+		if hasAnyoneScored then
+			MP.SendChatMessage(-1,"The scores this round are: ")
+			for playername, player in pairs(gameState.players) do
+				MP.SendChatMessage(-1, playername .. " : " .. player.score or 0)
+			end
+		end
+	end
 end
 
 function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
@@ -466,7 +474,6 @@ function sumo(player, argument)
 		MP.SendChatMessage(player.playerID, "\"/sumo hide\" to hide all goals and obstacles in the current arena.")
 		MP.SendChatMessage(player.playerID, "\"/sumo start \'minutes\' \" to start a sumo game with a duration of the specified minutes.")
 		MP.SendChatMessage(player.playerID, "\"/sumo time limit \'minutes\' \" to set the duration of a sumo game to the specified minutes.")
-		MP.SendChatMessage(player.playerID, "\"/sumo score limit \'points\' \" to set the score limit of a sumo game to the specified score.")
 		MP.SendChatMessage(player.playerID, "\"/sumo teams \'true/false\' \" to specify if the sumo games uses teams.")
 		MP.SendChatMessage(player.playerID, "\"/sumo create \'goal\' \" to create a goal, so you can make your own arenas! \n Consult the tutorial on GitHub to learn how to do this.")
 	elseif argument == "show" then
@@ -482,9 +489,6 @@ function sumo(player, argument)
 			print("Sumo game starting with duration: " .. number)
 		end
 		if not gameState.gameRunning then
-			if gameState.scoreLimit and gameState.scoreLimit > 0 then
-				MP.SendChatMessage(-1, "Bring home " .. gameState.scoreLimit .. " to win!")
-			end
 			sumoGameSetup()
 			MP.SendChatMessage(-1, "Sumo started, GO GO GO!")
 		else
@@ -494,10 +498,6 @@ function sumo(player, argument)
 		local number = tonumber(string.sub(argument,11,10000))
 		roundLength = number * 60
 		print("Sumo game time limit is now: " .. roundLength)
-	elseif string.find(argument, "score limit %d") then
-		local number = tonumber(string.sub(argument,12,10000))
-		requestedScoreLimit = number
-		print("Sumo game score limit is now: " .. number)
 	elseif string.find(argument, "teams %S") then
 		local teamsString = string.sub(argument,7,10000)
 		if teamsString == "true" then
@@ -570,11 +570,13 @@ function sumoGameRunningLoop()
 	if gameState.gameRunning and not gameState.gameEnding and gameState.time > 0 then
 		aliveCount = 0
 		local playercount = 0
+		alivePlayers = {}
 		for playername,player in pairs(players) do
 			playercount = playercount + 1
 			-- print(dump(player))
 			if not player.dead then
 				aliveCount = aliveCount + 1
+				table.insert(alivePlayers, playername)
 			end
 		end
 		gameState.playerCount = playercount
@@ -594,13 +596,6 @@ function sumoGameRunningLoop()
 		gameState.gameEnded = true
 		MP.TriggerClientEvent(-1, "onSumoGameEnd", "nil")
 		MP.TriggerClientEvent(-1, "removeSumoPrefabs", "all")
-	elseif not gameState.gameEnding and gameState.scoreLimit and gameState.scoreLimit ~= 0 then
-		for playerName,player in pairs(gameState.players) do
-			if player.score >= gameState.scoreLimit then
-				sumoGameEnd("score")
-				MP.SendChatMessage(-1, "Score limit was reached, " .. playerName .. " is the winner")
-			end
-		end
 	end
 	if gameState.gameRunning then
 		if gameState.time == goalEndTime then
@@ -625,26 +620,27 @@ end
 function sumoTimer()
 	if gameState.gameRunning then
 		sumoGameRunningLoop()
+		--force stopping the game when there are less players than MAX_ALIVE:
+		local aliveCount = 2 
+		if gameState.gameRunning and not gameState.gameEnding and gameState.time > 0 then
+			aliveCount = 0
+			for playername,player in pairs(gameState.players) do
+				if not player.dead then
+					aliveCount = aliveCount + 1
+				end
+			end
+			if gameState.time >= 5 and aliveCount == MAX_ALIVE then
+				sumoGameEnd("last alive")
+			end
+		end
 	elseif autoStart and MP.GetPlayerCount() > MAX_ALIVE then
 		autoStartTimer = autoStartTimer + 1
-		if autoStartTimer >= 15 then
+		MP.SendChatMessage(-1, "New round starts in: " .. 30 - autoStartTimer .. "s")
+		if autoStartTimer >= 30 then
 			autoStartTimer = 0
 			selectRandomArena()
 			-- onSumoArenaChange()
 			sumoGameSetup()
-		end
-	end
-	--force stopping the game when there are less players than MAX_ALIVE:
-	local aliveCount = 2 
-	if gameState.gameRunning and not gameState.gameEnding and gameState.time > 0 then
-		aliveCount = 0
-		for playername,player in pairs(gameState.players) do
-			if not player.dead then
-				aliveCount = aliveCount + 1
-			end
-		end
-		if gameState.time >= 5 and aliveCount == MAX_ALIVE then
-			sumoGameEnd("last alive")
 		end
 	end
 end
@@ -706,7 +702,23 @@ end
 
 --called whenever a player spawns a vehicle.
 function onVehicleSpawn(player, vehID,  data)
+	-- print("onVehicleSpawn Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(data))
+	-- MP.TriggerClientEvent(player, "onSumoVehicleSpawned", vehID)
 	-- markSumoVehicleToExplode(vehID)
+	for ID,Player in pairs(MP.GetPlayers()) do
+		if MP.IsPlayerConnected(ID) then
+			local player = {}
+			player.ID = ID
+			-- player.score = 0
+			-- player.team = chosenTeam
+			player.dead = false
+			-- player.allowedResets = true
+			-- player.resetTimer = 3
+			-- player.resetTimerActive = false
+			players[player] = player
+			-- teamCount = teamCount + 1
+		end
+	end
 end
 
 --called whenever a player applies their vehicle edits.
@@ -721,7 +733,8 @@ end
 
 --called whenever a vehicle is deleted
 function onVehicleDeleted(player, vehID,  source)
-
+	-- print("onVehicleDeleted Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(source))
+	-- MP.TriggerClientEvent(player, "onSumoVehicleDeleted", vehID)
 end
 
 --whenever a message is sent to the Rcon

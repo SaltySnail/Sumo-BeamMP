@@ -179,10 +179,17 @@
         ],
         "specularMap": "/levels/small_island/art/shapes/misc/asphalt_01_a_s.dds"
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
     ],
+    "annotation": "ASPHALT",
     "doubleSided": true,
     "groundType": "ASPHALT_OLD",
     "materialTag0": "beamng",

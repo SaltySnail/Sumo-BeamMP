@@ -185,10 +185,29 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "diffuseColor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "diffuseColor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "diffuseColor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
+    "annotation": "BUILDINGS",
     "groundType": "CONCRETE",
     "materialTag0": "beamng",
     "materialTag1": "Industrial"

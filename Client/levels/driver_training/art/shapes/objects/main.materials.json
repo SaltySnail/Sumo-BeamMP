@@ -212,12 +212,25 @@
         "roughnessFactor": 0.275999993,
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 64,
     "alphaTest": true,
+    "annotation": "BUILDINGS",
     "groundType": "WOOD",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
@@ -236,12 +249,25 @@
         "roughnessFactor": 0.169,
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 64,
     "alphaTest": true,
+    "annotation": "BUILDINGS",
     "groundType": "WOOD",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
@@ -261,10 +287,23 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
-    ]
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
+    ],
+    "annotation": "OBSTACLES"
   },
   "m_metal_plates": {
     "name": "m_metal_plates",
@@ -282,14 +321,30 @@
         "specularMap": "/levels/driver_training/art/shapes/objects/ind_metal_plates_s.color.png",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 64,
     "alphaTest": true,
+    "annotation": "BUILDINGS",
     "cubemap": "global_cubemap_metalblurred",
-    "groundType": "PLASTIC",
+    "groundType": "METAL",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
     "translucentBlendOp": "None"
@@ -310,14 +365,30 @@
         "specularMap": "/levels/driver_training/art/shapes/objects/ind_metal_trim_s.color.png",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 64,
     "alphaTest": true,
+    "annotation": "BUILDINGS",
     "cubemap": "global_cubemap_metalblurred",
-    "groundType": "PLASTIC",
+    "groundType": "METAL",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
     "translucentBlendOp": "None"

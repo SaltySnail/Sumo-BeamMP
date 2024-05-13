@@ -261,11 +261,30 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
-    "groundType": "ASPHALT_OLD"
+    "annotation": "BUILDINGS",
+    "groundType": "CONCRETE"
   },
   "m_edge_decal": {
     "name": "m_edge_decal",
@@ -281,12 +300,26 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
+    "annotation": "BUILDINGS",
     "castShadows": false,
+    "groundType": "CONCRETE",
     "translucent": true,
     "translucentRecvShadows": true,
     "translucentZWrite": true
@@ -318,12 +351,37 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
-    "cubemap": "global_cubemap_metalblurred",
-    "translucent": true
+    "alphaTest": true,
+    "annotation": "BUILDINGS",
+    "cubemap": "global_cubemap_metalblurred"
   },
   "m_metal_brushed": {
     "name": "m_metal_brushed",
@@ -353,10 +411,32 @@
         "specularMap": "/levels/driver_training/art/shapes/buildings/t_metal_brushed_s.color.png",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "reflectivityMapFactor": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
+    "annotation": "BUILDINGS",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
     "materialTag0": "beamng",
@@ -388,11 +468,30 @@
         "specularMap": "/levels/driver_training/art/shapes/buildings/t_metal_claddedzinc_s.color.png",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailNormalMapStrength": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 0,
+    "annotation": "BUILDINGS",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
     "materialTag0": "beamng",
@@ -459,10 +558,33 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
+    "annotation": "BUILDINGS",
+    "groundType": "CONCRETE",
     "translucentRecvShadows": true
   },
   "m_stone_facade": {
@@ -491,12 +613,34 @@
         "specularMap": "levels/driver_training/art/shapes/buildings/t_stone_facade_s.color.png",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 0,
-    "groundType": "WOOD",
+    "annotation": "BUILDINGS",
+    "groundType": "CONCRETE",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "translucentBlendOp": "None",

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 3.2.1 commit date:2022-07-05, commit time:15:44, hash:a2d59b2dac9e</authoring_tool>
+    </contributor>
+    <created>2024-04-29T21:38:51</created>
+    <modified>2024-04-29T21:38:51</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="checkpoint_marker-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">0.8 0.8 0.8 1</color>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images/>
+  <library_materials>
+    <material id="checkpoint_marker-material" name="checkpoint_marker">
+      <instance_effect url="#checkpoint_marker-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="Cube_001-mesh" name="Cube.001">
+      <mesh>
+        <source id="Cube_001-mesh-positions">
+          <float_array id="Cube_001-mesh-positions-array" count="24">-1.5 -2.8 -0.2 -1.5 -2.8 2.2 -1.5 2.8 -0.2 -1.5 2.8 2.2 1.5 -2.8 -0.2 1.5 -2.8 2.2 1.5 2.8 -0.2 1.5 2.8 2.2</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_001-mesh-normals">
+          <float_array id="Cube_001-mesh-normals-array" count="24">-0.7071068 -0.7071068 0 -0.7071067 0.7071068 0 -0.7071068 -0.7071068 0 -0.7071068 0.7071068 0 0.7071068 0.7071068 0 0.7071068 0.7071068 0 0.7071067 -0.7071068 0 0.7071068 -0.7071068 0</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-normals-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_001-mesh-map-0">
+          <float_array id="Cube_001-mesh-map-0-array" count="48">0.1748231 -5.40298 0.5004045 6.348837 0.1748231 6.348843 0.5004045 -5.40298 0.6748232 6.348843 0.5004045 6.348837 0.6748232 -5.402974 1.000404 6.348837 0.6748232 6.348843 4.04477e-4 -5.40298 0.1748231 6.348843 4.04477e-4 6.348837 0.1748231 -5.40298 0.5004045 -5.40298 0.5004045 6.348837 0.5004045 -5.40298 0.6748232 -5.402974 0.6748232 6.348843 0.6748232 -5.402974 1.000404 -5.40297 1.000404 6.348837 4.04477e-4 -5.40298 0.1748231 -5.40298 0.1748231 6.348843</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-map-0-array" count="24" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_001-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_001-mesh-positions"/>
+        </vertices>
+        <triangles material="checkpoint_marker-material" count="8">
+          <input semantic="VERTEX" source="#Cube_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_001-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Cube_001-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 1 1 0 2 2 3 3 3 6 4 4 2 1 5 7 5 6 4 6 7 6 4 8 5 7 9 0 2 10 4 6 11 1 0 12 3 3 13 2 1 14 3 3 15 7 5 16 6 4 17 7 5 18 5 7 19 4 6 20 5 7 21 1 0 22 0 2 23</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="Cube" name="Cube" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_001-mesh" name="Cube">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="checkpoint_marker-material" target="#checkpoint_marker-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>

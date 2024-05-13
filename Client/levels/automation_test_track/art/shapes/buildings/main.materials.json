@@ -98,6 +98,7 @@
         "normalMap": "levels/automation_test_track/art/road/road_asphalt_n.dds",
         "pixelSpecular": true,
         "reflectivityMap": "levels/automation_test_track/art/road/road_asphalt_r2.dds",
+        "roughnessFactor": 0.722649932,
         "specular": [
           0.545098066,
           0.545098066,
@@ -105,16 +106,33 @@
           0.00800000038
         ],
         "specularMap": "levels/automation_test_track/art/road/road_asphalt_s.dds",
-        "specularPower": 16,
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "specular": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
-    "annotation": "BUILDINGS",
+    "annotation": "ASPHALT",
     "cubemap": "cubemap_otago",
     "groundType": "ASPHALT",
     "materialTag0": "RoadAndPath",
@@ -296,12 +314,19 @@
         "opacityMap": "/art/shapes/garage_and_dealership/Clutter/clutter_commercial_o.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "vertColor": null
+      },
+      {
+        "vertColor": null
+      },
+      {
+        "vertColor": null
+      }
     ],
     "alphaRef": 170,
     "alphaTest": true,
+    "annotation": "BUILDINGS",
     "translucentBlendOp": "None",
     "version": 1.5
   },
@@ -1138,9 +1163,12 @@
       {
         "ambientOcclusionMap": "/art/shapes/garage_and_dealership/garage/t_metal_wall_corrugated_ao.data.png",
         "baseColorMap": "/art/shapes/garage_and_dealership/garage/t_metal_wall_corrugated_b.color.png",
+        "diffuseMapUseUV": null,
         "metallicMap": "/art/shapes/garage_and_dealership/garage/t_metal_wall_corrugated_m.data.png",
         "normalMap": "/art/shapes/garage_and_dealership/garage/t_metal_wall_corrugated_nm.normal.png",
+        "opacityMapUseUV": null,
         "roughnessMap": "/art/shapes/garage_and_dealership/garage/t_metal_wall_corrugated_r.data.png",
+        "roughnessMapUseUV": null,
         "vertColor": true
       },
       {
@@ -1149,12 +1177,24 @@
         "opacityMap": "/levels/automation_test_track/art/shapes/buildings/t_breakup_general_o.data.png",
         "opacityMapUseUV": 1,
         "roughnessMap": "/levels/automation_test_track/art/shapes/buildings/t_breakup_general_r.data.png",
-        "roughnessMapUseUV": 1
+        "roughnessMapUseUV": 1,
+        "vertColor": null
       },
-      {},
-      {}
+      {
+        "diffuseMapUseUV": null,
+        "opacityMapUseUV": null,
+        "roughnessMapUseUV": null,
+        "vertColor": null
+      },
+      {
+        "diffuseMapUseUV": null,
+        "opacityMapUseUV": null,
+        "roughnessMapUseUV": null,
+        "vertColor": null
+      }
     ],
     "activeLayers": 2,
+    "annotation": "BUILDINGS",
     "version": 1.5
   },
   "metal_corrugated": {

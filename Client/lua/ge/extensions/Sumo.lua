@@ -6,12 +6,15 @@ local rand = math.random
 
 local gamestate = {players = {}, settings = {}}
 
---blocked inputs when flag carrier
-local blockedInputActions = {'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','switch_previous_vehicle','switch_next_vehicle','dropPlayerAtCameraNoReset'} 
+--blocked inputs when dead
+local blockedInputActionsOnDeath = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
+local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','switch_previous_vehicle','switch_next_vehicle','dropPlayerAtCameraNoReset'} 
+local blockedInputActionsOnSpeedOrCircle = 	{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','switch_previous_vehicle','switch_next_vehicle','dropPlayerAtCameraNoReset'} 
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local thisArenaData = {}
 local mapData = {} --TODO: this should be a json file or something for easily adding arenas + this is stupid
+local isPlayerInCircle = false
 mapData.arenaData = {}
 mapData.arenas = "" 
 
@@ -962,20 +965,19 @@ end
 
 function receiveSumoGameState(data)
 	local data = jsonDecode(data)
-	if not gamestate.gameRunning and data.gameRunning then
-		for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
-			local ID = vehicle.gameVehicleID
-			local veh = be:getObjectByID(ID)
-			if veh then
-				vehicle.originalColor = be:getObjectByID(ID).color
-				vehicle.originalcolorPalette0 = be:getObjectByID(ID).colorPalette0
-				vehicle.originalcolorPalette1 = be:getObjectByID(ID).colorPalette1
-			end
-		end
-	end
-
+	-- if not gamestate.gameRunning and data.gameRunning then
+	-- 	for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
+	-- 		local ID = vehicle.gameVehicleID
+	-- 		local veh = be:getObjectByID(ID)
+	-- 		if veh then
+	-- 			vehicle.originalColor = be:getObjectByID(ID).color
+	-- 			vehicle.originalcolorPalette0 = be:getObjectByID(ID).colorPalette0
+	-- 			vehicle.originalcolorPalette1 = be:getObjectByID(ID).colorPalette1
+	-- 		end
+	-- 	end
+	-- end
+	print("receiveSumoGameState called: " .. dump(data))
 	gamestate = data
-	be:queueAllObjectLua("if Sumo then Sumo.setSumoGameState("..serialize(gamestate)..") end")
 end
 
 function mergeSumoTable(table,gamestateTable)
@@ -991,13 +993,13 @@ function mergeSumoTable(table,gamestateTable)
 	end
 end
 
-function allowSumoResets()
-	extensions.core_input_actionFilter.setGroup('sumo', blockedInputActions)
+function allowSumoResets(data)
+	extensions.core_input_actionFilter.setGroup('sumo', data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', false)
 end
 
-function disallowSumoResets()
-	extensions.core_input_actionFilter.setGroup('sumo', blockedInputActions)
+function disallowSumoResets(data)
+	extensions.core_input_actionFilter.setGroup('sumo', data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', true)
 end
 
@@ -1077,12 +1079,13 @@ function onSumoCreateGoal()
 end
 
 function spawnSumoObstacles(filepath) 
-	print( filepath)
+	print(filepath)
 	obstaclesPrefabActive = true
 	obstaclesPrefabPath   = filepath
 	obstaclesPrefabName   = string.gsub(obstaclesPrefabPath, "(.*/)(.*)", "%2"):sub(1, -13)
 	obstaclesPrefabObj    = spawnPrefab(obstaclesPrefabName, obstaclesPrefabPath, '0 0 0', '0 0 1', '1 1 1')
 	be:reloadStaticCollision(true)
+	disallowSumoResets(blockedInputActionsOnRound)
 end
 
 function removeSumoPrefabs(type)
@@ -1125,63 +1128,46 @@ end
 
 function teleportToSumoArena()
 	print("teleportToSumoArena Called")
-	local veh = be:getObjectByID(be:getPlayerVehicleID(0))
-	if not veh then return end
-	local arenaData = mapData.arenaData[currentArena]
-	local chosenLocation = rand(1, arenaData.spawnLocationCount)
-	if arenaData.spawnLocation[chosenLocation] then
-		-- print(dump(quatFromEuler(arenaData.spawnLocation[chosenLocation].rx, arenaData.spawnLocation[chosenLocation].ry, arenaData.spawnLocation[chosenLocation].rz)))
-		local q = quatFromEuler(math.rad(arenaData.spawnLocation[chosenLocation].rx), math.rad(arenaData.spawnLocation[chosenLocation].ry), math.rad(arenaData.spawnLocation[chosenLocation].rz))
-		veh:setPositionRotation(arenaData.spawnLocation[chosenLocation].x, arenaData.spawnLocation[chosenLocation].y, arenaData.spawnLocation[chosenLocation].z, q.x, q.y, q.z, q.w)
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
+		print("veh:" .. vehID .." : " .. dump(vehData))
+		local veh = be:getObjectByID(vehID)
+		if not veh then return end --Should not be called but just to be safe
+		local arenaData = mapData.arenaData[currentArena]
+		local chosenLocation = rand(1, arenaData.spawnLocationCount)
+		if arenaData.spawnLocation[chosenLocation] then
+			-- print(dump(quatFromEuler(arenaData.spawnLocation[chosenLocation].rx, arenaData.spawnLocation[chosenLocation].ry, arenaData.spawnLocation[chosenLocation].rz)))
+			local q = quatFromEuler(math.rad(arenaData.spawnLocation[chosenLocation].rx), math.rad(arenaData.spawnLocation[chosenLocation].ry), math.rad(arenaData.spawnLocation[chosenLocation].rz))
+			veh:setPositionRotation(arenaData.spawnLocation[chosenLocation].x, arenaData.spawnLocation[chosenLocation].y, arenaData.spawnLocation[chosenLocation].z, q.x, q.y, q.z, q.w)
+		end
+		veh:queueLuaCommand("recovery.startRecovering()")
+		veh:queueLuaCommand("recovery.stopRecovering()")
 	end
-	veh:queueLuaCommand("recovery.startRecovering()")
-	veh:queueLuaCommand("recovery.stopRecovering()")
 end
 
 function onSumoGameEnd()
-	allowSumoResets()
+	allowSumoResets(blockedInputActionsOnRound)
+	allowSumoResets(blockedInputActionsOnSpeedOrCircle)
+	allowSumoResets(blockedInputActionsOnDeath)
 	goalScale = 1
 	removeSumoPrefabs("all")
-	resetSumoCarColors()
-	-- print( "Sumo game ended")
-end
-
-function onScore()
-	uiMessages.showMSGYouScored = true
-	uiMessages.showMSGYouScoredEndTime = gamestate.time + uiMessages.showForTime
 end
 
 -- Function to explode a car by its vehicle ID
 function explodeSumoCar(vehID)
-	-- print( "explodeSumoCar called " .. dump(vehID))
-	-- local veh = be:getObjectByID(vehID)
-	-- if vehID and MPVehicleGE.getVehicleByGameID(vehID) then
-	-- 	local ownerName = MPVehicleGE.getVehicleByGameID(vehID).ownerName
-	-- 	if gamestate.players[ownerName] then
-	-- 		gamestate.players[ownerName].dead = true
-	-- 	end
-	-- end
 	for vid, veh in activeVehiclesIterator() do
-	-- for k,veh in pairs(MPVehicleGE.getVehicles()) do
-	-- print( "Seeing if a car should explode.")
-	-- print( "Seeing if car with the following ID should explode: " .. vid)
-	-- print( "vid: " .. vid .. " vehID: " .. tonumber(vehID))
 		if vid == tonumber(vehID) then
-		-- local vehicle = scenetree.findObjectById(veh.ID)
-		-- print( "BOOM goes the dynamite!")
 			veh:queueLuaCommand("fire.explodeVehicle()")
 			veh:queueLuaCommand("fire.igniteVehicle()")
 			veh:queueLuaCommand("beamstate.breakAllBreakgroups()")
-			if vid == be:getPlayerVehicleID(0) then
-				disallowSumoResets()
-				-- print( vehID)
-				local vehicle = MPVehicleGE.getVehicleByGameID(vid)
-				-- print( MPVehicleGE.getVehicleByGameID(vehID).ownerName) 
-				-- print( gamestate.players[MPVehicleGE.getVehicleByGameID(vehID).ownerName].playerID)
-				if TriggerServerEvent and vehicle and vehicle.ownerName then
-					-- print( dump(vehicle)) 
-					-- print( vehicle.ownerName) 
-					TriggerServerEvent("onPlayerExplode", vehicle.ownerName) 
+			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				print(vid .. " " .. vehID)
+				if vid == vehID then
+					-- disallowSumoResets(blockedInputActionsOnDeath)
+					local vehicle = MPVehicleGE.getVehicleByGameID(vid)
+					if TriggerServerEvent and vehicle and vehicle.ownerName then
+						TriggerServerEvent("onPlayerExplode", vehicle.ownerName) 
+					end
 				end
 			end
 		end
@@ -1192,14 +1178,41 @@ function onSumoTrigger(data)
     if data == "null" then return end
 	-- if data.event ~= "enter" then return end
     local trigger = data.triggerName
+	local isLocalVehicle = false
     -- if MPVehicleGE.isOwn(data.subjectID) == true then
 	if trigger == "goalTrigger" then	
 		if data.event == "enter" then
-			-- mark player to not explode
-			if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
+			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				if vehID == data.subjectID then
+					-- if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
+					disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
+					isLocalVehicle = true
+					break
+				end
+			end
+			if isLocalVehicle then
+				for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+					-- mark player to not explode
+					if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", vehID) end
+					isPlayerInCircle = true
+				end
+			end
 			-- print( "Unmarked " .. data.subjectID .. " for exploding")
 		elseif data.event == "exit" then
-			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
+			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				if vehID == data.subjectID then
+					-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
+					allowSumoResets(blockedInputActionsOnSpeedOrCircle)
+					isLocalVehicle = true
+					break
+				end
+			end
+			if isLocalVehicle then
+				for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+					if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  vehID) end
+					isPlayerInCircle = false
+				end
+			end
 			-- print( "Marked " .. data.subjectID .. " for exploding")
 			--mark player to explode
 		-- else
@@ -1207,8 +1220,20 @@ function onSumoTrigger(data)
 		end
 	elseif trigger == "outOfBoundTrigger" then
 		--explode player
-		explodeSumoCar(data.subjectID)
-		if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", data.subjectID) end
+		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+			if vehID == data.subjectID then
+				-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
+				allowSumoResets(blockedInputActionsOnSpeedOrCircle)
+				isLocalVehicle = true
+				break
+			end
+		end
+		if isLocalVehicle then
+			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				explodeSumoCar(vehID)
+				if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehID) end
+			end
+		end
 		-- print( "outOfBoundTrigger was triggered")
 	end
     -- end
@@ -1264,7 +1289,7 @@ function updateSumoGameState(data)
 	-- 			player.resetTimer = player.resetTimer - 1
 	-- 		else
 	-- 			player.resetTimerActive = false
-	-- 			extensions.core_input_actionFilter.setGroup('sumo', blockedInputActions)
+	-- 			extensions.core_input_actionFilter.setGroup('sumo', blockedInputActionsOnDeath)
 	-- 			extensions.core_input_actionFilter.addAction(0, 'sumo', false)	
 	-- 		end
 	-- 	end
@@ -1274,10 +1299,24 @@ function updateSumoGameState(data)
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
-		if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", be:getPlayerVehicleID(0)) end
+		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		-- 	-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
+		-- 	-- print("veh:" .. vehID .." : " .. dump(vehData))
+		-- 	local veh = be:getObjectByID(vehID)
+		if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", be:getPlayerVehicleID(0)) end --TODO: change the be:getPlayerVehicleID to MPVehicleGE.getOwnMap stuff 
+		-- end
 	elseif gamestate.gameRunning and not gamestate.gameEnding and time or gamestate.endtime and (gamestate.endtime - time) > 9 then
 		local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
 		txt = "Sumo Time Left: ".. timeLeft --game is still going
+		if not isPlayerInCircle then
+			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the inputblocking while on the flag
+			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
+				-- print("veh:" .. vehID .." : " .. dump(vehData))
+				local veh = be:getObjectByID(vehID)
+				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)") --If speed > 20 km/h no more resets!
+			end
+		end
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
 		local timeLeft = gamestate.endtime - time
 		txt = "Sumo Colors reset in "..math.abs(timeLeft-1).." seconds" --game ended
@@ -1285,40 +1324,50 @@ function updateSumoGameState(data)
 	if txt ~= "" then
 		guihooks.message({txt = txt}, 1, "Sumo.time")
 	end
-	if uiMessages.showMSGYouScored then
-		if gamestate.time >= uiMessages.showMSGYouScoredEndTime then
-		uiMessages.showMSGYouScored = false
-		uiMessages.showMSGYouScoredEndTime = 0
-		end
-	end
-	if gamestate.gameEnded then
-		resetSumoCarColors()
-	end
+	-- if uiMessages.showMSGYouScored then
+	-- 	if gamestate.time >= uiMessages.showMSGYouScoredEndTime then
+	-- 	uiMessages.showMSGYouScored = false
+	-- 	uiMessages.showMSGYouScoredEndTime = 0
+	-- 	end
+	-- end
+	-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+	-- 	-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
+	-- 	print("veh:" .. vehID .." : " .. dump(vehData))
+	-- 	local veh = be:getObjectByID(vehID)
+	-- 	if veh:electrics.value.airspeed * 3.6 > 30 then
+	-- 		disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
+	-- 		break
+	-- 	end
+	-- end
+
+	-- if gamestate.gameEnded then
+	-- 	resetSumoCarColors()
+	-- end
 end
 
 function requestSumoGameState()
 	if TriggerServerEvent then TriggerServerEvent("requestSumoGameState","nil") end
 end
 
-function onVehicleSwitched(oldID,ID)
-	local currentOwnerName = MPConfig.getNickname()
-	if ID and MPVehicleGE.getVehicleByGameID(ID) then
-		currentOwnerName = MPVehicleGE.getVehicleByGameID(ID).ownerName
-	end
-end
+-- function onVehicleSwitched(oldID,ID)
+-- 	local currentOwnerName = MPConfig.getNickname()
+-- 	if ID and MPVehicleGE.getVehicleByGameID(ID) then
+-- 		currentOwnerName = MPVehicleGE.getVehicleByGameID(ID).ownerName
+-- 	end
+-- end
 
 local distancecolor = -1
 
-function SumoNametags(ownerName,player,vehicle) --draws flag SumoNametags on people
-	if player and player.hasFlag == true then
-		local veh = be:getObjectByID(vehicle.gameVehicleID)
-		if veh then
-			local vehPos = veh:getPosition()
-			local posOffset = vec3(0,0,2)
-			debugDrawer:drawTextAdvanced(vehPos+posOffset, String("Flag"), ColorF(1,1,1,1), true, false, ColorI(50,50,200,255))
-		end
-	end
-end
+-- function SumoNametags(ownerName,player,vehicle) --draws flag SumoNametags on people
+-- 	-- if player and player.hasFlag == true then
+-- 	-- 	local veh = be:getObjectByID(vehicle.gameVehicleID)
+-- 	-- 	if veh then
+-- 	-- 		local vehPos = veh:getPosition()
+-- 	-- 		local posOffset = vec3(0,0,2)
+-- 	-- 		debugDrawer:drawTextAdvanced(vehPos+posOffset, String("Flag"), ColorF(1,1,1,1), true, false, ColorI(50,50,200,255))
+-- 	-- 	end
+-- 	-- end
+-- end
 
 -- function onVehicleResetted(gameVehicleID)
 -- 	print( "OnVehicleResetted called")
@@ -1413,127 +1462,79 @@ end
 function onPreRender(dt)
 	if MPCoreNetwork and not MPCoreNetwork.isMPSession() then return end
 
-	local currentVehID = be:getPlayerVehicleID(0)
-	local currentOwnerName = MPConfig.getNickname()
-	if currentVehID and MPVehicleGE.getVehicleByGameID(currentVehID) then
-		currentOwnerName = MPVehicleGE.getVehicleByGameID(currentVehID).ownerName
-	end
+	-- local currentVehID = be:getPlayerVehicleID(0)
+	-- local currentOwnerName = MPConfig.getNickname()
+	-- if currentVehID and MPVehicleGE.getVehicleByGameID(currentVehID) then
+	-- 	currentOwnerName = MPVehicleGE.getVehicleByGameID(currentVehID).ownerName
+	-- end
 
-	if not gamestate.gameRunning or gamestate.gameEnding then 
-		local veh = be:getObjectByID(currentVehID)
-		if veh then
-			local uiData = {}
-			uiData.gameRunning = false or gamestate.gameEnding
-			uiData.goalAbovePlayer = goalMarker.abovePlayer
-			uiData.showGoalArrow = false
-			uiData.showGoalHeightArrow = false
-			uiData.showGoalIcon = false
-			uiData.goalX = -140
-			uiData.goalY = -140
-			uiData.goalAngle = goalMarker.arrowAngle		
-			veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
-		end
-		return 
-	end
-	resetSumoCarColors()
+	-- if not gamestate.gameRunning or gamestate.gameEnding then 
+	-- 	local veh = be:getObjectByID(currentVehID)
+	-- 	-- if veh then 												--TODO: get the UI working 
+	-- 	-- 	local uiData = {}
+	-- 	-- 	uiData.gameRunning = false or gamestate.gameEnding
+	-- 	-- 	uiData.goalAbovePlayer = goalMarker.abovePlayer
+	-- 	-- 	uiData.showGoalArrow = false
+	-- 	-- 	uiData.showGoalHeightArrow = false
+	-- 	-- 	uiData.showGoalIcon = false
+	-- 	-- 	uiData.goalX = -140
+	-- 	-- 	uiData.goalY = -140
+	-- 	-- 	uiData.goalAngle = goalMarker.arrowAngle		
+	-- 	-- 	veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
+	-- 	-- end
+	-- 	return 
+	-- end
+	-- resetSumoCarColors()
 	-- print( "onPreRender called")
 
-	local closestOpponent = 100000000
+	-- local closestOpponent = 100000000
 
-	for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
-		if gamestate.players then
-			local player = gamestate.players[vehicle.ownerName]
-			if player and currentOwnerName and vehicle then
-				SumoNametags(currentOwnerName,player,vehicle)
-				sumoColor(player,vehicle,gamestate.players[vehicle.ownerName].team,dt)
-				if gamestate.players[currentOwnerName] and currentVehID and gamestate.players[currentOwnerName].hasFlag and not gamestate.players[vehicle.ownerName].hasFlag and currentVehID ~= vehicle.gameVehicleID then
-					local myVeh = be:getObjectByID(currentVehID)
-					local veh = be:getObjectByID(vehicle.gameVehicleID)				
-					if veh and myVeh then
-						if not gamestate.players[vehicle.ownerName].hasFlag and gamestate.players[vehicle.ownerName].team ~= gamestate.players[currentOwnername].team then
-							local distance = distance(myVeh:getPosition(),veh:getPosition())
-							if distance < closestOpponent then
-								closestOpponent = distance
-							end
-						end
-					end
-				end
-				if gamestate.teams then
-					local veh = be:getObjectByID(vehicle.gameVehicleID)	
-					local vehPos = veh:getPosition()
-					local posOffset = vec3(0,0,1.5)
-					debugDrawer:drawTextAdvanced(vehPos + posOffset, String("Team " .. gamestate.players[vehicle.ownerName].team), ColorF(1,1,1,1), true, false, ColorI(colors[gamestate.players[vehicle.ownerName].team][1], colors[gamestate.players[vehicle.ownerName].team][2], colors[gamestate.players[vehicle.ownerName].team][3], colors[gamestate.players[vehicle.ownerName].team][4]))
-				end
-			end
-		end
-	end
+	-- for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
+	-- 	if gamestate.players then
+	-- 		local player = gamestate.players[vehicle.ownerName]
+	-- 		if player and currentOwnerName and vehicle then
+	-- 			-- SumoNametags(currentOwnerName,player,vehicle)
+	-- 			-- sumoColor(player,vehicle,gamestate.players[vehicle.ownerName].team,dt)
+	-- 			if gamestate.players[currentOwnerName] and currentVehID and gamestate.players[currentOwnerName].hasFlag and not gamestate.players[vehicle.ownerName].hasFlag and currentVehID ~= vehicle.gameVehicleID then
+	-- 				local myVeh = be:getObjectByID(currentVehID)
+	-- 				local veh = be:getObjectByID(vehicle.gameVehicleID)				
+	-- 				if veh and myVeh then
+	-- 					if not gamestate.players[vehicle.ownerName].hasFlag and gamestate.players[vehicle.ownerName].team ~= gamestate.players[currentOwnername].team then
+	-- 						local distance = distance(myVeh:getPosition(),veh:getPosition())
+	-- 						if distance < closestOpponent then
+	-- 							closestOpponent = distance
+	-- 						end
+	-- 					end
+	-- 				end
+	-- 			end
+	-- 			if gamestate.teams then
+	-- 				local veh = be:getObjectByID(vehicle.gameVehicleID)	
+	-- 				local vehPos = veh:getPosition()
+	-- 				local posOffset = vec3(0,0,1.5)
+	-- 				-- debugDrawer:drawTextAdvanced(vehPos + posOffset, String("Team " .. gamestate.players[vehicle.ownerName].team), ColorF(1,1,1,1), true, false, ColorI(colors[gamestate.players[vehicle.ownerName].team][1], colors[gamestate.players[vehicle.ownerName].team][2], colors[gamestate.players[vehicle.ownerName].team][3], colors[gamestate.players[vehicle.ownerName].team][4]))
+	-- 			end
+	-- 		end
+	-- 	end
+	-- end
 
-	if goalPrefabActive and goalLocation and goalLocation.z then
-		local veh = be:getObjectByID(currentVehID)	
-		if veh then
-			local vehPos = veh:getPosition()
-			if goalLocation.z + 2 > vehPos.z + 5 then 
-				goalMarker.abovePlayer = true
-				goalMarker.showHeightArrow = true 
-			elseif goalLocation.z + 2 < vehPos.z - 5 then
-				goalMarker.abovePlayer = false
-				goalMarker.showHeightArrow = true
-			else
-				goalMarker.showHeightArrow = false
-			end
-			if core_camera.getForward() then
-				local camVec = core_camera.getForward()
-				local camPos = core_camera.getPosition()
-				-- print( "camVec: " .. dump(camVec))
-				local origin = vec3(0,0,0)
-				local camRot = angle2D(camVec, origin)
-				-- print( "vehRot: " .. dump(camRot))
-				goalMarker.arrowAngle = angle2D(camPos, goalLocation)
-				-- goalMarker.arrowAngle = goalMarker.arrowAngle + camRot
-				goalMarker.arrowAngle = (goalMarker.arrowAngle - camRot) - 180 --apparently it is offset with 180 degrees for some reason
-				goalMarker.showIcon = true
-				goalMarker.showArrow = true
-				goalMarker.x = (screenWidth / 2 - 140 / 2) + math.sqrt(((screenWidth/2) * (screenWidth/2)) + ((screenHeight/2) * (screenHeight/2))) * math.cos((goalMarker.arrowAngle - 90) * (math.pi / 180)) --TODO: make this work better on higher resolutions than 1080p
-				goalMarker.y = (screenHeight / 2 - 140 / 2) + math.sqrt(((screenWidth/2) * (screenWidth/2)) + ((screenHeight/2) * (screenHeight/2))) * math.sin((goalMarker.arrowAngle - 90) * (math.pi / 180))
-			end
-			debugDrawer:drawTextAdvanced(goalLocation, String("Goal " .. round(distance(vehPos, goalLocation), 0)) .. "m", ColorF(1,1,1,1), true, false, ColorI(50,50,150,255))
-		end
-	-- else --no goal but should only be for a real small amount of time
-	-- 	goalMarker.showIcon = false
-	-- 	goalMarker.showHeightArrow = false
-	-- 	goalMarker.showArrow = false
-	-- 	-- goalMarker.x = -140
-	-- 	-- goalMarker.y = -140
-	end
-	local tempSetting = defaultRedFadeDistance
-	if gamestate.settings then
-		tempSetting = gamestate.settings.redFadeDistance
-	end
-	
-	if gamestate.settings and gamestate.settings.flagTint and gamestate.players[currentOwnerName] and gamestate.players[currentOwnerName].hasFlag then
-		distancecolor = math.min(0.4,1 -(closestOpponent/(tempSetting or defaultRedFadeDistance)))
-		scenetree["PostEffectCombinePassObject"]:setField("enableBlueShift", 0, distancecolor)
-		scenetree["PostEffectCombinePassObject"]:setField("blueShiftColor", 0, "1 0 0")
-	end
+	-- local uiData = {}
+	-- -- local player = gamestate.players[vehicle.ownerName]
+	-- -- local veh = MPVehicleGE.getVehicleByGameID(currentVehID)	
 
-	local uiData = {}
-	-- local player = gamestate.players[vehicle.ownerName]
-	-- local veh = MPVehicleGE.getVehicleByGameID(currentVehID)	
+	-- uiData.gameRunning = true 
+	-- uiData.goalAbovePlayer = goalMarker.abovePlayer
+	-- uiData.showGoalArrow = goalMarker.showArrow
+	-- uiData.showGoalHeightArrow = goalMarker.showHeightArrow
+	-- uiData.showGoalIcon = goalMarker.showIcon
+	-- uiData.goalX = goalMarker.x
+	-- uiData.goalY = goalMarker.y
+	-- uiData.goalAngle = goalMarker.arrowAngle
+	-- uiData.showMSGYouScored = uiMessages.showMSGYouScored
 
-	uiData.gameRunning = true 
-	uiData.goalAbovePlayer = goalMarker.abovePlayer
-	uiData.showGoalArrow = goalMarker.showArrow
-	uiData.showGoalHeightArrow = goalMarker.showHeightArrow
-	uiData.showGoalIcon = goalMarker.showIcon
-	uiData.goalX = goalMarker.x
-	uiData.goalY = goalMarker.y
-	uiData.goalAngle = goalMarker.arrowAngle
-	uiData.showMSGYouScored = uiMessages.showMSGYouScored
-
-	local veh = be:getObjectByID(currentVehID)
-	if veh then
-		veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
-	end
+	-- local veh = be:getObjectByID(currentVehID)
+	-- if veh then
+	-- 	veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
+	-- end
 	-- print( "Resolution: " .. screenWidth .. "x" .. screenHeight)
 end
 
@@ -1542,7 +1543,20 @@ function onResetGameplay(id)
 end
 
 function onExtensionUnloaded()
-	resetSumoCarColors()
+	-- resetSumoCarColors()
+end
+
+function onSumoVehicleSpawned(vehID)
+
+end
+
+function onSumoVehicleDeleted(vehID)
+
+end
+
+function onSumoAirSpeedTooHigh()
+	print('onSumoAirSpeedTooHigh called')
+	disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
 end
 
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
@@ -1564,6 +1578,10 @@ if MPGameNetwork then AddEventHandler("explodeSumoCar", explodeSumoCar) end
 if MPGameNetwork then AddEventHandler("onSumoGameEnd", onSumoGameEnd) end
 if MPGameNetwork then AddEventHandler("teleportToSumoArena", teleportToSumoArena) end
 if MPGameNetwork then AddEventHandler("onSumoTrigger", onSumoTrigger) end
+if MPGameNetwork then AddEventHandler("onSumoAirSpeedTooHigh", onSumoAirSpeedTooHigh) end
+
+-- if MPGameNetwork then AddEventHandler("onSumoVehicleSpawned", onSumoVehicleSpawned) end
+-- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
 -- if MPGameNetwork then AddEventHandler("onSumoGoalTrigger", onSumoGoalTrigger) end
@@ -1576,7 +1594,7 @@ M.requestSumoArenaNames = requestSumoArenaNames
 M.requestSumoLevels = requestSumoLevels
 M.requestSumoGoalCount = requestSumoGoalCount
 M.onPreRender = onPreRender
-M.onVehicleSwitched = onVehicleSwitched
+-- M.onVehicleSwitched = onVehicleSwitched
 M.resetSumoCarColors = resetSumoCarColors
 M.spawnFlag = spawnFlag
 M.spawnSumoGoal = spawnSumoGoal
@@ -1595,4 +1613,7 @@ M.explodeSumoCar = explodeSumoCar
 M.onSumoTrigger = onSumoTrigger
 M.onSumoGameEnd = onSumoGameEnd
 M.teleportToSumoArena = teleportToSumoArena
+M.onSumoAirSpeedTooHigh = onSumoAirSpeedTooHigh
+-- M.onSumoVehicleSpawned = onSumoVehicleSpawned
+-- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
