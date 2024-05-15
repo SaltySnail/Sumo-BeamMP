@@ -347,7 +347,7 @@ function sumoGameSetup()
 	end
 	local chosenTeam = possibleTeams[rand(1,#possibleTeams)]
 	local teamCount = 0
-	for ID,Player in pairs(MP.GetPlayers()) do
+	for ID,Name in pairs(MP.GetPlayers()) do
 		if teams then
 			if teamCount == teamSize then
 				chosenTeam = possibleTeams[rand(1,#possibleTeams)]
@@ -360,11 +360,11 @@ function sumoGameSetup()
 		end
 		if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
 			local player = {}
-			if not gameState.players[Player] then gameState.players[Player] = {} end
-			gameState.players[Player].ID = ID
+			if not gameState.players[Name] then gameState.players[Name] = {} end
+			gameState.players[Name].ID = ID
 			-- player.score = 0
-			gameState.players[Player].team = chosenTeam
-			gameState.players[Player].dead = false
+			gameState.players[Name].team = chosenTeam
+			gameState.players[Name].dead = false
 			-- player.allowedResets = true
 			-- player.resetTimer = 3
 			-- player.resetTimerActive = false
@@ -423,7 +423,6 @@ function sumoGameEnd(reason)
 			if #alivePlayers > 0 then
 				MP.SendChatMessage(-1,"Game over, " .. alivePlayers[1] .. " wins!") --FIXME: if MAX_ALIVE is more than 1 this is fucked, don't think you should set it to more though
 				if scoringSystem then
-					print("Player:\t\t\t" .. dump(player))
 					if gameState.players[alivePlayers[1]].score then
 						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + 1
 					else
@@ -571,6 +570,7 @@ function sumoGameRunningLoop()
 		aliveCount = 0
 		local playercount = 0
 		alivePlayers = {}
+		print(dump(players))
 		for playername,player in pairs(players) do
 			playercount = playercount + 1
 			-- print(dump(player))
@@ -588,7 +588,6 @@ function sumoGameRunningLoop()
 		sumoGameEnd("time")
 		gameState.endtime = gameState.time + 10
 	elseif gameState.gameEnding and gameState.time == gameState.endtime then
-		gameState.gameRunning = false
 		gameState = {}
 		gameState.players = {}
 		gameState.gameRunning = false
@@ -651,12 +650,12 @@ function onUnload()
 end
 
 --called whenever a player is authenticated by the server for the first time.
-function onPlayerFirstAuth(player)
+function onPlayerFirstAuth(playerID)
 
 end
 
 --called whenever the player is authenticated by the server.
-function onPlayerAuth(player)
+function onPlayerAuth(playerID)
 
 end
 
@@ -701,11 +700,11 @@ function onChatMessage(playerID, playerName, chatMessage)
 end
 
 --called whenever a player spawns a vehicle.
-function onVehicleSpawn(player, vehID,  data)
+function onVehicleSpawn(playerID, vehID,  data)
 	-- print("onVehicleSpawn Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(data))
 	-- MP.TriggerClientEvent(player, "onSumoVehicleSpawned", vehID)
 	-- markSumoVehicleToExplode(vehID)
-	for ID,Player in pairs(MP.GetPlayers()) do
+	for ID,Name in pairs(MP.GetPlayers()) do
 		if MP.IsPlayerConnected(ID) then
 			local player = {}
 			player.ID = ID
@@ -715,30 +714,30 @@ function onVehicleSpawn(player, vehID,  data)
 			-- player.allowedResets = true
 			-- player.resetTimer = 3
 			-- player.resetTimerActive = false
-			players[player] = player
+			players[Name] = player
 			-- teamCount = teamCount + 1
 		end
 	end
 end
 
 --called whenever a player applies their vehicle edits.
-function onVehicleEdited(player, vehID,  data)
+function onVehicleEdited(playerID, vehID,  data)
 
 end
 
 --called whenever a player resets their vehicle, holding insert spams this function.
-function onVehicleReset(player, vehID, data)
+function onVehicleReset(playerID, vehID, data)
 
 end
 
 --called whenever a vehicle is deleted
-function onVehicleDeleted(player, vehID,  source)
+function onVehicleDeleted(playerID, vehID,  source)
 	-- print("onVehicleDeleted Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(source))
 	-- MP.TriggerClientEvent(player, "onSumoVehicleDeleted", vehID)
 end
 
 --whenever a message is sent to the Rcon
-function onRconCommand(player, message, password, prefix)
+function onRconCommand(playerID, message, password, prefix)
 
 end
 
