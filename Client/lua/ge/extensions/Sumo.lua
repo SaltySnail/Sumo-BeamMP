@@ -880,7 +880,7 @@ uiMessages.showMSGYouScoredEndTime = 0
 uiMessages.showForTime = 2 --2s because the timing is inconsistent, maybe I should add a onSecond function or something
 
 local screenWidth = GFXDevice.getDesktopMode().width
-local screenHeight = GFXDevice.getDesktopMode().height
+local screenHeight = GFXDevice.getDesktopMode().height --TODO: figure out how to get the UI max size, if that is higher than screen use screen size.
 if screenHeight > 1080 then screenHeight = 1080 end --it seems ui apps are limited to 1080p
 if screenWidth > 1920 then screenWidth = 1920 end
 
@@ -1146,6 +1146,7 @@ function teleportToSumoArena()
 end
 
 function onSumoGameEnd()
+	core_gamestate.setGameState('multiplayer', 'multiplayer', 'multiplayer') --reset the app layout
 	allowSumoResets(blockedInputActionsOnRound)
 	allowSumoResets(blockedInputActionsOnSpeedOrCircle)
 	allowSumoResets(blockedInputActionsOnDeath)
@@ -1296,6 +1297,21 @@ function updateSumoGameState(data)
 	-- end
 
 	local txt = ""
+	if time and time == -4 then
+		core_gamestate.setGameState('sumo', 'sumo', 'sumo')
+		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+			local veh = be:getObjectByID(vehID)
+			veh:queueLuaCommand('controller.setFreeze(1)')
+		end
+	end
+	if time and time == -1 then 
+		guihooks.trigger('sumoStartTimer', 30)
+		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+			local veh = be:getObjectByID(vehID)
+			veh:queueLuaCommand('controller.setFreeze(0)')
+		end
+	end
+	
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
@@ -1308,6 +1324,9 @@ function updateSumoGameState(data)
 	elseif gamestate.gameRunning and not gamestate.gameEnding and time or gamestate.endtime and (gamestate.endtime - time) > 9 then
 		local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
 		txt = "Sumo Time Left: ".. timeLeft --game is still going
+		if time % 30 == 0 then
+			guihooks.trigger('sumoSyncTimer', 30);
+		end
 		if not isPlayerInCircle then
 			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the inputblocking while on the flag
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -1316,10 +1335,11 @@ function updateSumoGameState(data)
 				local veh = be:getObjectByID(vehID)
 				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)") --If speed > 20 km/h no more resets!
 			end
-		end
+		end 
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
 		local timeLeft = gamestate.endtime - time
 		txt = "Sumo Colors reset in "..math.abs(timeLeft-1).." seconds" --game ended
+		guihooks.trigger('sumoRemoveTimer', 0)
 	end
 	if txt ~= "" then
 		guihooks.message({txt = txt}, 1, "Sumo.time")
@@ -1432,7 +1452,7 @@ function sumoColor(player,vehicle,team,dt)
 				end
 				vehicle.colortimer = colortimer + (dt*2.6)
 				if transition > 0 then
-					vehicle.transition = math.max(0,transition - dt)
+					vehicle.transition = math.max(0,tFransition - dt)
 				end
 
 				vehicle.color = color

@@ -6,9 +6,9 @@
         {
             "label": "Compress client",
             "type": "shell",
-            "command": "zip -r C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client/SumoGamemode.zip art levels lua scripts ui LICENSE",
+            "command": "zip -r C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client/SumoGamemode.zip art levels lua scripts ui settings LICENSE",
             "windows": {
-                "command": "7z a -tzip C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client/SumoGamemode.zip art levels lua scripts ui LICENSE -aoa -r"
+                "command": "7z a -tzip C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client/SumoGamemode.zip art levels lua scripts ui settings LICENSE -aoa -r"
             },
             "options": {
                 "cwd": "Client"

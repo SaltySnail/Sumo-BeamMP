@@ -1,17 +1,15 @@
 {
-  "domElement": "<sumo></sumo>",
   "name": "Sumo",
-  "types": [
-    "ui.apps.categories.info"
-  ],
-  "description": "The UI of the Sumo gamemode.",
-  "css": {
-    "left":"0px",
-    "height": "100%",
-    "bottom": "0px",
-    "width": "100%"
-  },
   "author": "Julianstap",
   "version": "0.1",
-  "directive": "sumo"
+  "description": "The UI of the Sumo gamemode.",
+  "directive": "sumo",
+  "domElement": "<sumo></sumo>",
+  "css": {
+    "width": "500px",
+    "height": "500px",
+    "top": "0px",
+    "left": "0px"
+  },
+  "preserveAspectRatio": true
 }

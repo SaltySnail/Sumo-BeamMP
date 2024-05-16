@@ -4,10 +4,14 @@
     {
       "appName":"sumo",
       "placement":{
-        "left":"0px",
-        "height": "100%",
-        "bottom": "0px",
-        "width": "100%"
+        "bottom":"",
+        "height":"80px",
+        "left":0,
+        "margin":"auto",
+        "position":"absolute",
+        "right":0,
+        "top":"40px",
+        "width":"80px"
       }
     },
     {
