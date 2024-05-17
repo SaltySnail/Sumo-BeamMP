@@ -1035,6 +1035,7 @@ function spawnSumoGoal(filepath, offset, scale)
 	print(currentArena .. " " .. goalNumber)
 	if mapData.arenaData[currentArena].goalOffsets[goalNumber] then
 		offsetString = "" .. mapData.arenaData[currentArena].goalOffsets[goalNumber].x .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].y .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].z
+		goalLocation = mapData.arenaData[currentArena].goalOffsets[goalNumber]
 	end
 	-- if scale then
 	-- 	scaleString = "" .. scale.x .. " " .. scale.y .. " " .. scale.z
@@ -1151,6 +1152,7 @@ function onSumoGameEnd()
 	allowSumoResets(blockedInputActionsOnSpeedOrCircle)
 	allowSumoResets(blockedInputActionsOnDeath)
 	goalScale = 1
+	goalLocation = nil
 	removeSumoPrefabs("all")
 end
 
@@ -1333,7 +1335,7 @@ function updateSumoGameState(data)
 				-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
 				-- print("veh:" .. vehID .." : " .. dump(vehData))
 				local veh = be:getObjectByID(vehID)
-				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)") --If speed > 20 km/h no more resets!
+				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)") --If speed > 20 km/h no more resets! (the no more resets get done in )
 			end
 		end 
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
@@ -1481,7 +1483,9 @@ end
 
 function onPreRender(dt)
 	if MPCoreNetwork and not MPCoreNetwork.isMPSession() then return end
-
+	if goalLocation then
+		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
+	end
 	-- local currentVehID = be:getPlayerVehicleID(0)
 	-- local currentOwnerName = MPConfig.getNickname()
 	-- if currentVehID and MPVehicleGE.getVehicleByGameID(currentVehID) then
