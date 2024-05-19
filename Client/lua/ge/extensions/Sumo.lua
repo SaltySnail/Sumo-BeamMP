@@ -858,7 +858,7 @@ local goalPrefabActive = false
 local goalPrefabPath
 local goalPrefabName
 local goalPrefabObj
-local goalLocation = {}
+local goalLocation
 
 local obstaclesPrefabActive = false
 local obstaclesPrefabPath
@@ -1035,6 +1035,7 @@ function spawnSumoGoal(filepath, offset, scale)
 	print(currentArena .. " " .. goalNumber)
 	if mapData.arenaData[currentArena].goalOffsets[goalNumber] then
 		offsetString = "" .. mapData.arenaData[currentArena].goalOffsets[goalNumber].x .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].y .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].z
+		goalLocation = {}
 		goalLocation = mapData.arenaData[currentArena].goalOffsets[goalNumber]
 	end
 	-- if scale then
@@ -1205,7 +1206,7 @@ function onSumoTrigger(data)
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 				if vehID == data.subjectID then
 					-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
-					allowSumoResets(blockedInputActionsOnSpeedOrCircle)
+					allowSumoResets(blockedInputActionsOnSpeedOrCircle) 
 					isLocalVehicle = true
 					break
 				end
@@ -1226,7 +1227,7 @@ function onSumoTrigger(data)
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then
 				-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
-				allowSumoResets(blockedInputActionsOnSpeedOrCircle)
+				-- allowSumoResets(blockedInputActionsOnSpeedOrCircle) --removed this because players might spawn back on the platform, which ruins it for others
 				isLocalVehicle = true
 				break
 			end
