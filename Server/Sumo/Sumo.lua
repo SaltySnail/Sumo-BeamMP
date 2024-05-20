@@ -108,13 +108,13 @@ function onInit()
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
 	
-	for k, v in pairs(MP.GetPlayers()) do
-        onPlayerJoin(k)
-        if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
-    end
+	-- for k, v in pairs(MP.GetPlayers()) do
+    --     onPlayerJoin(k)
+    --     if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
+    -- end
 
-	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
-	if arena == "" then onSumoArenaChange() end
+	-- MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
+	-- if arena == "" then onSumoArenaChange() end
 	 
 	-- applyStuff(commands, SumoCommands)
 	print("--------------Sumo Loaded------------------")
@@ -673,8 +673,23 @@ end
 function onPlayerJoin(playerID)
 	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
 	-- print("onPlayerJoin called")
-	MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
-	if arena == "" then onSumoArenaChange() end
+	local file = io.open("Resources/Server/Sumo/arenas.json", "r")
+	if not file then 
+		print("arenas.json not found")
+		return
+	end
+	local contents = file:read("*a")
+	-- print(Util.JsonPrettify(contents))
+	file:close()
+	-- print("onPlayerJoin" .. playerID .. ": " .. Util.JsonPrettify(contents))
+	-- contents = 
+	MP.TriggerClientEvent(playerID, "setSumoArenasData", Util.JsonMinify(contents))
+	if next(arenaNames) == nil then --fill arenaNames
+		for name, value in pairs(Util.JsonDecode(contents)) do
+			table.insert(arenaNames, name)
+		end
+	end
+	-- if arena == "" then onSumoArenaChange() end
 	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
 

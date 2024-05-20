@@ -17,12 +17,12 @@
         {
             "label": "Copy server",
             "type": "shell",
-            "command": "cp 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/Sumo.lua' && cp 'settings.json' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/settings.json'",
+            "command": "cp -R 'Sumo' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo",
             "windows": {
-                "command": "Copy-Item 'Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/Sumo.lua' ; Copy-Item 'settings.json' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/settings.json'"
+                "command": "Copy-Item 'Sumo/Sumo.lua' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/Sumo.lua' ; Copy-Item 'Sumo/settings.json' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/settings.json' ; Copy-Item 'Sumo/arenas.json' 'C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Server/Sumo/arenas.json'"
             },
             "options": {
-                "cwd": "Server/Sumo"
+                "cwd": "Server/"
             }
         },
         {
