@@ -40,11 +40,11 @@ local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
 local alivePlayers = {}
-local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
+local MAX_ALIVE = 0 --for debugging use 0, else use 1 (I miss defines :( )
 local autoStart = false
 local scoringSystem = true
 local autoStartTimer = 0
-local SUMO_SERVER_LUA_PATH = "Resources/Server/Sumo/" --this is the path from beammp-server.exe (change this if it is in a different path)
+local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
 
 function dump(o)
     if type(o) == 'table' then
@@ -107,6 +107,7 @@ function onInit()
 	MP.RegisterEvent("onRconCommand", "onRconCommand")
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
+	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
 	
 	-- for k, v in pairs(MP.GetPlayers()) do
     --     onPlayerJoin(k)
@@ -458,9 +459,9 @@ function showSumoPrefabs(player) --shows the prefabs belonging to this map and t
 	end
 end
 
-function createSumoGoal(player)
-	MP.TriggerClientEvent(player.playerID, "onSumoCreateGoal", "nil")
-end
+-- function createSumoGoal(player)
+-- 	MP.TriggerClientEvent(player.playerID, "onSumoCreateGoal", "nil")
+-- end
 
 function sumo(player, argument)
 	if argument == "help" then
@@ -516,8 +517,13 @@ function sumo(player, argument)
 	elseif string.find(argument, "create %S") then
 		local createString = string.sub(argument,8,10000) 
 		if createString == "goal" then
-			createSumoGoal(player)
+			MP.TriggerClientEvent(player.playerID, "onSumoCreateGoal", "nil")
+		elseif createString == "spawn" then
+			MP.TriggerClientEvent(player.playerID, "onSumoCreateSpawn", "nil")
 		end
+	elseif string.find(argument, "save as %S") then
+		local arenaName = string.sub(argument,9,10000)
+		MP.TriggerClientEvent(player.playerID, "onSumoSaveArena", arenaName)
 	elseif string.find(argument, "list %S") then
 		local subArgument = string.sub(argument,6,10000)
 		if subArgument == "arenas" then
@@ -672,8 +678,8 @@ end
 --called whenever a player has fully joined the session
 function onPlayerJoin(playerID)
 	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
-	-- print("onPlayerJoin called")
-	local file = io.open("Resources/Server/Sumo/arenas.json", "r")
+	print("sumo: onPlayerJoin called")
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "arenas.json", "r")
 	if not file then 
 		print("arenas.json not found")
 		return
@@ -828,7 +834,7 @@ function selectRandomArena()
 end
 
 function loadSettings()
-	local file = io.open(SUMO_SERVER_LUA_PATH .. "settings.json", "r") -- Open the file in read mode
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "settings.json", "r") -- Open the file in read mode
     if file then
         local content = file:read("*all") -- Read the entire file content
         file:close()
@@ -839,6 +845,19 @@ function loadSettings()
     else
         print("Cannot open file:", path)
     end
+end
+
+function sumoSaveArena(playerID, data)
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "arenas.json", "r")
+	local jsonTable = Util.JsonDecode(file:read("*a"))
+	file:close()
+	data = Util.JsonDecode(data)
+	local arenaName = data.name
+	data.name = nil
+	jsonTable[arenaName] = data
+	file = io.open(SUMO_SERVER_DATA_PATH .. "arenas.json", "w")
+	file:write(Util.JsonPrettify(Util.JsonEncode(jsonTable)))
+	file:close()
 end
 
 M.onInit = onInit
@@ -881,5 +900,6 @@ M.selectRandomArena = selectRandomArena
 
 M.sumo = sumo
 M.SUMO = SUMO
+M.sumoSaveArena = sumoSaveArena
 
 return M

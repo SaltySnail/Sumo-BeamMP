@@ -1,9 +1,9 @@
 {
-  "name": "Sumo",
+  "name": "SumoTimer",
   "author": "Julianstap",
   "version": "0.1",
   "description": "The UI of the Sumo gamemode.",
-  "directive": "sumo",
+  "directive": "sumoTimer",
   "domElement": "<sumo></sumo>",
   "css": {
     "width": "500px",

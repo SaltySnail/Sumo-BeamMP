@@ -32,24 +32,9 @@ local obstaclesPrefabPath
 local obstaclesPrefabName
 local obstaclesPrefabObj
 
-local goalMarker = {}
-goalMarker.x = 140
-goalMarker.y = 0
-goalMarker.arrowAngle = 0
-goalMarker.showArrow = false
-goalMarker.showHeightArrow = false
-goalMarker.showIcon = false
-goalMarker.abovePlayer = false
-
-local uiMessages = {}
-uiMessages.showMSGYouScored = false
-uiMessages.showMSGYouScoredEndTime = 0
-uiMessages.showForTime = 2 --2s because the timing is inconsistent, maybe I should add a onSecond function or something
-
-local screenWidth = GFXDevice.getDesktopMode().width
-local screenHeight = GFXDevice.getDesktopMode().height --TODO: figure out how to get the UI max size, if that is higher than screen use screen size.
-if screenHeight > 1080 then screenHeight = 1080 end --it seems ui apps are limited to 1080p
-if screenWidth > 1920 then screenWidth = 1920 end
+local newArena = {}
+newArena.goals = {}
+newArena.spawnLocations = {}
 
 local logTag = "Sumo"
 
@@ -170,7 +155,7 @@ function disallowSumoResets(data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', true)
 end
 
-function spawnSumoGoal(filepath, offset, scale) 
+function spawnSumoGoal(filepath, offset, rotation) 
 	goalPrefabActive = true
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
@@ -195,15 +180,24 @@ function spawnSumoGoal(filepath, offset, scale)
 
 	-- print( filepath)
 	local offsetString = '0 0 0'
+	local rotationString = '0 0 1'
 	local scaleString = '1 1 1'
+	print(currentArena .. " " .. goalNumber)
+	if mapData.arenaData[currentArena].goals[goalNumber] then
+		offsetString = "" .. mapData.arenaData[currentArena].goals[goalNumber].x .. " " .. mapData.arenaData[currentArena].goals[goalNumber].y .. " " .. mapData.arenaData[currentArena].goals[goalNumber].z
+		goalLocation = {}
+		goalLocation = mapData.arenaData[currentArena].goals[goalNumber]
+		local rot = {rx = mapData.arenaData[currentArena].goals[goalNumber].rx, ry = mapData.arenaData[currentArena].goals[goalNumber].ry, rz = mapData.arenaData[currentArena].goals[goalNumber].rz}
+		rot = quatFromEuler(rot.rx, rot.ry, rot.rz)
+		rotationString = rot.x .. " " .. rot.y .. " " .. rot.z .. " " .. rot.w
+		-- rotationString = "" .. mapData.arenaData[currentArena].goals[goalNumber].rx * (math.pi/180) .. " " .. mapData.arenaData[currentArena].goals[goalNumber].ry * (math.pi/180) .. " " .. mapData.arenaData[currentArena].goals[goalNumber].rz * (math.pi/180)
+		-- rotationString = "" .. mapData.arenaData[currentArena].goals[goalNumber].rx .. " " .. mapData.arenaData[currentArena].goals[goalNumber].ry .. " " .. mapData.arenaData[currentArena].goals[goalNumber].rz
+	end
 	if offset then
 		offsetString = "" .. offset.x .. " " .. offset.y .. " " .. offset.z
 	end
-	print(currentArena .. " " .. goalNumber)
-	if mapData.arenaData[currentArena].goalOffsets[goalNumber] then
-		offsetString = "" .. mapData.arenaData[currentArena].goalOffsets[goalNumber].x .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].y .. " " .. mapData.arenaData[currentArena].goalOffsets[goalNumber].z
-		goalLocation = {}
-		goalLocation = mapData.arenaData[currentArena].goalOffsets[goalNumber]
+	if rotation then
+		rotationString = "" .. rotation.x .. " " .. rotation.y .. " " .. rotation.z
 	end
 	-- if scale then
 	-- 	scaleString = "" .. scale.x .. " " .. scale.y .. " " .. scale.z
@@ -213,7 +207,7 @@ function spawnSumoGoal(filepath, offset, scale)
 	end
 	-- print( "Offset: " .. offsetString)
 	-- print( "Scale: " .. scaleString)
-	goalPrefabObj    = spawnPrefab(goalPrefabName, goalPrefabPath,  offsetString, '0 0 1', scaleString)
+	goalPrefabObj    = spawnPrefab(goalPrefabName, goalPrefabPath,  offsetString, rotationString, scaleString)
 	-- print( "goalPrefabObj: " .. dump(goalPrefabObj))
 	-- -- -- read local file 
 	-- local file = io.open(goalPrefabPath, "rb")
@@ -244,7 +238,27 @@ function onSumoCreateGoal()
 	local currentVehID = be:getPlayerVehicleID(0)
 	local veh = be:getObjectByID(currentVehID)
 	if not veh then return end
-	spawnSumoGoal("art/goal.prefab.json", veh:getPosition())
+	local pos = veh:getPosition()
+	local rot = veh:getRotation()
+	rot = rot:toEuler()
+	removeSumoPrefabs("goal")
+	-- rot = rot * (180/math.pi) --convert to degrees so people can read it in the json file
+	local upVec = veh:getDirectionVectorUp()
+	if upVec.z > 50 and upVec.z < 60 then
+		pos.z = pos.z - 11
+	end
+	spawnSumoGoal("art/goal" .. #newArena.goals .. ".prefab.json", pos)
+	table.insert(newArena.goals, {x = pos.x, y = pos.y, z = pos.z, rx = rot.x, ry = rot.y, rz = rot.z})
+end
+
+function onSumoCreateSpawn()
+	local currentVehID = be:getPlayerVehicleID(0)
+	local veh = be:getObjectByID(currentVehID)
+	if not veh then return end
+	vehPos = veh:getPosition()
+	vehRot = veh:getDirectionVector()
+	table.insert(newArena.spawnLocations, {x = vehPos.x, y = vehPos.y, z = vehPos.z, rx = vehRot.x * (180/math.pi),  ry = vehRot.y * (180/math.pi),  rz = vehRot.z * (180/math.pi)})
+	print(dump(newArena.spawnLocations))
 end
 
 function spawnSumoObstacles(filepath) 
@@ -286,7 +300,7 @@ function removeSumoPrefabs(type)
 		local arenaData = {}
 		arenaData = levelData[currentArena]
 		-- print( "arenaData (" .. currentArena .. "): " .. dump(arenaData))
-		goals = #arenaData["goalOffsets"]
+		goals = #arenaData["goals"]
 		for goalID=1,tonumber(goals) do
 			prefabPath = "goal" .. goalID
 			-- print( "Removing: " .. prefabPath)
@@ -303,11 +317,11 @@ function teleportToSumoArena()
 		local veh = be:getObjectByID(vehID)
 		if not veh then return end --Should not be called but just to be safe
 		local arenaData = mapData.arenaData[currentArena]
-		local chosenLocation = rand(1, #arenaData.spawnLocation)
-		if arenaData.spawnLocation[chosenLocation] then
-			-- print(dump(quatFromEuler(arenaData.spawnLocation[chosenLocation].rx, arenaData.spawnLocation[chosenLocation].ry, arenaData.spawnLocation[chosenLocation].rz)))
-			local q = quatFromEuler(math.rad(arenaData.spawnLocation[chosenLocation].rx), math.rad(arenaData.spawnLocation[chosenLocation].ry), math.rad(arenaData.spawnLocation[chosenLocation].rz))
-			veh:setPositionRotation(arenaData.spawnLocation[chosenLocation].x, arenaData.spawnLocation[chosenLocation].y, arenaData.spawnLocation[chosenLocation].z, q.x, q.y, q.z, q.w)
+		local chosenLocation = rand(1, #arenaData.spawnLocations)
+		if arenaData.spawnLocations[chosenLocation] then
+			-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
+			local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
+			veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
 		end
 		veh:queueLuaCommand("recovery.startRecovering()")
 		veh:queueLuaCommand("recovery.stopRecovering()")
@@ -389,7 +403,7 @@ function onSumoTrigger(data)
 		-- else
 		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 		end
-	elseif trigger == "outOfBoundTrigger" then
+	elseif string.find(trigger, "outOfBoundTrigger") then
 		--explode player
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then
@@ -409,6 +423,42 @@ function onSumoTrigger(data)
 	end
     -- end
 	-- print( "trigger data: " .. dump(data))
+end
+
+function onReverseGravityTrigger(data)
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		if vehID ~= data.subjectID then return end
+	end
+	if data.event == "enter" then
+		ogCamName = core_camera.getActiveCamName(0)
+		if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
+			core_camera.setBySlotId(0, 6)
+ 		   core_camera.resetCamera(0)
+		end
+		core_environment.setGravity(9.81)
+	elseif data.event == "exit" then
+		if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
+			core_camera.setBySlotId(0, 1)
+ 		   core_camera.resetCamera(0)
+			ogCamName = ""
+		end
+		core_environment.setGravity(-9.81)
+	else
+		local veh = be:getObjectByID(data.subjectID)
+		local upVector = veh:getDirectionVectorUp() * (180/math.pi)
+		--print(dump(upVector))
+		if upVector.z > 55 and upVector.z < 60 then
+			local pos = veh:getPosition()
+			local rot = veh:getRotation()
+			rot = rot:toEuler() * (180/math.pi)
+			--print(dump(rot))
+			rot.y = rot.y + 180
+			rot = rot * (math.pi/180)
+			--print("Rot is now: " ..  dump(rot))
+			rot = quatFromEuler(rot.x, rot.y, rot.z)
+			veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+		end
+	end
 end
 
 -- function requestSumoLevelName()
@@ -443,7 +493,7 @@ function requestSumoGoalCount()
 	arenaData = levelData[currentArena]
 	if not arenaData then return end
 	print( "arenaData (" .. currentArena .. "): " .. dump(arenaData))
-	goals = #arenaData["goalOffsets"]
+	goals = #arenaData["goals"]
 	print( "There are " .. goals .. " goals in " .. levelName .. ", " .. currentArena)
 	if TriggerServerEvent then TriggerServerEvent("setSumoGoalCount", goals) end
 end
@@ -660,22 +710,6 @@ function onPreRender(dt)
 	-- 	currentOwnerName = MPVehicleGE.getVehicleByGameID(currentVehID).ownerName
 	-- end
 
-	-- if not gamestate.gameRunning or gamestate.gameEnding then 
-	-- 	local veh = be:getObjectByID(currentVehID)
-	-- 	-- if veh then 												--TODO: get the UI working 
-	-- 	-- 	local uiData = {}
-	-- 	-- 	uiData.gameRunning = false or gamestate.gameEnding
-	-- 	-- 	uiData.goalAbovePlayer = goalMarker.abovePlayer
-	-- 	-- 	uiData.showGoalArrow = false
-	-- 	-- 	uiData.showGoalHeightArrow = false
-	-- 	-- 	uiData.showGoalIcon = false
-	-- 	-- 	uiData.goalX = -140
-	-- 	-- 	uiData.goalY = -140
-	-- 	-- 	uiData.goalAngle = goalMarker.arrowAngle		
-	-- 	-- 	veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
-	-- 	-- end
-	-- 	return 
-	-- end
 	-- resetSumoCarColors()
 	-- print( "onPreRender called")
 
@@ -708,26 +742,6 @@ function onPreRender(dt)
 	-- 		end
 	-- 	end
 	-- end
-
-	-- local uiData = {}
-	-- -- local player = gamestate.players[vehicle.ownerName]
-	-- -- local veh = MPVehicleGE.getVehicleByGameID(currentVehID)	
-
-	-- uiData.gameRunning = true 
-	-- uiData.goalAbovePlayer = goalMarker.abovePlayer
-	-- uiData.showGoalArrow = goalMarker.showArrow
-	-- uiData.showGoalHeightArrow = goalMarker.showHeightArrow
-	-- uiData.showGoalIcon = goalMarker.showIcon
-	-- uiData.goalX = goalMarker.x
-	-- uiData.goalY = goalMarker.y
-	-- uiData.goalAngle = goalMarker.arrowAngle
-	-- uiData.showMSGYouScored = uiMessages.showMSGYouScored
-
-	-- local veh = be:getObjectByID(currentVehID)
-	-- if veh then
-	-- 	veh:queueLuaCommand('gui.send(\'Sumo\',' .. serialize(uiData) ..')')
-	-- end
-	-- print( "Resolution: " .. screenWidth .. "x" .. screenHeight)
 end
 
 function onResetGameplay(id)
@@ -757,6 +771,11 @@ function setSumoArenasData(contents)
 	mapData.arenaData = jsonDecode(contents)
 end
 
+function onSumoSaveArena(name)
+	newArena.name = name
+	TriggerServerEvent("sumoSaveArena", jsonEncode(newArena))
+end
+
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
 if MPGameNetwork then AddEventHandler("onSumoCreateGoal", onSumoCreateGoal) end
@@ -776,8 +795,13 @@ if MPGameNetwork then AddEventHandler("explodeSumoCar", explodeSumoCar) end
 if MPGameNetwork then AddEventHandler("onSumoGameEnd", onSumoGameEnd) end
 if MPGameNetwork then AddEventHandler("teleportToSumoArena", teleportToSumoArena) end
 if MPGameNetwork then AddEventHandler("onSumoTrigger", onSumoTrigger) end
+if MPGameNetwork then AddEventHandler("onReverseGravityTrigger", onReverseGravityTrigger) end
 if MPGameNetwork then AddEventHandler("onSumoAirSpeedTooHigh", onSumoAirSpeedTooHigh) end
 if MPGameNetwork then AddEventHandler("setSumoArenasData", setSumoArenasData) end
+if MPGameNetwork then AddEventHandler("onSumoSaveArena", onSumoSaveArena) end
+if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) end
+
+
 
 
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleSpawned", onSumoVehicleSpawned) end
@@ -815,6 +839,9 @@ M.onSumoGameEnd = onSumoGameEnd
 M.teleportToSumoArena = teleportToSumoArena
 M.onSumoAirSpeedTooHigh = onSumoAirSpeedTooHigh
 M.setSumoArenasData = setSumoArenasData
+M.onSumoSaveArena = onSumoSaveArena
+M.onSumoCreateSpawn = onSumoCreateSpawn
+M.onReverseGravityTrigger = onReverseGravityTrigger
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M

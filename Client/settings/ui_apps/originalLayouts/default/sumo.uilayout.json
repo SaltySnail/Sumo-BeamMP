@@ -2,7 +2,7 @@
   "version":0.1,
   "apps":[
     {
-      "appName":"sumo",
+      "appName":"sumoTimer",
       "placement":{
         "bottom":"",
         "height":"80px",
