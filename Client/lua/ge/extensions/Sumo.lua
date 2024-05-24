@@ -427,36 +427,36 @@ end
 
 function onReverseGravityTrigger(data)
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-		if vehID ~= data.subjectID then return end
-	end
-	if data.event == "enter" then
-		ogCamName = core_camera.getActiveCamName(0)
-		if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
-			core_camera.setBySlotId(0, 6)
- 		   core_camera.resetCamera(0)
-		end
-		core_environment.setGravity(9.81)
-	elseif data.event == "exit" then
-		if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
-			core_camera.setBySlotId(0, 1)
- 		   core_camera.resetCamera(0)
-			ogCamName = ""
-		end
-		core_environment.setGravity(-9.81)
-	else
-		local veh = be:getObjectByID(data.subjectID)
-		local upVector = veh:getDirectionVectorUp() * (180/math.pi)
-		--print(dump(upVector))
-		if upVector.z > 55 and upVector.z < 60 then
-			local pos = veh:getPosition()
-			local rot = veh:getRotation()
-			rot = rot:toEuler() * (180/math.pi)
-			--print(dump(rot))
-			rot.y = rot.y + 180
-			rot = rot * (math.pi/180)
-			--print("Rot is now: " ..  dump(rot))
-			rot = quatFromEuler(rot.x, rot.y, rot.z)
-			veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+		if vehID == data.subjectID then
+			if data.event == "enter" then
+				ogCamName = core_camera.getActiveCamName(0)
+				if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
+					core_camera.setBySlotId(0, 6) --this isn't always chase TODO: figure out how to call it by name
+				core_camera.resetCamera(0)
+				end
+				core_environment.setGravity(9.81)
+			elseif data.event == "exit" then
+				if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
+					core_camera.setBySlotId(0, 1)
+					core_camera.resetCamera(0)
+					ogCamName = ""
+				end
+				core_environment.setGravity(-9.81)
+			end
+			local veh = be:getObjectByID(data.subjectID)
+			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
+			--print(dump(upVector))
+			if upVector.z > 50 and upVector.z < 65 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+				local pos = veh:getPosition()
+				local rot = veh:getRotation()
+				rot = rot:toEuler() * (180/math.pi)
+				--print(dump(rot))
+				rot.y = rot.y + 180
+				rot = rot * (math.pi/180)
+				--print("Rot is now: " ..  dump(rot))
+				rot = quatFromEuler(rot.x, rot.y, rot.z)
+				veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+			end
 		end
 	end
 end
