@@ -1,5 +1,4 @@
 {
-  "version":0.3,
   "apps":[
     {
       "appName":"sumotimer",
@@ -15,25 +14,12 @@
       }
     },
     {
-      "appName":"sumocountdown",
-      "placement":{
-        "bottom":"",
-        "height":"200px",
-        "left":0,
-        "margin":"auto",
-        "position":"absolute",
-        "right":0,
-        "top":"50% - 200px",
-        "width":"200px"
-      }
-    },
-    {
       "appName":"forcedInduction",
       "placement":{
-        "width":"150px",
         "bottom":"320px",
         "height":"150px",
-        "right":"20px"
+        "right":"20px",
+        "width":"150px"
       },
       "settings":{
         "noCockpit":true
@@ -42,10 +28,10 @@
     {
       "appName":"keyList",
       "placement":{
-        "width":"355px",
         "height":"500px",
         "right":"0px",
-        "top":"0px"
+        "top":"0px",
+        "width":"355px"
       }
     },
     {
@@ -76,10 +62,10 @@
     {
       "appName":"tacho2",
       "placement":{
-        "width":"300px",
         "bottom":"5px",
         "height":"300px",
-        "right":"5px"
+        "right":"5px",
+        "width":"300px"
       },
       "settings":{
         "noCockpit":true
@@ -89,7 +75,7 @@
       "appName":"messages",
       "placement":{
         "bottom":"",
-        "height":"450px",
+        "height":"280px",
         "left":"0px",
         "position":"absolute",
         "right":"",
@@ -97,13 +83,13 @@
         "width":"470px"
       }
     },
-	    {
+    {
       "appName":"multiplayerchat",
       "placement":{
-        "width":"550px",
         "bottom":"0px",
         "height":"170px",
-        "left":"180px"
+        "left":"180px",
+        "width":"550px"
       }
     },
     {
@@ -128,8 +114,22 @@
         "top":"0px",
         "width":"700px"
       }
+    },
+    {
+      "appName":"sumocountdown",
+      "placement":{
+        "bottom":0,
+        "height":"400px",
+        "left":0,
+        "margin":"auto",
+        "position":"absolute",
+        "right":0,
+        "top":0,
+        "width":"400px"
+      }
     }
   ],
   "title":"Sumo",
-  "type":"sumo"
+  "type":"sumo",
+  "version":0.3
 }

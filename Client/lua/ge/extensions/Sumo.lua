@@ -518,7 +518,7 @@ function updateSumoGameState(data)
 	-- end
 
 	local txt = ""
-	if time and time == -4 then
+	if time and time == -8 then
 		core_gamestate.setGameState('sumo', 'sumo', 'sumo')
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			local veh = be:getObjectByID(vehID)
@@ -534,6 +534,9 @@ function updateSumoGameState(data)
 	end
 	if time and time <= 0 and time > -4 then
 		guihooks.trigger('sumoCountdown', math.abs(time))
+	end
+	if time and time == 1 then
+		guihooks.trigger('sumoClearCountdown', 0)
 	end
 
 	if time and time < 0 then

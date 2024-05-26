@@ -1,7 +1,7 @@
 {
     "name": "Sumo Countdown",
     "author": "Julianstap",
-    "version": "0.1",
+    "version": "0.3",
     "description": "The countdown UI of the Sumo gamemode.",
     "directive": "sumocountdown",
     "domElement": "<sumocountdown></sumocountdown>",

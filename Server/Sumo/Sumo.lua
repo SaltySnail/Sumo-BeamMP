@@ -380,7 +380,7 @@ function sumoGameSetup()
 	end
 
 	gameState.playerCount = playerCount
-	gameState.time = -5
+	gameState.time = -9
 	gameState.roundLength = roundLength
 	gameState.endtime = -1
 	gameState.gameRunning = true
