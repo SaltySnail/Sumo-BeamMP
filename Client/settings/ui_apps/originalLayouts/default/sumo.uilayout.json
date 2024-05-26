@@ -1,17 +1,30 @@
 {
-  "version":0.1,
+  "version":0.3,
   "apps":[
     {
-      "appName":"sumoTimer",
+      "appName":"sumotimer",
       "placement":{
         "bottom":"",
-        "height":"80px",
+        "height":"100px",
         "left":0,
         "margin":"auto",
         "position":"absolute",
         "right":0,
         "top":"40px",
-        "width":"80px"
+        "width":"100px"
+      }
+    },
+    {
+      "appName":"sumocountdown",
+      "placement":{
+        "bottom":"",
+        "height":"200px",
+        "left":0,
+        "margin":"auto",
+        "position":"absolute",
+        "right":0,
+        "top":"50% - 200px",
+        "width":"200px"
       }
     },
     {

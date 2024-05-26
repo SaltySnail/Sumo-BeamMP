@@ -1,0 +1,30 @@
+{
+    "name": "Sumo Countdown",
+    "author": "Julianstap",
+    "version": "0.1",
+    "description": "The countdown UI of the Sumo gamemode.",
+    "directive": "sumocountdown",
+    "domElement": "<sumocountdown></sumocountdown>",
+    "css": {
+        ".sumo_countdown_circle": {
+            "display": "flex",
+            "font-family": "\"sumo_countdown_font\", Arial, Helvetica, sans-serif",
+            "width": "100px",
+            "height": "100px",
+            "background-color": "rgba(255, 255, 0, 0.5)",
+            "border-radius": "50%",
+            "justify-content": "center",
+            "align-items": "center",
+            "font-size": "24px"
+            },
+        "width": "500px",
+        "height": "500px",
+        "top": "0px",
+        "left": "0px",
+        "@font-face": {
+            "font-family": "sumo_countdown_font",
+            "src": "url(fonts/roboto.ttf) format(\"truetype\")"
+        }
+    },
+    "preserveAspectRatio": true
+  }

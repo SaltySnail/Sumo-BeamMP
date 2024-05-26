@@ -1,10 +1,10 @@
 {
-  "name": "SumoTimer",
+  "name": "Sumo Timer",
   "author": "Julianstap",
-  "version": "0.1",
-  "description": "The UI of the Sumo gamemode.",
-  "directive": "sumoTimer",
-  "domElement": "<sumo></sumo>",
+  "version": "0.3",
+  "description": "The timer UI of the Sumo gamemode.",
+  "directive": "sumotimer",
+  "domElement": "<sumotimer></sumotimer>",
   "css": {
     "width": "500px",
     "height": "500px",

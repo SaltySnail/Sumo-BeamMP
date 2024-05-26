@@ -1,8 +1,8 @@
 angular.module('beamng.apps')
-.directive('sumoTimer', ['CanvasShortcuts','$timeout', function (CanvasShortcuts, $timeout) {
+.directive('sumotimer', ['CanvasShortcuts','$timeout', function (CanvasShortcuts, $timeout) {
     return {
         template: `
-            <div id="sumoApp" style="max-height:100%; width:100%; margin:0px; background:transparent;" layout="row" layout-align="center left" layout-wrap>        
+            <div id="sumotimerDiv" style="max-height:100%; width:100%; margin:0px; background:transparent;" layout="row" layout-align="center left" layout-wrap>        
                 <div id="circleCanvasDiv" style="position:absolute; marginTop:0; marginLeft:0; width:100%; height:100%;">
                     <canvas id="circleCanvas" style="width:100%; height:100%;" width="500" height="500"></canvas>
                 </div>

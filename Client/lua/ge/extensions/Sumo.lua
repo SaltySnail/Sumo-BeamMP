@@ -499,6 +499,7 @@ function requestSumoGoalCount()
 end
 
 function updateSumoGameState(data)
+	print('updateSumoGameState called: ' .. data)
 	mergeSumoTable(jsonDecode(data),gamestate)
 
 	local time = 0
@@ -524,14 +525,16 @@ function updateSumoGameState(data)
 			veh:queueLuaCommand('controller.setFreeze(1)')
 		end
 	end
-	if time and time == -1 then 
+	if time and time == 0 then 
 		guihooks.trigger('sumoStartTimer', 30)
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			local veh = be:getObjectByID(vehID)
 			veh:queueLuaCommand('controller.setFreeze(0)')
 		end
 	end
-	
+	if time and time <= 0 and time > -4 then
+		guihooks.trigger('sumoCountdown', math.abs(time))
+	end
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
