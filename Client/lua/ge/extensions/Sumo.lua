@@ -534,10 +534,16 @@ function updateSumoGameState(data)
 	end
 	if time and time <= 0 and time > -4 then
 		guihooks.trigger('sumoCountdown', math.abs(time))
+		if time < 0 then
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 75})
+		else
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 75})
+		end
 	end
 	if time and time == 1 then
 		guihooks.trigger('sumoClearCountdown', 0)
 	end
+
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
@@ -552,6 +558,9 @@ function updateSumoGameState(data)
 		txt = "Sumo Time Left: ".. timeLeft --game is still going
 		if time % 30 == 0 then
 			guihooks.trigger('sumoSyncTimer', 30);
+		end
+		if time % 30 >= 24 and time % 30 <= 29 then
+			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 60})
 		end
 		if not isPlayerInCircle then
 			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the inputblocking while on the flag

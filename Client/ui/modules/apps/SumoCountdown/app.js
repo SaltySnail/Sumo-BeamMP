@@ -44,7 +44,6 @@ angular.module('beamng.apps')
             if (data == '0') {
                 ctx.fillText("GO", 180, 285);
             } else {
-                
                 ctx.fillText(data, 225, 280);
             }
         });   
