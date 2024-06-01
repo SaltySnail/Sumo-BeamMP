@@ -547,6 +547,7 @@ function updateSumoGameState(data)
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
+		
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
 		-- 	-- print("veh:" .. vehID .." : " .. dump(vehData))
@@ -556,10 +557,12 @@ function updateSumoGameState(data)
 	elseif gamestate.gameRunning and not gamestate.gameEnding and time or gamestate.endtime and (gamestate.endtime - time) > 9 then
 		local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
 		txt = "Sumo Time Left: ".. timeLeft --game is still going
+		
 		if time % 30 == 0 then
 			guihooks.trigger('sumoSyncTimer', 30);
 		end
 		if time % 30 >= 24 and time % 30 <= 29 then
+			guihooks.trigger('sumoAnimateCircleSize', 30)
 			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 60})
 		end
 		if not isPlayerInCircle then
@@ -570,10 +573,11 @@ function updateSumoGameState(data)
 				local veh = be:getObjectByID(vehID)
 				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)") --If speed > 20 km/h no more resets! (the no more resets get done in )
 			end
-		end 
+		end
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
 		local timeLeft = gamestate.endtime - time
 		txt = "Sumo Colors reset in "..math.abs(timeLeft-1).." seconds" --game ended
+		
 		guihooks.trigger('sumoRemoveTimer', 0)
 	end
 	if txt ~= "" then
