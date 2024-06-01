@@ -57,6 +57,39 @@ angular.module('beamng.apps')
                 updateTime();
             }
 
+            function animateCircleSize() {
+                const originalWidth = canvas.width;
+                const originalHeight = canvas.height;
+                const targetWidth = originalWidth * 1.1;
+                const targetHeight = originalHeight * 1.1;
+                const duration = 500; // Total duration in milliseconds for the animation
+                const stepTime = 20; // Time in milliseconds between each step
+                let currentStep = 0;
+                const totalSteps = duration / stepTime;
+
+                const sizeInterval = setInterval(() => {
+                    currentStep++;
+                    const stepRatio = currentStep / totalSteps;
+                    if (currentStep <= totalSteps / 2) {
+                        // Increasing size
+                        canvas.width = originalWidth + (targetWidth - originalWidth) * stepRatio * 2;
+                        canvas.height = originalHeight + (targetHeight - originalHeight) * stepRatio * 2;
+                    } else {
+                        // Decreasing size
+                        canvas.width = targetWidth - (targetWidth - originalWidth) * (stepRatio - 0.5) * 2;
+                        canvas.height = targetHeight - (targetHeight - originalHeight) * (stepRatio - 0.5) * 2;
+                    }
+
+                    // Redraw the circle and sector after resizing
+                    if (currentStep >= totalSteps) {
+                        clearInterval(sizeInterval);
+                        canvas.width = originalWidth; // Reset to original size to avoid floating point errors
+                        canvas.height = originalHeight;
+                    }
+                    updateSector();
+                }, stepTime);
+            }
+
             function updateSector() {
                 canvas = document.getElementById('circleCanvas');
                 ctx = canvas.getContext('2d');
@@ -103,7 +136,7 @@ angular.module('beamng.apps')
 
             // Wait for the DOM to be fully loaded
             document.addEventListener('DOMContentLoaded', function() {
-                // Wrap canvas initialization inside $timeout to ensure it runs after the DOM is loaded
+            // Wrap canvas initialization inside $timeout to ensure it runs after the DOM is loaded
                 canvas = document.getElementById('circleCanvas');
                 if (!canvas) {
                     console.error("Canvas element not found.");
@@ -114,6 +147,11 @@ angular.module('beamng.apps')
             });
 
             scope.$on('VehicleChange', function (event, data) {
+            });
+
+            scope.$on('sumoAnimateCircleSize', function (event, data) {
+                animateCircleSize();
+                console.log("Animating circle size", data);
             });
             
             scope.$on('sumoStartTimer', function (event, data) {
