@@ -81,14 +81,12 @@ angular.module('beamng.apps')
                     }
 
                     // Redraw the circle and sector after resizing
-                    updateSector();
-
                     if (currentStep >= totalSteps) {
                         clearInterval(sizeInterval);
                         canvas.width = originalWidth; // Reset to original size to avoid floating point errors
                         canvas.height = originalHeight;
-                        updateSector(); // Final redraw to ensure proper display
                     }
+                    updateSector();
                 }, stepTime);
             }
 
