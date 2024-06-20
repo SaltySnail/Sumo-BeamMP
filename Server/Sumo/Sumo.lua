@@ -93,7 +93,7 @@ function onInit()
 	MP.RegisterEvent("setSumoGoalCount", "setSumoGoalCount")
 	MP.RegisterEvent("markSumoVehicleToExplode", "markSumoVehicleToExplode")
 	MP.RegisterEvent("unmarkSumoVehicleToExplode", "unmarkSumoVehicleToExplode")
-	MP.RegisterEvent("onPlayerExplode", "onPlayerExplode")
+	MP.RegisterEvent("onSumoPlayerExplode", "onSumoPlayerExplode")
 	MP.RegisterEvent("onPlayerFirstAuth", "onPlayerFirstAuth")
 	MP.RegisterEvent("onPlayerAuth", "onPlayerAuth")
 	MP.RegisterEvent("onPlayerJoining", "onPlayerJoining")
@@ -725,20 +725,20 @@ function onVehicleSpawn(playerID, vehID,  data)
 	-- print("onVehicleSpawn Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(data))
 	-- MP.TriggerClientEvent(player, "onSumoVehicleSpawned", vehID)
 	-- markSumoVehicleToExplode(vehID)
-	for ID,Name in pairs(MP.GetPlayers()) do
-		if MP.IsPlayerConnected(ID) then
-			local player = {}
-			player.ID = ID
-			-- player.score = 0
-			-- player.team = chosenTeam
-			player.dead = false
-			-- player.allowedResets = true
-			-- player.resetTimer = 3
-			-- player.resetTimerActive = false
-			players[Name] = player
-			-- teamCount = teamCount + 1
-		end
-	end
+	-- for ID,Name in pairs(MP.GetPlayers()) do
+	-- 	if MP.IsPlayerConnected(ID) then
+	-- 		local player = {}
+	-- 		player.ID = ID
+	-- 		-- player.score = 0
+	-- 		-- player.team = chosenTeam
+	-- 		player.dead = false
+	-- 		-- player.allowedResets = true
+	-- 		-- player.resetTimer = 3
+	-- 		-- player.resetTimerActive = false
+	-- 		players[Name] = player
+	-- 		-- teamCount = teamCount + 1
+	-- 	end
+	-- end
 end
 
 --called whenever a player applies their vehicle edits.
@@ -804,7 +804,7 @@ end
 -- 		table.insert(levels, name) 
 -- 	end
 -- end
-function onPlayerExplode(playerID, playerName)
+function onSumoPlayerExplode(playerID, playerName)
 	-- print(playerName .. "   " .. dump(gameState))
 	gameState.players[playerName].dead = true
 end
@@ -894,7 +894,7 @@ M.setSumoGoalCount = setSumoGoalCount
 
 M.markSumoVehicleToExplode = markSumoVehicleToExplode
 M.unmarkSumoVehicleToExplode = unmarkSumoVehicleToExplode
-M.onPlayerExplode = onPlayerExplode
+M.onSumoPlayerExplode = onSumoPlayerExplode
 
 M.selectRandomArena = selectRandomArena
 

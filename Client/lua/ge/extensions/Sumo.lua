@@ -8,8 +8,8 @@ local gamestate = {players = {}, settings = {}}
 
 --blocked inputs when dead
 local blockedInputActionsOnDeath = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
-local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','switch_previous_vehicle','switch_next_vehicle','dropPlayerAtCameraNoReset'} 
-local blockedInputActionsOnSpeedOrCircle = 	{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','switch_previous_vehicle','switch_next_vehicle','dropPlayerAtCameraNoReset'} 
+local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
+local blockedInputActionsOnSpeedOrCircle = 	{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {} --TODO: this should be a json file or something for easily adding arenas + this is stupid
@@ -268,7 +268,7 @@ function spawnSumoObstacles(filepath)
 	obstaclesPrefabName   = string.gsub(obstaclesPrefabPath, "(.*/)(.*)", "%2"):sub(1, -13)
 	obstaclesPrefabObj    = spawnPrefab(obstaclesPrefabName, obstaclesPrefabPath, '0 0 0', '0 0 1', '1 1 1')
 	be:reloadStaticCollision(true)
-	disallowSumoResets(blockedInputActionsOnRound)
+	disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
 end
 
 function removeSumoPrefabs(type)
@@ -351,7 +351,7 @@ function explodeSumoCar(vehID)
 					-- disallowSumoResets(blockedInputActionsOnDeath)
 					local vehicle = MPVehicleGE.getVehicleByGameID(vid)
 					if TriggerServerEvent and vehicle and vehicle.ownerName then
-						TriggerServerEvent("onPlayerExplode", vehicle.ownerName) 
+						TriggerServerEvent("onSumoPlayerExplode", vehicle.ownerName) 
 					end
 				end
 			end
@@ -523,6 +523,7 @@ function updateSumoGameState(data)
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			local veh = be:getObjectByID(vehID)
 			veh:queueLuaCommand('controller.setFreeze(1)')
+			disallowSumoResets(blockedInputActionsOnDeath)
 		end
 	end
 	if time and time == 0 then 
@@ -530,14 +531,15 @@ function updateSumoGameState(data)
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			local veh = be:getObjectByID(vehID)
 			veh:queueLuaCommand('controller.setFreeze(0)')
+			disallowSumoResets(blockedInputActionsOnRound)
 		end
 	end
 	if time and time <= 0 and time > -4 then
 		guihooks.trigger('sumoCountdown', math.abs(time))
 		if time < 0 then
-			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 75})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 60})
 		else
-			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 75})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 50})
 		end
 	end
 	if time and time == 1 then
@@ -563,15 +565,16 @@ function updateSumoGameState(data)
 		end
 		if time % 30 >= 24 and time % 30 <= 29 then
 			guihooks.trigger('sumoAnimateCircleSize', 30)
-			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 60})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 50})
 		end
 		if not isPlayerInCircle then
-			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the inputblocking while on the flag
+			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the other inputblocking 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+			disallowSumoResets(blockedInputActionsOnRound)
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-				-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
+			-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
 				-- print("veh:" .. vehID .." : " .. dump(vehData))
 				local veh = be:getObjectByID(vehID)
-				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)") --If speed > 20 km/h no more resets! (the no more resets get done in )
+				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)")
 			end
 		end
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
@@ -819,9 +822,6 @@ if MPGameNetwork then AddEventHandler("onSumoAirSpeedTooHigh", onSumoAirSpeedToo
 if MPGameNetwork then AddEventHandler("setSumoArenasData", setSumoArenasData) end
 if MPGameNetwork then AddEventHandler("onSumoSaveArena", onSumoSaveArena) end
 if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) end
-
-
-
 
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleSpawned", onSumoVehicleSpawned) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end

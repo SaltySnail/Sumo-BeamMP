@@ -92,6 +92,9 @@ angular.module('beamng.apps')
 
             function updateSector() {
                 canvas = document.getElementById('circleCanvas');
+                if (!canvas) { 
+                    return;
+                }
                 ctx = canvas.getContext('2d');
                 let x = canvas.width / 2;
                 let y = canvas.height / 2;
