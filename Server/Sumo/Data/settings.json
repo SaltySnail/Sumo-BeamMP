@@ -1,3 +1,4 @@
 {
-    "autoStart":false
+    "autoStart":false,
+    "chatCommands":true
 }

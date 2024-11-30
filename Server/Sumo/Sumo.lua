@@ -1,8 +1,19 @@
 --Sumo by Julianstap, 2023
 
 local M = {}
--- M.COBALT_VERSION = "1.7.6"
 -- utils.setLogType("SUMO",93)
+
+--TODO before january:
+--fix AABB stuff, should be in mathlib.lua						
+--fix being able to move first few seconds					
+--fix exploding when spawning in a safe zone				
+--fix cars exploding on others their screen			
+--fix level not spawning when someone joins mid round			
+--disable vehicle spawning during round						
+--make gravity angle bigger									
+--fix timer spawning two threads						
+--have the ability to turn off the alarm
+--fix respawns not being blocked for some people
 
 local floor = math.floor
 local mod = math.fmod
@@ -42,6 +53,7 @@ local teams = false
 local alivePlayers = {}
 local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
 local autoStart = false
+local commandsAllowed = false
 local scoringSystem = true
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
@@ -695,6 +707,10 @@ function onPlayerJoin(playerID)
 			table.insert(arenaNames, name)
 		end
 	end
+	if gameRunning then
+		MP.TriggerClientEvent(playerID, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
+		MP.TriggerClientEvent(playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
+	end
 	-- if arena == "" then onSumoArenaChange() end
 	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
@@ -706,6 +722,7 @@ end
 
 --called whenever a player sends a chat message
 function onChatMessage(playerID, playerName, chatMessage)
+	if not commandsAllowed then return end
 	local player = {}
 	player.playerID = playerID
 	-- print("onChatMessage( " .. dump(player) .. ", " .. chatMessage .. ")")
@@ -841,6 +858,7 @@ function loadSettings()
         local data = Util.JsonDecode(content) -- Decode the JSON data
 		if data then
 			autoStart = data["autoStart"]
+			commandsAllowed = data["chatCommands"]
 		end
     else
         print("Cannot open file:", path)

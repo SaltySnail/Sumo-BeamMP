@@ -36,6 +36,8 @@ local newArena = {}
 newArena.goals = {}
 newArena.spawnLocations = {}
 
+local triggersThatPlayerIsIn = 0
+
 local logTag = "Sumo"
 
 function dump(o)
@@ -289,6 +291,7 @@ function removeSumoPrefabs(type)
 			end
 		end
 	end
+	triggersThatPlayerIsIn = 0
 end
 
 function teleportToSumoArena()
@@ -347,11 +350,12 @@ function onSumoTrigger(data)
     local trigger = data.triggerName
 	local isLocalVehicle = false
     -- if MPVehicleGE.isOwn(data.subjectID) == true then
-	if trigger == "goalTrigger" then	
+	if string.find(trigger, "^goalTrigger%d*$") then	
 		if data.event == "enter" then
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 				if vehID == data.subjectID then
 					-- if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
+					triggersThatPlayerIsIn = triggersThatPlayerIsIn + 1
 					disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
 					isLocalVehicle = true
 					break
@@ -368,10 +372,13 @@ function onSumoTrigger(data)
 		elseif data.event == "exit" then
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 				if vehID == data.subjectID then
-					-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
-					allowSumoResets(blockedInputActionsOnSpeedOrCircle) 
-					isLocalVehicle = true
-					break
+					triggersThatPlayerIsIn = triggersThatPlayerIsIn - 1
+					if triggersThatPlayerIsIn <= 0 then
+						-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
+						allowSumoResets(blockedInputActionsOnSpeedOrCircle) 
+						isLocalVehicle = true
+						break
+					end
 				end
 			end
 			if isLocalVehicle then
