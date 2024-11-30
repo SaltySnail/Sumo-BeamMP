@@ -8,5 +8,9 @@
 			"path": "../Sumo-BeamMP"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"xstring": "cpp"
+		}
+	}
 }

@@ -13,6 +13,7 @@ angular.module('beamng.apps')
         link: function (scope, element, attrs) {
             var streamsList = ['Sumo'];
             var endTime = '30';
+            let timers = [];
             StreamsManager.add(streamsList);
             scope.$on('$destroy', function () {
                 StreamsManager.remove(streamsList);
@@ -46,12 +47,16 @@ angular.module('beamng.apps')
             }
 
             function startTimer() {
-                // clearInterval(timerID)
+                clearInterval(timerID)
                 timerID = setInterval(updateTime, 10);
+                timers.push(timerID);
             }
 
             function removeTimer() {
-                clearInterval(timerID);
+                for (let timer of timers) {
+                    clearInterval(timer);
+                }
+                // clearInterval(timerID);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 resetTime();
                 updateTime();
@@ -166,6 +171,9 @@ angular.module('beamng.apps')
             });   
 
             scope.$on('sumoRemoveTimer', function (event, data) {
+                removeTimer(); //extra for if the time is still ticking
+                removeTimer();
+                removeTimer();
                 removeTimer();
                 // startTimer();
                 // scope.$apply();

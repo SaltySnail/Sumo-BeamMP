@@ -12,7 +12,7 @@ local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_s
 local blockedInputActionsOnSpeedOrCircle = 	{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
-local mapData = {} --TODO: this should be a json file or something for easily adding arenas + this is stupid
+local mapData = {}
 local isPlayerInCircle = false
 
 local currentArena = ""
@@ -159,26 +159,8 @@ function spawnSumoGoal(filepath, offset, rotation)
 	goalPrefabActive = true
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
-	local goalNumber = tonumber(string.match(goalPrefabName, "%d+")) --TODO: make this tonumber()
+	local goalNumber = tonumber(string.match(goalPrefabName, "%d+"))
 	goalPrefabPath = "art/goal.prefab.json"
-	-- 	-- local line = jsonDecode(jsonString)
-	-- 	-- if line.name == "goalTrigger" then 
-	-- 	-- 	goalLocation = vec3(line.position)
-	-- 	-- end
-	-- end
-	-- local modifiedFile = jsonEncode(data)
-	-- file = io.open(goalPrefabPath, "w")
-	-- if not file then retu4rn end
-	-- file:write(modifiedFile)
-	-- file:close()
-
-	-- local file = io.open(goalPrefabPath, "rb")
-	-- if not file then return end
-	-- local jsonString = file:read("*all")
-	-- file:close()
-	-- print( "prefab json after modifying: " .. dump(jsonString))	
-
-	-- print( filepath)
 	local offsetString = '0 0 0'
 	local rotationString = '0 0 1'
 	local scaleString = '1 1 1'
@@ -190,8 +172,6 @@ function spawnSumoGoal(filepath, offset, rotation)
 		local rot = {rx = mapData.arenaData[currentArena].goals[goalNumber].rx, ry = mapData.arenaData[currentArena].goals[goalNumber].ry, rz = mapData.arenaData[currentArena].goals[goalNumber].rz}
 		rot = quatFromEuler(rot.rx, rot.ry, rot.rz)
 		rotationString = rot.x .. " " .. rot.y .. " " .. rot.z .. " " .. rot.w
-		-- rotationString = "" .. mapData.arenaData[currentArena].goals[goalNumber].rx * (math.pi/180) .. " " .. mapData.arenaData[currentArena].goals[goalNumber].ry * (math.pi/180) .. " " .. mapData.arenaData[currentArena].goals[goalNumber].rz * (math.pi/180)
-		-- rotationString = "" .. mapData.arenaData[currentArena].goals[goalNumber].rx .. " " .. mapData.arenaData[currentArena].goals[goalNumber].ry .. " " .. mapData.arenaData[currentArena].goals[goalNumber].rz
 	end
 	if offset then
 		offsetString = "" .. offset.x .. " " .. offset.y .. " " .. offset.z
@@ -199,39 +179,31 @@ function spawnSumoGoal(filepath, offset, rotation)
 	if rotation then
 		rotationString = "" .. rotation.x .. " " .. rotation.y .. " " .. rotation.z
 	end
-	-- if scale then
-	-- 	scaleString = "" .. scale.x .. " " .. scale.y .. " " .. scale.z
-	-- end
 	if gamestate.goalScale then
 		scaleString = "" .. gamestate.goalScale .. " " .. gamestate.goalScale .. " 1" --.. gamestate.goalScale
 	end
-	-- print( "Offset: " .. offsetString)
-	-- print( "Scale: " .. scaleString)
 	goalPrefabObj    = spawnPrefab(goalPrefabName, goalPrefabPath,  offsetString, rotationString, scaleString)
-	-- print( "goalPrefabObj: " .. dump(goalPrefabObj))
-	-- -- -- read local file 
-	-- local file = io.open(goalPrefabPath, "rb")
-	-- if not file then return end
-	-- local jsonString = file:read("*all")
-	-- file:close()
-	-- local data = jsonDecode(jsonString)
-	-- print( "prefab json: " .. dump(jsonString))	
-	-- if data and gamestate.goalScale then 
-	-- 	for _, entry in ipairs(data) do
-	-- 		if entry.name == "goalTrigger" then
-	-- 			goalLocation = entry.position
-	-- 			-- entry.scale[1] = entry.scale[1] * gamestate.goalScale
-	-- 			-- entry.scale[2] = entry.scale[2] * gamestate.goalScale
-	-- 			-- entry.scale[3] = entry.scale[3] * gamestate.goalScale
-	-- 			-- entry.scale = {gamestate.goalScale, gamestate.goalScale, gamestate.goalScale}
-	-- 		elseif entry.name == goalPrefabName .. "TSStatic" then  
-	-- 			-- entry.scale[1] = entry.scale[1] * gamestate.goalScale
-	-- 			-- entry.scale[2] = entry.scale[2] * gamestate.goalScale
-	-- 			-- entry.scale[3] = entry.scale[3] * gamestate.goalScale
-	-- 			-- entry.scale = {gamestate.goalScale, gamestate.goalScale, gamestate.goalScale}
-	-- 		end
-	-- 	end
-	-- end
+	
+	local newObj = createObject('TSStatic')
+	if offset then
+		newObj:setPosition(vec3(offset.x, offset.y, offset.z))
+	elseif mapData.arenaData[currentArena].goals[goalNumber] then
+		newObj:setPosition(vec3(mapData.arenaData[currentArena].goals[goalNumber].x, mapData.arenaData[currentArena].goals[goalNumber].y, mapData.arenaData[currentArena].goals[goalNumber].z))
+	else
+		newObj:setPosition(vec3(0,0,0))
+	end
+	newObj:setField('rotation', 0, rotationString)
+	newObj:setField('shapeName', 0, "/art/safezone_marker.dae")
+	print("goalScale: " .. 3.900 * (tonumber(gamestate.goalScale) or 1) .. " " .. 2.100 * (tonumber(gamestate.goalScale) or 1) .. " " .. 5.300)
+	newObj.scale = vec3(3.900 * (tonumber(gamestate.goalScale) or 1), 2.100 * (tonumber(gamestate.goalScale) or 1), 5.300)
+	newObj.useInstanceRenderData = true
+	newObj:setField('instanceColor', 0, string.format("%g %g %g %g", 0,0.183,0.684,1))
+	newObj:setField('instanceColor1', 0, string.format("%g %g %g %g", 0.961126566,0.961126566,0.961126566,1))
+	newObj:setField('collisionType', 0, "Collision Mesh")
+	newObj:setField('decalType', 0, "Collision Mesh")
+	newObj.canSave = true
+	newObj:registerObject(goalPrefabName .. "TSStatic")
+	scenetree.MissionGroup:addObject(newObj)
 end
 
 function onSumoCreateGoal()
@@ -446,7 +418,7 @@ function onReverseGravityTrigger(data)
 			local veh = be:getObjectByID(data.subjectID)
 			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
 			--print(dump(upVector))
-			if upVector.z > 50 and upVector.z < 65 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+			if upVector.z > 40 and upVector.z < 75 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
 				local pos = veh:getPosition()
 				local rot = veh:getRotation()
 				rot = rot:toEuler() * (180/math.pi)
@@ -520,19 +492,21 @@ function updateSumoGameState(data)
 	local txt = ""
 	if time and time == -8 then
 		core_gamestate.setGameState('sumo', 'sumo', 'sumo')
-		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-			local veh = be:getObjectByID(vehID)
-			veh:queueLuaCommand('controller.setFreeze(1)')
-			disallowSumoResets(blockedInputActionsOnDeath)
-		end
+		be:queueAllObjectLua("controller.setFreeze(1)")
+		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		-- 	local veh = be:getObjectByID(vehID)
+		-- 	veh:queueLuaCommand('controller.setFreeze(1)')
+		-- end
+		disallowSumoResets(blockedInputActionsOnDeath)
 	end
 	if time and time == 0 then 
 		guihooks.trigger('sumoStartTimer', 30)
-		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-			local veh = be:getObjectByID(vehID)
-			veh:queueLuaCommand('controller.setFreeze(0)')
-			disallowSumoResets(blockedInputActionsOnRound)
-		end
+		be:queueAllObjectLua("controller.setFreeze(0)")
+		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		-- 	local veh = be:getObjectByID(vehID)
+		-- 	veh:queueLuaCommand('controller.setFreeze(0)')
+		-- end
+		disallowSumoResets(blockedInputActionsOnRound)
 	end
 	if time and time <= 0 and time > -4 then
 		guihooks.trigger('sumoCountdown', math.abs(time))
@@ -565,7 +539,7 @@ function updateSumoGameState(data)
 		end
 		if time % 30 >= 24 and time % 30 <= 29 then
 			guihooks.trigger('sumoAnimateCircleSize', 30)
-			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 50})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 10})
 		end
 		if not isPlayerInCircle then
 			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the other inputblocking 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -726,6 +700,9 @@ function onPreRender(dt)
 	if goalLocation then
 		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
 	end
+	-- if getPlayerVehicle(0):getSpawnWorldOOBB() then --TODO: fix this if, getSpawnWorlOOBB returns the coordinates for the vehicle. What needs to be done is check if the vehicle nodes are less distance away of all the BeamNGTrigger nodes than the size of the BeamNGTrigger.
+		
+	-- end
 	-- local currentVehID = be:getPlayerVehicleID(0)
 	-- local currentOwnerName = MPConfig.getNickname()
 	-- if currentVehID and MPVehicleGE.getVehicleByGameID(currentVehID) then
