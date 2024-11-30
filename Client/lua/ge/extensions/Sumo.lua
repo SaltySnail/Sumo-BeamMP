@@ -247,6 +247,11 @@ function removeSumoPrefabs(type)
 	print( "removeSumoPrefabs(" .. type .. ") Called" )
 	if type == "goal" and goalPrefabActive then 
 		removePrefab(goalPrefabName)
+		for _, objectName in pairs(scenetree.getAllObjects()) do
+			if objectName:find("^goal%d*TSStatic$") then 
+				scenetree.findObject(objectName):delete()
+			end
+		end
 		-- print( "Removing: " .. goalPrefabName)
 		goalPrefabActive = false
 	elseif type == "all" then
@@ -277,6 +282,11 @@ function removeSumoPrefabs(type)
 			prefabPath = "goal" .. goalID
 			-- print( "Removing: " .. prefabPath)
 			removePrefab(prefabPath)
+		end
+		for _, objectName in pairs(scenetree.getAllObjects()) do
+			if objectName:find("^goal%d*TSStatic$") then 
+				scenetree.findObject(objectName):delete()
+			end
 		end
 	end
 end
