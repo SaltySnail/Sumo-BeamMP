@@ -1,4 +1,5 @@
 {
     "autoStart":false,
-    "chatCommands":true
+    "chatCommands":true,
+    "safezoneEndAlarm":true
 }

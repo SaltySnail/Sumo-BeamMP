@@ -4,16 +4,16 @@ local M = {}
 -- utils.setLogType("SUMO",93)
 
 --TODO before january:
---fix AABB stuff, should be in mathlib.lua						
---fix being able to move first few seconds					
---fix exploding when spawning in a safe zone				
---fix cars exploding on others their screen			
---fix level not spawning when someone joins mid round			
---disable vehicle spawning during round						
---make gravity angle bigger									
---fix timer spawning two threads						
---have the ability to turn off the alarm
---fix respawns not being blocked for some people
+--fix AABB stuff, should be in mathlib.lua	  V					
+--fix being able to move first few seconds		V			
+--fix exploding when spawning in a safe zone	V			
+--fix cars exploding on others their screen		V?????? 	
+--fix level not spawning when someone joins mid round	 V? 		
+--disable vehicle spawning during round			V			
+--make gravity angle bigger					V				
+--fix timer spawning two threads					V???????	
+--have the ability to turn off the alarm           V?
+--fix respawns not being blocked for some people                V?
 
 local floor = math.floor
 local mod = math.fmod
@@ -37,9 +37,9 @@ local goalID = -1
 
 gameState.gameRunning = false
 gameState.gameEnding = false
-gameState.currentArena = ""
 gameState.goalCount = 1
 gameState.goalScale = 1
+gameState.safezoneEndAlarm = true
 -- gameState.goalScaleResize = 0
 
 local roundLength = 5*60 -- length of the game in seconds
@@ -51,9 +51,10 @@ local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
 local alivePlayers = {}
-local MAX_ALIVE = 1 --for debugging use 0, else use 1 (I miss defines :( )
+local MAX_ALIVE = 1 --for debugging use 0, else use 1
 local autoStart = false
-local commandsAllowed = false
+local commandsAllowed = true
+local safezoneEndAlarm = true
 local scoringSystem = true
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
@@ -70,19 +71,6 @@ function dump(o)
        return tostring(o)
     end
 end
-
--- function applyStuff(targetDatabase, tables)
--- 	local appliedTables = {}
--- 	for tableName, table in pairs(tables) do
--- 		if targetDatabase[tableName]:exists() == false then
--- 			for key, value in pairs(table) do
--- 				targetDatabase[tableName][key] = value
--- 			end
--- 			appliedTables[tableName] = tableName
--- 		end
--- 	end
--- 	return appliedTables
--- end
 
 --called whenever the extension is loaded
 function onInit()
@@ -120,16 +108,7 @@ function onInit()
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
-	
-	-- for k, v in pairs(MP.GetPlayers()) do
-    --     onPlayerJoin(k)
-    --     if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
-    -- end
 
-	-- MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil")
-	-- if arena == "" then onSumoArenaChange() end
-	 
-	-- applyStuff(commands, SumoCommands)
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
 end
@@ -291,12 +270,6 @@ function spawnSumoGoal()
 	MP.TriggerClientEvent(-1, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json") --flagPrefabTable[rand(1, flagPrefabTable.size())]
 end
 
-
--- function setSumoLevelName(playerID, name)
--- 	levelName = name
--- 	print("level name: " .. levelName)
--- end
-
 function onSumoArenaChange()	
 	local foundArena = false
 	for key,arenaName in pairs(arenaNames) do
@@ -375,13 +348,8 @@ function sumoGameSetup()
 			local player = {}
 			if not gameState.players[Name] then gameState.players[Name] = {} end
 			gameState.players[Name].ID = ID
-			-- player.score = 0
 			gameState.players[Name].team = chosenTeam
 			gameState.players[Name].dead = false
-			-- player.allowedResets = true
-			-- player.resetTimer = 3
-			-- player.resetTimerActive = false
-			-- gameState.players[Player] = player
 			teamCount = teamCount + 1
 		end
 	end
@@ -399,14 +367,9 @@ function sumoGameSetup()
 	gameState.gameEnding = false
 	gameState.gameEnded = false
 	gameState.teams = teams
-	gameState.currentArena = ""
 	gameState.goalCount = 1
 	gameState.goalScale = 1
-	-- if playercount and playercount > 1 then
-	-- 	gameState.goalScaleResize = 0 * (playercount - 1) 
-	-- else 
-	-- 	gameState.goalScaleResize = 0
-	-- end
+	gameState.safezoneEndAlarm = safezoneEndAlarm
 
 	spawnSumoGoal()
 	-- MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json")
@@ -464,16 +427,11 @@ function sumoGameEnd(reason)
 end
 
 function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
-	-- MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json") 
 	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
 	for goalID=1,goalPrefabCount do
 		MP.TriggerClientEvent(player.playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
 end
-
--- function createSumoGoal(player)
--- 	MP.TriggerClientEvent(player.playerID, "onSumoCreateGoal", "nil")
--- end
 
 function sumo(player, argument)
 	if argument == "help" then
@@ -544,12 +502,6 @@ function sumo(player, argument)
 			else
 				MP.SendChatMessage(player.playerID, "Possible arenas to play on this map: " .. dump(arenaNames))
 			end
-		-- elseif subArgument == "levels" then
-		-- 	if levels == {} then
-		-- 		MP.SendChatMessage(player.playerID, "There are no levels available for sumo, obviously something is very wrong.")
-		-- 	else
-		-- 		MP.SendChatMessage(player.playerID, "Possible levels to play sumo on: " .. dump(levels))
-		-- 	end
 		else
 			MP.SendChatMessage(player.playerID, "I can't " .. argument .. ", try something else (like list arenas).")
 		end
@@ -656,7 +608,6 @@ function sumoTimer()
 		if autoStartTimer >= 30 then
 			autoStartTimer = 0
 			selectRandomArena()
-			-- onSumoArenaChange()
 			sumoGameSetup()
 		end
 	end
@@ -677,11 +628,6 @@ function onPlayerAuth(playerID)
 
 end
 
---called whenever someone begins connecting to the server
--- function onPlayerConnecting(playerID)
--- 	MP.TriggerClientEventJson(playerID, "receiveSumoGameState", gameState)
--- end
-
 --called when a player begins loading
 function onPlayerJoining(player)
 
@@ -700,19 +646,16 @@ function onPlayerJoin(playerID)
 	-- print(Util.JsonPrettify(contents))
 	file:close()
 	-- print("onPlayerJoin" .. playerID .. ": " .. Util.JsonPrettify(contents))
-	-- contents = 
 	MP.TriggerClientEvent(playerID, "setSumoArenasData", Util.JsonMinify(contents))
 	if next(arenaNames) == nil then --fill arenaNames
 		for name, value in pairs(Util.JsonDecode(contents)) do
 			table.insert(arenaNames, name)
 		end
 	end
-	if gameRunning then
+	if arena and gameState.gameRunning then
 		MP.TriggerClientEvent(playerID, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
 		MP.TriggerClientEvent(playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
-	-- if arena == "" then onSumoArenaChange() end
-	-- MP.TriggerClientEvent(-1, "requestSumoLevels", "nil")
 end
 
 --called whenever a player disconnects from the server
@@ -739,23 +682,7 @@ end
 
 --called whenever a player spawns a vehicle.
 function onVehicleSpawn(playerID, vehID,  data)
-	-- print("onVehicleSpawn Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(data))
-	-- MP.TriggerClientEvent(player, "onSumoVehicleSpawned", vehID)
-	-- markSumoVehicleToExplode(vehID)
-	-- for ID,Name in pairs(MP.GetPlayers()) do
-	-- 	if MP.IsPlayerConnected(ID) then
-	-- 		local player = {}
-	-- 		player.ID = ID
-	-- 		-- player.score = 0
-	-- 		-- player.team = chosenTeam
-	-- 		player.dead = false
-	-- 		-- player.allowedResets = true
-	-- 		-- player.resetTimer = 3
-	-- 		-- player.resetTimerActive = false
-	-- 		players[Name] = player
-	-- 		-- teamCount = teamCount + 1
-	-- 	end
-	-- end
+
 end
 
 --called whenever a player applies their vehicle edits.
@@ -770,8 +697,7 @@ end
 
 --called whenever a vehicle is deleted
 function onVehicleDeleted(playerID, vehID,  source)
-	-- print("onVehicleDeleted Called: \t" .. dump(player) .. " " .. vehID .. " " .. dump(source))
-	-- MP.TriggerClientEvent(player, "onSumoVehicleDeleted", vehID)
+
 end
 
 --whenever a message is sent to the Rcon
@@ -859,6 +785,7 @@ function loadSettings()
 		if data then
 			autoStart = data["autoStart"]
 			commandsAllowed = data["chatCommands"]
+			safezoneEndAlarm = data["safezoneEndAlarm"]
 		end
     else
         print("Cannot open file:", path)

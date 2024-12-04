@@ -314,7 +314,7 @@ function teleportToSumoArena()
 end
 
 function onSumoGameEnd()
-	core_gamestate.setGameState('multiplayer', 'multiplayer', 'multiplayer') --reset the app layout
+	core_gamestate.setGameState('scenario', 'multiplayer', 'multiplayer') --reset the app layout
 	allowSumoResets(blockedInputActionsOnRound)
 	allowSumoResets(blockedInputActionsOnSpeedOrCircle)
 	allowSumoResets(blockedInputActionsOnDeath)
@@ -435,7 +435,7 @@ function onReverseGravityTrigger(data)
 			local veh = be:getObjectByID(data.subjectID)
 			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
 			--print(dump(upVector))
-			if upVector.z > 40 and upVector.z < 75 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+			if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
 				local pos = veh:getPosition()
 				local rot = veh:getRotation()
 				rot = rot:toEuler() * (180/math.pi)
@@ -508,7 +508,7 @@ function updateSumoGameState(data)
 
 	local txt = ""
 	if time and time == -8 then 
-		core_gamestate.setGameState('sumo', 'sumo', 'sumo')
+		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
 	end
 	if time and time < 0  and time >= -10 then
 		be:queueAllObjectLua("controller.setFreeze(1)")
@@ -558,7 +558,9 @@ function updateSumoGameState(data)
 		end
 		if time % 30 >= 24 and time % 30 <= 29 then
 			guihooks.trigger('sumoAnimateCircleSize', 30)
-			Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 10})
+			if gamestate.safezoneEndAlarm then
+				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 10})
+			end
 		end
 		if not isPlayerInCircle then
 			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the other inputblocking 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
