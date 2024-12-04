@@ -712,14 +712,47 @@ function sumoColor(player,vehicle,team,dt)
 	-- end
 end
 
+local vecX = vec3(1,0,0)
+local vecY = vec3(0,1,0)
+local vecZ = vec3(0,0,1)
+
 function onPreRender(dt)
-	if MPCoreNetwork and not MPCoreNetwork.isMPSession() then return end
-	if goalLocation then
+	if MPCoreNetwork and not MPCoreNetwork.isMPSession() and not gamestate.gameRunning then return end
+	if goalLocation and goalPrefabActive then
 		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
 	end
-	-- if getPlayerVehicle(0):getSpawnWorldOOBB() then --TODO: fix this if, getSpawnWorlOOBB returns the coordinates for the vehicle. What needs to be done is check if the vehicle nodes are less distance away of all the BeamNGTrigger nodes than the size of the BeamNGTrigger.
-		
-	-- end
+	local pos, rot, scl
+	local zVec, yVec, xVec
+	for _, objectName in pairs(scenetree.getAllObjects()) do
+		-- print(objectName)
+		if string.find(objectName, "^goal%d*TSStatic") then 
+			goalObj = scenetree.findObject(objectName)
+			-- goalObj.getField("ID")
+			pos, rot, scl = goalObj:getPosition(), quat(goalObj:getRotation()), goalObj:getScale()
+      		zVec, yVec, xVec = rot*vecZ*scl.z, rot*vecY*scl.y, rot*vecX*scl.x
+			-- print(dump(goalObj) .. " " .. dump(pos))
+		end
+	end
+	if not goalObj or not pos or not xVec or not yVec or not zVec then return end
+	if not be:getPlayerVehicle(0) then return end
+	local bb1 = be:getPlayerVehicle(0):getSpawnWorldOOBB()
+	-- print(dump(bb2))
+	-- print(pos .. " " .. xVec .. " " .. yVec .. " " .. zVec)
+ 	if overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, pos, xVec, yVec, zVec) then
+		-- print("player is inside safe zone!")
+		trigger = {}
+		trigger.event = "enter"
+		trigger.triggerName = "goalTrigger0"
+		trigger.subjectID = be:getPlayerVehicle(0):getID()
+		onSumoTrigger(trigger)
+	else
+		trigger = {}
+		trigger.event = "exit"
+		trigger.triggerName = "goalTrigger0"
+		trigger.subjectID = be:getPlayerVehicle(0):getID()
+		onSumoTrigger(trigger)
+	end
+
 	-- local currentVehID = be:getPlayerVehicleID(0)
 	-- local currentOwnerName = MPConfig.getNickname()
 	-- if currentVehID and MPVehicleGE.getVehicleByGameID(currentVehID) then
