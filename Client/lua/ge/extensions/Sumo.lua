@@ -507,8 +507,10 @@ function updateSumoGameState(data)
 	-- end
 
 	local txt = ""
-	if time and time == -8 then
+	if time and time == -8 then 
 		core_gamestate.setGameState('sumo', 'sumo', 'sumo')
+	end
+	if time and time < 0  and time >= -10 then
 		be:queueAllObjectLua("controller.setFreeze(1)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	local veh = be:getObjectByID(vehID)
