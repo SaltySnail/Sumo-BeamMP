@@ -530,9 +530,9 @@ function updateSumoGameState(data)
 	if time and time <= 0 and time > -4 then
 		guihooks.trigger('sumoCountdown', math.abs(time))
 		if time < 0 then
-			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 60})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 50})
 		else
-			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 50})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 40})
 		end
 	end
 	if time and time == 1 then
@@ -559,7 +559,7 @@ function updateSumoGameState(data)
 		if time % 30 >= 24 and time % 30 <= 29 then
 			guihooks.trigger('sumoAnimateCircleSize', 30)
 			if gamestate.safezoneEndAlarm then
-				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 10})
+				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 5})
 			end
 		end
 		if not isPlayerInCircle then

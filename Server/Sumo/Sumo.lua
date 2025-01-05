@@ -7,13 +7,23 @@ local M = {}
 --fix AABB stuff, should be in mathlib.lua	  V					
 --fix being able to move first few seconds		V			
 --fix exploding when spawning in a safe zone	V			
---fix cars exploding on others their screen		V?????? 	
---fix level not spawning when someone joins mid round	 V? 		
+--fix cars exploding on others their screen		V	
+--fix level not spawning when someone joins mid round	 V		
 --disable vehicle spawning during round			V			
---make gravity angle bigger					V				
---fix timer spawning two threads					V???????	
---have the ability to turn off the alarm           V?
+--make gravity angle bigger					V			
+--have the ability to turn off the alarm           V
 --fix respawns not being blocked for some people                V?
+
+
+--safezone doesnt spawn star sometimes
+--upside down triggers dont work
+--scores don't show up when multiple people are joining
+--resets still sometimes not disabled :/ FIX THIS IT WERKS WHEN YOU ARE IN THE ZONE!! HINT HINT
+--have random car setting thingy as extra feature
+--maybe have extra size in the OBB	
+--fix timer spawning two threads	
+--fix game starting when someone doesn't have a car				
+
 
 local floor = math.floor
 local mod = math.fmod
@@ -458,6 +468,16 @@ function sumo(player, argument)
 			roundLength = number * 60
 			print("Sumo game starting with duration: " .. number)
 		end
+		local playerCount = 0
+		for ID,Player in pairs(MP.GetPlayers()) do
+			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+				playerCount = playerCount + 1
+			end
+		end
+		if playerCount <= MAX_ALIVE then
+			MP.SendChatMessage(player.playerID, "Can't start the game on your own.")
+			return 1
+		end
 		if not gameState.gameRunning then
 			sumoGameSetup()
 			MP.SendChatMessage(-1, "Sumo started, GO GO GO!")
@@ -603,6 +623,13 @@ function sumoTimer()
 			end
 		end
 	elseif autoStart and MP.GetPlayerCount() > MAX_ALIVE then
+		local playerCount = 0
+		for ID,Player in pairs(MP.GetPlayers()) do
+			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+				playerCount = playerCount + 1
+			end
+		end
+		if playerCount <= MAX_ALIVE then return end
 		autoStartTimer = autoStartTimer + 1
 		MP.SendChatMessage(-1, "New round starts in: " .. 30 - autoStartTimer .. "s")
 		if autoStartTimer >= 30 then
