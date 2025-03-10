@@ -32,6 +32,10 @@ local obstaclesPrefabPath
 local obstaclesPrefabName
 local obstaclesPrefabObj
 
+local debugSphereColorTriggered = ColorF(0,1,0,1)
+local debugSphereColorNeutral = ColorF(1,0,0,1)
+local debugView = false
+
 local newArena = {}
 newArena.goals = {}
 newArena.spawnLocations = {}
@@ -150,11 +154,13 @@ end
 function allowSumoResets(data)
 	extensions.core_input_actionFilter.setGroup('sumo', data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', false)
+	print('allowSumoResets called')
 end
 
 function disallowSumoResets(data)
 	extensions.core_input_actionFilter.setGroup('sumo', data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', true)
+	print('disallowSumoResets called')
 end
 
 function spawnSumoGoal(filepath, offset, rotation) 
@@ -248,9 +254,12 @@ end
 function removeSumoPrefabs(type)
 	print( "removeSumoPrefabs(" .. type .. ") Called" )
 	if type == "goal" and goalPrefabActive then 
-		removePrefab(goalPrefabName)
+		
 		for _, objectName in pairs(scenetree.getAllObjects()) do
 			if objectName:find("^goal%d*TSStatic$") then 
+				scenetree.findObject(objectName):delete()
+			end
+			if objectName:find("^goal%d*$") then 
 				scenetree.findObject(objectName):delete()
 			end
 		end
@@ -507,10 +516,14 @@ function updateSumoGameState(data)
 	-- end
 
 	local txt = ""
-	if time and time == -8 then 
+	if gamestate.randomVehicles and time and time == -28 then 
+		spawnSumoRandomVehicle()
 		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
 	end
-	if time and time < 0  and time >= -10 then
+	if not gamestate.randomVehicles and time and time == -8 then 
+		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
+	end
+	if time and time < 0 then
 		be:queueAllObjectLua("controller.setFreeze(1)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	local veh = be:getObjectByID(vehID)
@@ -556,7 +569,7 @@ function updateSumoGameState(data)
 		if time % 30 == 0 then
 			guihooks.trigger('sumoSyncTimer', 30);
 		end
-		if time % 30 >= 24 and time % 30 <= 29 then
+		if time and time > 0 and time % 30 >= 24 and time % 30 <= 29 then
 			guihooks.trigger('sumoAnimateCircleSize', 30)
 			if gamestate.safezoneEndAlarm then
 				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 5})
@@ -721,13 +734,13 @@ local vecY = vec3(0,1,0)
 local vecZ = vec3(0,0,1)
 
 function onPreRender(dt)
-	if MPCoreNetwork and not MPCoreNetwork.isMPSession() and not gamestate.gameRunning then return end
+	if not gamestate.gameRunning then return end
 	if goalLocation and goalPrefabActive then
 		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
 	end
 	local pos, rot, scl
 	local zVec, yVec, xVec
-	for _, objectName in pairs(scenetree.getAllObjects()) do
+	for _, objectName in pairs(scenetree.getAllObjects()) do --TODO: move this to when a goal is created
 		-- print(objectName)
 		if string.find(objectName, "^goal%d*TSStatic") then 
 			goalObj = scenetree.findObject(objectName)
@@ -739,22 +752,40 @@ function onPreRender(dt)
 	end
 	if not goalObj or not pos or not xVec or not yVec or not zVec then return end
 	if not be:getPlayerVehicle(0) then return end
-	local bb1 = be:getPlayerVehicle(0):getSpawnWorldOOBB()
-	-- print(dump(bb2))
-	-- print(pos .. " " .. xVec .. " " .. yVec .. " " .. zVec)
- 	if overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, pos, xVec, yVec, zVec) then
-		-- print("player is inside safe zone!")
-		trigger = {}
-		trigger.event = "enter"
-		trigger.triggerName = "goalTrigger0"
-		trigger.subjectID = be:getPlayerVehicle(0):getID()
-		onSumoTrigger(trigger)
-	else
-		trigger = {}
-		trigger.event = "exit"
-		trigger.triggerName = "goalTrigger0"
-		trigger.subjectID = be:getPlayerVehicle(0):getID()
-		onSumoTrigger(trigger)
+	local playerVehicle = be:getPlayerVehicle(0)
+	local bb1 = playerVehicle:getSpawnWorldOOBB()
+	xVec = xVec * 1.5 --make the hitbox of the safezone the same size as the visual safezone
+	yVec = yVec * 3
+	zVec = zVec * 2
+	local isInsideSafezone = overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, pos, xVec, yVec, zVec)
+
+	if playerVehicle.isInsideSafezone ~= isInsideSafezone then
+		playerVehicle.isInsideSafezone = isInsideSafezone
+		if isInsideSafezone then
+			if debugView then
+				debugDrawer:drawSphere(pos, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(pos + xVec, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(pos + yVec, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(pos + zVec, 0.1, debugSphereColorTriggered)
+			end
+			trigger = {}
+			trigger.event = "enter"
+			trigger.triggerName = "goalTrigger0"
+			trigger.subjectID = playerVehicle:getID()
+			onSumoTrigger(trigger)
+		else
+			if debugView then
+				debugDrawer:drawSphere(pos, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(pos + xVec, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(pos + yVec, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(pos + zVec, 0.1, debugSphereColorNeutral)
+			end
+			trigger = {}
+			trigger.event = "exit"
+			trigger.triggerName = "goalTrigger0"
+			trigger.subjectID = playerVehicle:getID()
+			onSumoTrigger(trigger)
+		end
 	end
 
 	-- local currentVehID = be:getPlayerVehicleID(0)
@@ -829,6 +860,45 @@ function onSumoSaveArena(name)
 	TriggerServerEvent("sumoSaveArena", jsonEncode(newArena))
 end
 
+function spawnSumoRandomVehicle()
+	
+	local chosenConfig = ''
+	
+	local numVehicles = #core_vehicles.getModelList(true).models
+	local chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
+	
+	-- Choose a single vehicle model
+	-- Reroll away undesired results
+	while (chosenModel.Type == 'Prop' or 
+			chosenModel.Type == 'Trailer' or
+			chosenModel.Type == 'Automation' or
+			chosenModel.Type == 'Truck') do
+		chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
+	end 
+	
+	local allConfigs = core_vehicles.getConfigList(true)
+	local modelConfigs = {}
+	
+	-- Build a list of configs for the chosen model
+	for i,v in pairs(allConfigs.configs) do
+		if (v.model_key == chosenModel.key) then
+			table.insert(modelConfigs, {key = v.key, name = v.Name})
+		end
+	end
+
+	-- Randomly choose a config
+	if (#modelConfigs == 0) then ui_message("No configs found for "..chosenModel.Name)
+	else chosenConfig = modelConfigs[math.random(1,#modelConfigs)]
+	end
+
+	-- Spawn the vehicle
+	core_vehicles.replaceVehicle(chosenModel.key, {config = chosenConfig.key})
+	ui_message('Spawned: '..chosenConfig.name)
+
+	--Create a log for examining spawn frequencies
+	--print("Fairmode: "..chosenModel.key)
+end
+
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
 if MPGameNetwork then AddEventHandler("onSumoCreateGoal", onSumoCreateGoal) end
@@ -853,6 +923,7 @@ if MPGameNetwork then AddEventHandler("onSumoAirSpeedTooHigh", onSumoAirSpeedToo
 if MPGameNetwork then AddEventHandler("setSumoArenasData", setSumoArenasData) end
 if MPGameNetwork then AddEventHandler("onSumoSaveArena", onSumoSaveArena) end
 if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) end
+if MPGameNetwork then AddEventHandler("spawnSumoRandomVehicle", spawnSumoRandomVehicle) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleSpawned", onSumoVehicleSpawned) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
@@ -892,6 +963,7 @@ M.setSumoArenasData = setSumoArenasData
 M.onSumoSaveArena = onSumoSaveArena
 M.onSumoCreateSpawn = onSumoCreateSpawn
 M.onReverseGravityTrigger = onReverseGravityTrigger
+M.spawnSumoRandomVehicle = spawnSumoRandomVehicle
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M

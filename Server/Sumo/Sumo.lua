@@ -1,29 +1,6 @@
 --Sumo by Julianstap, 2023
 
 local M = {}
--- utils.setLogType("SUMO",93)
-
---TODO before january:
---fix AABB stuff, should be in mathlib.lua	  V					
---fix being able to move first few seconds		V			
---fix exploding when spawning in a safe zone	V			
---fix cars exploding on others their screen		V	
---fix level not spawning when someone joins mid round	 V		
---disable vehicle spawning during round			V			
---make gravity angle bigger					V			
---have the ability to turn off the alarm           V
---fix respawns not being blocked for some people                V?
-
-
---safezone doesnt spawn star sometimes
---upside down triggers dont work
---scores don't show up when multiple people are joining
---resets still sometimes not disabled :/ FIX THIS IT WERKS WHEN YOU ARE IN THE ZONE!! HINT HINT
---have random car setting thingy as extra feature
---maybe have extra size in the OBB	
---fix timer spawning two threads	
---fix game starting when someone doesn't have a car				
-
 
 local floor = math.floor
 local mod = math.fmod
@@ -54,7 +31,7 @@ gameState.safezoneEndAlarm = true
 
 local roundLength = 5*60 -- length of the game in seconds
 local goalTime = 30
-local goalEndTime = -10
+local goalEndTime = -10000
 local defaultRedFadeDistance = 100 -- the distance between a flag carrier and someone that doesn't have the flag, where the screen of the flag carrier will turn red
 local defaultColorPulse = true -- if the car color should pulse between the car color and blue
 local defaultFlagTint = true -- if the infecor should have a blue tint
@@ -62,6 +39,7 @@ local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
 local alivePlayers = {}
 local MAX_ALIVE = 1 --for debugging use 0, else use 1
+local randomVehicles = false
 local autoStart = false
 local commandsAllowed = true
 local safezoneEndAlarm = true
@@ -370,7 +348,12 @@ function sumoGameSetup()
 	end
 
 	gameState.playerCount = playerCount
-	gameState.time = -9
+	gameState.randomVehicles = randomVehicles
+	if randomVehicles then
+		gameState.time = -29
+	else
+		gameState.time = -9
+	end
 	gameState.roundLength = roundLength
 	gameState.endtime = -1
 	gameState.gameRunning = true
@@ -398,7 +381,21 @@ function sumoGameEnd(reason)
 		MP.SendChatMessage(-1,"Game stopped for uknown reason")
 	else
 		if reason == "time" then
-			MP.SendChatMessage(-1,"Game over, time limit was reached")
+			if #alivePlayers > 0 then
+				MP.SendChatMessage(-1,"Game over the time limit was reached, the winners are: ")
+				for i=1,#alivePlayers do
+					MP.SendChatMessage(-1, alivePlayers[i])
+					if scoringSystem then
+						if gameState.players[alivePlayers[i]].score then
+							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 1
+						else
+							gameState.players[alivePlayers[i]].score = 1
+						end
+					end
+				end
+			else
+				MP.SendChatMessage(-1,"Game over, time limit was reached")
+			end
 		elseif reason == "manual" then
 			MP.SendChatMessage(-1,"Game stopped, Everyone Looses")
 			gameState.endtime = gameState.time + 10
@@ -504,6 +501,16 @@ function sumo(player, argument)
 			autoStart = false
 		end
 		MP.SendChatMessage(player.playerID, "Sumo auto mode : " .. autoString)
+	elseif string.find(argument, "random vehicles %S") then
+		local randomVehiclesString = string.sub(argument,17,10000)
+		if randomVehiclesString == "true" then
+			randomVehicles = true
+		elseif randomVehiclesString == "false" then
+			randomVehicles = false
+		else
+			MP.SendChatMessage(player.playerID, "I don't know " .. randomVehiclesString .. ", available options are true or false.")
+		end
+		MP.SendChatMessage(player.playerID, "Sumo random vehicles mode : " .. tostring(randomVehicles))
 	elseif string.find(argument, "create %S") then
 		local createString = string.sub(argument,8,10000) 
 		if createString == "goal" then
@@ -785,12 +792,12 @@ end
 
 function markSumoVehicleToExplode(playerID, vehID)
 	vehiclesToExplode["" .. vehID] = true
-	print("Veh marked for exploding: " .. vehID)
+	-- print("Veh marked for exploding: " .. vehID)
 end
 
 function unmarkSumoVehicleToExplode(playerID, vehID)
 	vehiclesToExplode["" .. vehID] = false
-	print("Veh unmarked for exploding: " .. vehID)
+	-- print("Veh unmarked for exploding: " .. vehID)
 end
 
 function selectRandomArena()
@@ -813,6 +820,7 @@ function loadSettings()
 			autoStart = data["autoStart"]
 			commandsAllowed = data["chatCommands"]
 			safezoneEndAlarm = data["safezoneEndAlarm"]
+			randomVehicles = data["randomVehicles"]
 		end
     else
         print("Cannot open file:", path)

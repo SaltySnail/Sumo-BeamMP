@@ -47,7 +47,7 @@ angular.module('beamng.apps')
             }
 
             function startTimer() {
-                clearInterval(timerID)
+                removeTimer()
                 timerID = setInterval(updateTime, 10);
                 timers.push(timerID);
             }
@@ -57,7 +57,9 @@ angular.module('beamng.apps')
                     clearInterval(timer);
                 }
                 // clearInterval(timerID);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (ctx) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
                 resetTime();
                 updateTime();
             }

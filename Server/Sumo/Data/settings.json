@@ -1,5 +1,6 @@
 {
     "autoStart":false,
     "chatCommands":true,
-    "safezoneEndAlarm":true
+    "safezoneEndAlarm":true,
+    "randomVehicles":false
 }
