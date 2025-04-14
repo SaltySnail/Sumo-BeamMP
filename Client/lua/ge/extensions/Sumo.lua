@@ -7,13 +7,14 @@ local rand = math.random
 local gamestate = {players = {}, settings = {}}
 
 --blocked inputs when dead
-local blockedInputActionsOnDeath = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
-local blockedInputActionsOnSpeedOrCircle = 	{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
+local allInputActions = 					{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
 local isPlayerInCircle = false
+local isPlayerBelowSpeedLimit = false
+local isPlayerDead = false
 
 local currentArena = ""
 local currentLevel = ""
@@ -154,13 +155,13 @@ end
 function allowSumoResets(data)
 	extensions.core_input_actionFilter.setGroup('sumo', data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', false)
-	print('allowSumoResets called')
+	-- print('allowSumoResets called')
 end
 
 function disallowSumoResets(data)
 	extensions.core_input_actionFilter.setGroup('sumo', data)
 	extensions.core_input_actionFilter.addAction(0, 'sumo', true)
-	print('disallowSumoResets called')
+	-- print('disallowSumoResets called')
 end
 
 function spawnSumoGoal(filepath, offset, rotation) 
@@ -172,7 +173,7 @@ function spawnSumoGoal(filepath, offset, rotation)
 	local offsetString = '0 0 0'
 	local rotationString = '0 0 1'
 	local scaleString = '1 1 1'
-	print(currentArena .. " " .. goalNumber)
+	print("Spawning goal: " .. currentArena .. " " .. goalNumber)
 	if mapData.arenaData[currentArena].goals[goalNumber] then
 		offsetString = "" .. mapData.arenaData[currentArena].goals[goalNumber].x .. " " .. mapData.arenaData[currentArena].goals[goalNumber].y .. " " .. mapData.arenaData[currentArena].goals[goalNumber].z
 		goalLocation = {}
@@ -248,7 +249,6 @@ function spawnSumoObstacles(filepath)
 	obstaclesPrefabName   = string.gsub(obstaclesPrefabPath, "(.*/)(.*)", "%2"):sub(1, -13)
 	obstaclesPrefabObj    = spawnPrefab(obstaclesPrefabName, obstaclesPrefabPath, '0 0 0', '0 0 1', '1 1 1')
 	be:reloadStaticCollision(true)
-	disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
 end
 
 function removeSumoPrefabs(type)
@@ -325,11 +325,20 @@ end
 function onSumoGameEnd()
 	core_gamestate.setGameState('scenario', 'multiplayer', 'multiplayer') --reset the app layout
 	allowSumoResets(blockedInputActionsOnRound)
-	allowSumoResets(blockedInputActionsOnSpeedOrCircle)
-	allowSumoResets(blockedInputActionsOnDeath)
+	allowSumoResets(allInputActions)
 	goalScale = 1
 	goalLocation = nil
 	removeSumoPrefabs("all")
+end
+
+function handleResetState()
+	print("handleResetState called player in circle: " .. tostring(isPlayerInCircle) .. " below speed limit: " .. tostring(isPlayerBelowSpeedLimit) .. " dead: " .. tostring(isPlayerDead))
+	if not isPlayerInCircle and isPlayerBelowSpeedLimit and not isPlayerDead then
+		-- allowSumoResets(allInputActions)
+		disallowSumoResets(blockedInputActionsOnRound)
+	else		
+		disallowSumoResets(allInputActions)
+	end
 end
 
 -- Function to explode a car by its vehicle ID
@@ -342,7 +351,8 @@ function explodeSumoCar(vehID)
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 				print(vid .. " " .. vehID)
 				if vid == vehID then
-					-- disallowSumoResets(blockedInputActionsOnDeath)
+					disallowSumoResets(allInputActions)
+					isPlayerDead = true
 					local vehicle = MPVehicleGE.getVehicleByGameID(vid)
 					if TriggerServerEvent and vehicle and vehicle.ownerName then
 						TriggerServerEvent("onSumoPlayerExplode", vehicle.ownerName) 
@@ -365,7 +375,7 @@ function onSumoTrigger(data)
 				if vehID == data.subjectID then
 					-- if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 					triggersThatPlayerIsIn = triggersThatPlayerIsIn + 1
-					disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
+					-- disallowSumoResets(allInputActions)
 					isLocalVehicle = true
 					break
 				end
@@ -384,7 +394,7 @@ function onSumoTrigger(data)
 					triggersThatPlayerIsIn = triggersThatPlayerIsIn - 1
 					if triggersThatPlayerIsIn <= 0 then
 						-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
-						allowSumoResets(blockedInputActionsOnSpeedOrCircle) 
+						-- allowSumoResets(allInputActions) 
 						isLocalVehicle = true
 						break
 					end
@@ -406,7 +416,7 @@ function onSumoTrigger(data)
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then
 				-- if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  data.subjectID) end
-				-- allowSumoResets(blockedInputActionsOnSpeedOrCircle) --removed this because players might spawn back on the platform, which ruins it for others
+				-- allowSumoResets(allInputActions) --removed this because players might spawn back on the platform, which ruins it for others
 				isLocalVehicle = true
 				break
 			end
@@ -529,7 +539,8 @@ function updateSumoGameState(data)
 		-- 	local veh = be:getObjectByID(vehID)
 		-- 	veh:queueLuaCommand('controller.setFreeze(1)')
 		-- end
-		disallowSumoResets(blockedInputActionsOnDeath)
+		disallowSumoResets(allInputActions)
+		isPlayerDead = false
 	end
 	if time and time == 0 then 
 		guihooks.trigger('sumoStartTimer', 30)
@@ -538,6 +549,7 @@ function updateSumoGameState(data)
 		-- 	local veh = be:getObjectByID(vehID)
 		-- 	veh:queueLuaCommand('controller.setFreeze(0)')
 		-- end
+		-- allowSumoResets(allInputActions)
 		disallowSumoResets(blockedInputActionsOnRound)
 	end
 	if time and time <= 0 and time > -4 then
@@ -575,16 +587,7 @@ function updateSumoGameState(data)
 				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 5})
 			end
 		end
-		if not isPlayerInCircle then
-			allowSumoResets(blockedInputActionsOnSpeedOrCircle) --TODO: check if this is really a good way to handle this, it might cancel the other inputblocking 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-			disallowSumoResets(blockedInputActionsOnRound)
-			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-			-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
-				-- print("veh:" .. vehID .." : " .. dump(vehData))
-				local veh = be:getObjectByID(vehID)
-				veh:queueLuaCommand("isSumoAirSpeedHigherThan(20)")
-			end
-		end
+		handleResetState() 		
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
 		local timeLeft = gamestate.endtime - time
 		txt = "Sumo Colors reset in "..math.abs(timeLeft-1).." seconds" --game ended
@@ -605,7 +608,7 @@ function updateSumoGameState(data)
 	-- 	print("veh:" .. vehID .." : " .. dump(vehData))
 	-- 	local veh = be:getObjectByID(vehID)
 	-- 	if veh:electrics.value.airspeed * 3.6 > 30 then
-	-- 		disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
+	-- 		disallowSumoResets(allInputActions)
 	-- 		break
 	-- 	end
 	-- end
@@ -735,6 +738,10 @@ local vecZ = vec3(0,0,1)
 
 function onPreRender(dt)
 	if not gamestate.gameRunning then return end
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		local veh = be:getObjectByID(vehID)
+		veh:queueLuaCommand("requestSumoAirSpeedKmh()")
+	end
 	if goalLocation and goalPrefabActive then
 		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
 	end
@@ -759,7 +766,12 @@ function onPreRender(dt)
 	zVec = zVec * 2
 	local isInsideSafezone = overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, pos, xVec, yVec, zVec)
 
-	if playerVehicle.isInsideSafezone ~= isInsideSafezone then
+	-- this checks if player has transistioned from inside to outside the safezone or vice versa or it is the first time checking
+	if not playerVehicle.isInsideSafezone 
+		or isInsideSafezone == true
+	    or playerVehicle.isInsideSafezone ~= isInsideSafezone 
+		then 
+			
 		playerVehicle.isInsideSafezone = isInsideSafezone
 		if isInsideSafezone then
 			if debugView then
@@ -844,9 +856,13 @@ function onSumoVehicleDeleted(vehID)
 
 end
 
-function onSumoAirSpeedTooHigh()
-	print('onSumoAirSpeedTooHigh called')
-	disallowSumoResets(blockedInputActionsOnSpeedOrCircle)
+function onSumoAirSpeedKmh(kmh)
+	-- print('onSumoAirSpeedKmh called ' .. kmh)
+	if kmh > 20 then
+		isPlayerBelowSpeedLimit = false
+	else
+		isPlayerBelowSpeedLimit = true
+	end
 end
 
 function setSumoArenasData(contents)
@@ -867,12 +883,8 @@ function spawnSumoRandomVehicle()
 	local numVehicles = #core_vehicles.getModelList(true).models
 	local chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
 	
-	-- Choose a single vehicle model
 	-- Reroll away undesired results
-	while (chosenModel.Type == 'Prop' or 
-			chosenModel.Type == 'Trailer' or
-			chosenModel.Type == 'Automation' or
-			chosenModel.Type == 'Truck') do
+	while not chosenModel or chosenModel.Type ~= 'Car' do
 		chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
 	end 
 	
@@ -919,7 +931,7 @@ if MPGameNetwork then AddEventHandler("onSumoGameEnd", onSumoGameEnd) end
 if MPGameNetwork then AddEventHandler("teleportToSumoArena", teleportToSumoArena) end
 if MPGameNetwork then AddEventHandler("onSumoTrigger", onSumoTrigger) end
 if MPGameNetwork then AddEventHandler("onReverseGravityTrigger", onReverseGravityTrigger) end
-if MPGameNetwork then AddEventHandler("onSumoAirSpeedTooHigh", onSumoAirSpeedTooHigh) end
+if MPGameNetwork then AddEventHandler("onSumoAirSpeedKmh", onSumoAirSpeedKmh) end
 if MPGameNetwork then AddEventHandler("setSumoArenasData", setSumoArenasData) end
 if MPGameNetwork then AddEventHandler("onSumoSaveArena", onSumoSaveArena) end
 if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) end
@@ -958,7 +970,7 @@ M.explodeSumoCar = explodeSumoCar
 M.onSumoTrigger = onSumoTrigger
 M.onSumoGameEnd = onSumoGameEnd
 M.teleportToSumoArena = teleportToSumoArena
-M.onSumoAirSpeedTooHigh = onSumoAirSpeedTooHigh
+M.onSumoAirSpeedKmh = onSumoAirSpeedKmh
 M.setSumoArenasData = setSumoArenasData
 M.onSumoSaveArena = onSumoSaveArena
 M.onSumoCreateSpawn = onSumoCreateSpawn
@@ -967,3 +979,5 @@ M.spawnSumoRandomVehicle = spawnSumoRandomVehicle
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
+
+-- for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end

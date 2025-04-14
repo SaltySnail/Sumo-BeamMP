@@ -30,7 +30,7 @@ gameState.safezoneEndAlarm = true
 -- gameState.goalScaleResize = 0
 
 local roundLength = 5*60 -- length of the game in seconds
-local goalTime = 30
+local goalTime = 30 --TODO make it work with a higher goalTime than 30s
 local goalEndTime = -10000
 local defaultRedFadeDistance = 100 -- the distance between a flag carrier and someone that doesn't have the flag, where the screen of the flag carrier will turn red
 local defaultColorPulse = true -- if the car color should pulse between the car color and blue
@@ -38,7 +38,8 @@ local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
 local alivePlayers = {}
-local MAX_ALIVE = 1 --for debugging use 0, else use 1
+local MAX_ALIVE = 0 --for debugging use 0, else use 1
+local playersNeededForGame = 2 --minimum players needed to start a game
 local randomVehicles = false
 local autoStart = false
 local commandsAllowed = true
@@ -46,6 +47,7 @@ local safezoneEndAlarm = true
 local scoringSystem = true
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
+local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
 
 function dump(o)
     if type(o) == 'table' then
@@ -246,16 +248,13 @@ end
 function spawnSumoGoal()
 	-- gameState.goalScale = (gameState.goalScale or 1) - gameState.goalScaleResize
 	gameState.goalScale = gameState.goalScale * 0.7
-	rand() --Some implementation need this before the numbers become random
-	rand()
-	rand()
 	local newGoalID = rand(1,goalPrefabCount)
 	while (newGoalID == goalID) do
 		newGoalID = rand(1,goalPrefabCount)
 	end
 	goalID = newGoalID
 	print("Chosen goal: art/goal" .. goalID .. ".prefab.json")
-	MP.TriggerClientEvent(-1, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json") --flagPrefabTable[rand(1, flagPrefabTable.size())]
+	MP.TriggerClientEvent(-1, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 end
 
 function onSumoArenaChange()	
@@ -364,11 +363,11 @@ function sumoGameSetup()
 	gameState.goalScale = 1
 	gameState.safezoneEndAlarm = safezoneEndAlarm
 
-	spawnSumoGoal()
 	-- MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json")
 	MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
 	MP.TriggerClientEvent(-1, "teleportToSumoArena", "nil")
 	updateSumoClients()
+	spawnSumoGoal()
 
 	MP.TriggerClientEventJson(-1, "receiveSumoGameState", gameState)
 end
@@ -427,7 +426,7 @@ function sumoGameEnd(reason)
 		if hasAnyoneScored then
 			MP.SendChatMessage(-1,"The scores this round are: ")
 			for playername, player in pairs(gameState.players) do
-				MP.SendChatMessage(-1, playername .. " : " .. player.score or 0)
+				MP.SendChatMessage(-1, "" .. playername .. " : " .. player.score or 0)
 			end
 		end
 	end
@@ -471,8 +470,8 @@ function sumo(player, argument)
 				playerCount = playerCount + 1
 			end
 		end
-		if playerCount <= MAX_ALIVE then
-			MP.SendChatMessage(player.playerID, "Can't start the game on your own.")
+		if playerCount < playersNeededForGame then
+			MP.SendChatMessage(player.playerID, "Can't start the game with less than " .. playersNeededForGame .. ".")
 			return 1
 		end
 		if not gameState.gameRunning then
@@ -811,7 +810,7 @@ function selectRandomArena()
 end
 
 function loadSettings()
-	local file = io.open(SUMO_SERVER_DATA_PATH .. "settings.json", "r") -- Open the file in read mode
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "settings.json", "r")
     if file then
         local content = file:read("*all") -- Read the entire file content
         file:close()
@@ -821,7 +820,40 @@ function loadSettings()
 			commandsAllowed = data["chatCommands"]
 			safezoneEndAlarm = data["safezoneEndAlarm"]
 			randomVehicles = data["randomVehicles"]
+			playersNeededForGame = data["playersNeededForGame"]
 		end
+    else
+        print("Cannot open file:", path)
+    end
+end
+
+function loadScores()
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "r")
+    if file then
+        local content = file:read("*all")
+        file:close()
+        local data = Util.JsonDecode(content)
+		if data then
+			return data
+		end
+    else
+        print("Cannot open file:", path)
+    end
+	return {}
+end
+
+function saveAddedScores() -- reads the scores.json file and adds the new scores to it
+	local scores = loadScores()
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
+    if file then
+		local storedScores = Util.JsonDecode(file:read("*all"))
+		for playername, player in pairs(gameState.players) do
+			if player.score then
+				scores[playername] = scores[playername] + player.score
+			end
+		end
+		file.write(Util.JsonPrettify(Util.JsonEncode(scores)))
+		file:close()
     else
         print("Cannot open file:", path)
     end
@@ -881,5 +913,7 @@ M.selectRandomArena = selectRandomArena
 M.sumo = sumo
 M.SUMO = SUMO
 M.sumoSaveArena = sumoSaveArena
+M.loadScores = loadScores
+M.saveAddedScores = saveAddedScores
 
 return M

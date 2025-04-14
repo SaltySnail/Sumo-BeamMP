@@ -74,7 +74,7 @@
     "activeLayers": 2,
     "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "groundType": "CONCRETE",
+    "groundType": "ASPHALT",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "concrete",
@@ -646,6 +646,7 @@
         "vertColor": null
       }
     ],
+    "groundType": "SHOCK_ABSORBER",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "specularMapUV0": "0",
@@ -1025,9 +1026,9 @@
         ],
         "normalMap": "levels/johnson_valley/art/shapes/misc/italy_bld_electric_wire_n.dds",
         "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "specularMap": "levels/johnson_valley/art/shapes/misc/italy_bld_electric_wire_s.dds",
@@ -1124,18 +1125,9 @@
         ],
         "useAnisotropic": true
       },
-      {
-        "diffuseColor": null,
-        "useAnisotropic": null
-      },
-      {
-        "diffuseColor": null,
-        "useAnisotropic": null
-      },
-      {
-        "diffuseColor": null,
-        "useAnisotropic": null
-      }
+      {},
+      {},
+      {}
     ],
     "annotation": "OBSTACLES",
     "groundType": "WOOD",
@@ -1273,24 +1265,6 @@
     "materialTag1": "vehicle",
     "translucentBlendOp": "None"
   },
-  "shock_absorber": {
-    "name": "shock_absorber",
-    "mapTo": "shock_absorber",
-    "class": "Material",
-    "persistentId": "7e4ff354-e260-4edc-8348-7635154b0b80",
-    "Stages": [
-      {
-        "colorMap": "levels/johnson_valley/art/shapes/misc/invisible.dds"
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "alphaTest": true,
-    "groundDepth": 0.600000024,
-    "groundType": "shock_absorber"
-  },
   "si_metal_roof": {
     "name": "si_metal_roof",
     "mapTo": "si_metal_roof",
@@ -1342,12 +1316,31 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "instanceDiffuse": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "instanceDiffuse": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "instanceDiffuse": null,
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
+    "groundType": "SHOCK_ABSORBER",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "translucentBlendOp": "None"
@@ -1567,9 +1560,9 @@
       {
         "colorMap": "levels/johnson_valley/art/shapes/misc/ut_building_decoration_1_d.dds",
         "specular": [
-          0.9882349967956544,
-          0.9882349967956544,
-          0.9882349967956544,
+          0.9882349968,
+          0.9882349968,
+          0.9882349968,
           1
         ],
         "specularPower": 1,
@@ -1793,34 +1786,6 @@
     "doubleSided": true,
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
-  },
-  "wca_objects1": {
-    "name": "wca_objects1",
-    "mapTo": "wca_objects1",
-    "class": "Material",
-    "persistentId": "979469f8-df04-435e-9884-573e44bb28a6",
-    "Stages": [
-      {
-        "colorMap": "levels/johnson_valley/art/shapes/misc/wca_objects_d.dds",
-        "normalMap": "levels/johnson_valley/art/shapes/misc/wca_objects_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/johnson_valley/art/shapes/misc/wca_objects_r.dds",
-        "specularMap": "levels/johnson_valley/art/shapes/misc/wca_objects_s.dds",
-        "specularPower": 32,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "alphaTest": true,
-    "annotation": "POLE",
-    "cubemap": "global_cubemap_metalblurred",
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
     "translucentBlendOp": "None"
   },
   "wca_objects_construction": {

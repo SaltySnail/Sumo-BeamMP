@@ -31,7 +31,7 @@
     ],
     "activeLayers": 2,
     "annotation": "OBSTACLES",
-    "groundType": "METAL",
+    "groundType": "ASPHALT",
     "materialTag0": "beamng",
     "materialTag1": "Industrial",
     "version": 1.5
@@ -148,48 +148,6 @@
     "translucentBlendOp": "None",
     "version": 1.5
   },
-  "chainlink": {
-    "name": "chainlink",
-    "mapTo": "chainlink",
-    "class": "Material",
-    "persistentId": "850fecef-e8ca-40d7-a9f0-fe8cf27eb9e9",
-    "Stages": [
-      {
-        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_b.color.png",
-        "metallicFactor": 1,
-        "metallicMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_m.data.png",
-        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_nm.normal.png",
-        "opacityMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_o.data.png",
-        "pixelSpecular": true,
-        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_r.data.png",
-        "vertColor": true
-      },
-      {
-        "metallicFactor": null,
-        "pixelSpecular": null,
-        "vertColor": null
-      },
-      {
-        "metallicFactor": null,
-        "pixelSpecular": null,
-        "vertColor": null
-      },
-      {
-        "metallicFactor": null,
-        "pixelSpecular": null,
-        "vertColor": null
-      }
-    ],
-    "alphaRef": 33,
-    "alphaTest": true,
-    "annotation": "OBSTACLES",
-    "cubemap": "cubemap_automation_reflection",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucentBlendOp": "None",
-    "version": 1.5
-  },
   "guardrails": {
     "name": "guardrails",
     "mapTo": "guardrails",
@@ -237,49 +195,6 @@
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
     "translucent": true,
-    "translucentBlendOp": "None",
-    "translucentRecvShadows": true,
-    "version": 1.5
-  },
-  "m_chainlink": {
-    "name": "m_chainlink",
-    "mapTo": "m_chainlink",
-    "class": "Material",
-    "persistentId": "19f172d3-a515-4f75-808d-608115aca5c6",
-    "Stages": [
-      {
-        "ambientOcclusionMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_ao.data.png",
-        "baseColorMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_b.color.png",
-        "metallicFactor": 1,
-        "metallicMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_m.data.png",
-        "normalMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_nm.normal.png",
-        "opacityMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_o.data.png",
-        "pixelSpecular": true,
-        "roughnessMap": "/levels/automation_test_track/art/shapes/objects/t_chainlink_fence_r.data.png",
-        "vertColor": true
-      },
-      {
-        "metallicFactor": null,
-        "pixelSpecular": null,
-        "vertColor": null
-      },
-      {
-        "metallicFactor": null,
-        "pixelSpecular": null,
-        "vertColor": null
-      },
-      {
-        "metallicFactor": null,
-        "pixelSpecular": null,
-        "vertColor": null
-      }
-    ],
-    "alphaRef": 37,
-    "alphaTest": true,
-    "annotation": "BUILDINGS",
-    "cubemap": "cubemap_automation_reflection",
-    "groundType": "ASPHALT",
-    "materialTag1": "building",
     "translucentBlendOp": "None",
     "translucentRecvShadows": true,
     "version": 1.5

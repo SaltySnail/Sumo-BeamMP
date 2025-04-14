@@ -345,7 +345,7 @@
           1
         ],
         "baseColorMap": "/levels/automation_test_track/art/shapes/buildings/concrete_dirty_macro_b.color.png",
-        "detailMap": "/levels/automation_test_track/art/shapes/buildings/concrete_detail.color.png",
+        "detailMap": "/levels/automation_test_track/art/shapes/buildings/concrete_detail.data.png",
         "detailNormalMap": "/levels/automation_test_track/art/shapes/buildings/concrete_n.normal.png",
         "detailScale": [
           10,
@@ -711,7 +711,7 @@
           1
         ],
         "baseColorMap": "/levels/automation_test_track/art/shapes/buildings/t_bricks_01_b.color.png",
-        "detailMap": "/levels/automation_test_track/art/shapes/buildings/t_concrete_precast_d.color.png",
+        "detailMap": "/levels/automation_test_track/art/shapes/buildings/t_concrete_precast_detail.data.png",
         "detailNormalMap": "/levels/automation_test_track/art/shapes/buildings/t_concrete_precast_nm.normal.png",
         "detailNormalMapStrength": 2,
         "detailScale": [

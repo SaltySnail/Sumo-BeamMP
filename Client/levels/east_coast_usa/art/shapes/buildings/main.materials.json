@@ -944,11 +944,20 @@
         ],
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
-    "alphaRef": 159,
+    "alphaRef": 107,
     "alphaTest": true,
     "annotation": "BUILDINGS",
     "doubleSided": true,
@@ -1220,16 +1229,24 @@
         "overlayMap": "levels/east_coast_usa/art/shapes/buildings/eca_breakup_texture.dds",
         "reflectivityMap": "levels/east_coast_usa/art/shapes/buildings/eca_doors_windows_r.dds",
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/eca_doors_windows_s.dds",
-        "specularPower": 1,
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
     "annotation": "BUILDINGS",
-    "cubemap": "global_cubemap_metalblurred",
+    "cubemap": "cubemap_eca_town_reflection",
     "groundType": "METAL",
     "materialTag0": "beamng",
     "materialTag1": "building",
@@ -1733,34 +1750,6 @@
     "materialTag0": "beamng",
     "specularStrength0": "0.4",
     "translucentBlendOp": "None"
-  },
-  "instanced_trafficlight": {
-    "name": "instanced_trafficlight",
-    "mapTo": "instanced_trafficlight",
-    "class": "Material",
-    "persistentId": "8d9750b1-4b22-4966-92fa-11ec20576702",
-    "Stages": [
-      {
-        "colorMap": "levels/east_coast_usa/art/shapes/buildings/instanced_trafficlight_lights.png",
-        "colorPaletteMap": "levels/east_coast_usa/art/shapes/buildings/instanced_trafficlight_palette.color.png",
-        "emissive": true,
-        "glow": true,
-        "instanceDiffuse": true,
-        "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "annotation": "TRAFFIC_SIGNALS",
-    "castShadows": false,
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucent": true,
-    "translucentBlendOp": "Add"
   },
   "italy_bld_electric_wire": {
     "name": "italy_bld_electric_wire",

@@ -74,7 +74,7 @@
     "activeLayers": 2,
     "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "groundType": "CONCRETE",
+    "groundType": "ASPHALT",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "concrete",
@@ -330,88 +330,6 @@
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
     "translucent": true
-  },
-  "gm_pipe_02_ColorEffectR27G177B88_material": {
-    "name": "gm_pipe_02_ColorEffectR27G177B88_material",
-    "mapTo": "ColorEffectR27G177B88-material",
-    "class": "Material",
-    "persistentId": "1f2117a9-3212-4cd1-8a29-2c53f17cc216",
-    "Stages": [
-      {
-        "diffuseColor": [
-          0.0856185033917427,
-          0.5550979971885681,
-          0.2773630023002625,
-          1
-        ],
-        "specular": [
-          0.5,
-          0.5,
-          0.5,
-          1
-        ],
-        "specularPower": 50
-      },
-      {},
-      {},
-      {}
-    ],
-    "doubleSided": true,
-    "translucentBlendOp": "None"
-  },
-  "gm_ramp_02_ColorEffectR27G177B88_material_001": {
-    "name": "gm_ramp_02_ColorEffectR27G177B88_material_001",
-    "mapTo": "ColorEffectR27G177B88-material_001",
-    "class": "Material",
-    "persistentId": "667137d7-52aa-4eca-8043-1f8f28e93570",
-    "Stages": [
-      {
-        "diffuseColor": [
-          0.06849479675292969,
-          0.4440779983997345,
-          0.22189100086689,
-          1
-        ],
-        "specular": [
-          0.25,
-          0.25,
-          0.25,
-          1
-        ],
-        "specularPower": 50
-      },
-      {},
-      {},
-      {}
-    ],
-    "translucentBlendOp": "None"
-  },
-  "gm_ramp_02_GridMat_001": {
-    "name": "gm_ramp_02_GridMat_001",
-    "mapTo": "GridMat_001",
-    "class": "Material",
-    "persistentId": "ea372b95-6b9e-4841-b0bc-76d7fde7200d",
-    "Stages": [
-      {
-        "diffuseColor": [
-          0.5120000243186951,
-          0.5120000243186951,
-          0.5120000243186951,
-          1
-        ],
-        "specular": [
-          0.5,
-          0.5,
-          0.5,
-          1
-        ],
-        "specularPower": 50
-      },
-      {},
-      {},
-      {}
-    ],
-    "translucentBlendOp": "None"
   },
   "metal_orange_plate_a": {
     "name": "metal_orange_plate_a",

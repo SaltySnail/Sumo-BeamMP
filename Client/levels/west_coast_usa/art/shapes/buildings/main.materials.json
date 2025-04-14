@@ -98,7 +98,7 @@
           1
         ],
         "baseColorMap": "levels/west_coast_usa/art/shapes/buildings/brick_herringbone_d.dds",
-        "detailMap": "/levels/west_coast_usa/art/shapes/buildings/t_grunge_detail1_b.color.png",
+        "detailMap": "/levels/west_coast_usa/art/shapes/buildings/t_grunge_detail1_b.data.png",
         "detailScale": [
           0.25,
           0.25
@@ -254,21 +254,31 @@
     "persistentId": "bef10247-df48-4f55-b111-303c87da4cc0",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/clutter_commercial_d.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/clutter_commercial_b.color.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/buildings/clutter_commercial_o.data.png",
         "roughnessFactor": 0.607767701,
-        "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "roughnessFactor": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 64,
     "alphaTest": true,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "columns": {
     "name": "columns",

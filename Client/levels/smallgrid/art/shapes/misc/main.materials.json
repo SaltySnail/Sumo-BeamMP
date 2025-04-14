@@ -74,7 +74,7 @@
     "activeLayers": 2,
     "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "groundType": "CONCRETE",
+    "groundType": "ASPHALT",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "concrete",
@@ -96,9 +96,9 @@
           0.1000000014901161
         ],
         "diffuseColor": [
-          0.7725489735603333,
-          0.7725489735603333,
-          0.7725489735603333,
+          0.772548974,
+          0.772548974,
+          0.772548974,
           1
         ],
         "normalMap": "levels/GridMap/art/shapes/buildings/concrete-01_GM_n2.dds",
@@ -143,20 +143,28 @@
     "persistentId": "ed309ba2-7ee7-4302-b0e4-2ef252f05edd",
     "Stages": [
       {
-        "colorMap": "asphalt_01_a_d.dds",
+        "colorMap": "/levels/smallgrid/art/shapes/misc/asphalt_01_a_d.dds",
         "diffuseColor": [
-          0.8039219975471497,
-          0.8039219975471497,
-          0.8039219975471497,
+          0.803921998,
+          0.803921998,
+          0.803921998,
           1
         ],
-        "specularMap": "asphalt_01_a_s.dds",
-        "specularPower": 1,
+        "specularMap": "/levels/smallgrid/art/shapes/misc/asphalt_01_a_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      }
     ],
     "doubleSided": true,
     "materialTag0": "beamng",
@@ -174,10 +182,10 @@
         "colorMap": "billboards_01b",
         "pixelSpecular": true,
         "scrollDir": [
-          0.2070000022649765,
+          0.207000002,
           0
         ],
-        "scrollSpeed": 0.5879999995231628,
+        "scrollSpeed": 0.588,
         "specular": [
           0.5,
           0.5,
@@ -235,17 +243,17 @@
       {
         "colorMap": "concrete_bridge_01a_d.dds",
         "diffuseColor": [
-          0.800000011920929,
-          0.800000011920929,
-          0.800000011920929,
+          0.800000012,
+          0.800000012,
+          0.800000012,
           1
         ],
         "normalMap": "concrete_bridge_01a_n.dds",
         "pixelSpecular": true,
         "specular": [
-          0.4000000059604645,
-          0.4000000059604645,
-          0.4000000059604645,
+          0.400000006,
+          0.400000006,
+          0.400000006,
           1
         ],
         "specularMap": "concrete_bridge_01a_s.dds",
@@ -268,9 +276,9 @@
       {
         "colorMap": "containers_01_a_d.dds",
         "diffuseColor": [
-          0.9960780143737793,
-          0.992156982421875,
-          0.992156982421875,
+          0.9960780143737792,
+          0.992156982,
+          0.992156982,
           1
         ],
         "normalMap": "containers_01_a_n.dds",
@@ -290,9 +298,9 @@
     "Stages": [
       {
         "diffuseColor": [
-          0.6399999856948853,
-          0.6399999856948853,
-          0.6399999856948853,
+          0.639999986,
+          0.639999986,
+          0.639999986,
           1
         ]
       },
@@ -312,9 +320,9 @@
       {
         "colorMap": "levels/GridMap/art/shapes/misc/glass_01_d.dds",
         "diffuseColor": [
-          0.992156982421875,
-          0.992156982421875,
-          0.992156982421875,
+          0.992156982,
+          0.992156982,
+          0.992156982,
           1
         ],
         "pixelSpecular": true,
@@ -339,8 +347,8 @@
     "Stages": [
       {
         "diffuseColor": [
-          0.06849479675292969,
-          0.4440779983997345,
+          0.0684947968,
+          0.444077998,
           0.22189100086689,
           1
         ],
@@ -366,9 +374,9 @@
     "Stages": [
       {
         "diffuseColor": [
-          0.5120000243186951,
-          0.5120000243186951,
-          0.5120000243186951,
+          0.512000024,
+          0.512000024,
+          0.512000024,
           1
         ],
         "specular": [
@@ -491,9 +499,9 @@
       {
         "colorMap": "misc_markings.dds",
         "diffuseColor": [
-          0.9960780143737793,
-          0.9960780143737793,
-          0.9960780143737793,
+          0.9960780143737792,
+          0.9960780143737792,
+          0.9960780143737792,
           1
         ],
         "pixelSpecular": true,
@@ -525,9 +533,9 @@
     "Stages": [
       {
         "diffuseColor": [
-          0.6399999856948853,
-          0.6399999856948853,
-          0.6399999856948853,
+          0.639999986,
+          0.639999986,
+          0.639999986,
           1
         ]
       },
@@ -548,9 +556,9 @@
     "Stages": [
       {
         "diffuseColor": [
-          0.6399999856948853,
-          0.6399999856948853,
-          0.6399999856948853,
+          0.639999986,
+          0.639999986,
+          0.639999986,
           1
         ],
         "specular": [
@@ -578,9 +586,9 @@
     "Stages": [
       {
         "diffuseColor": [
-          0.6399999856948853,
-          0.6399999856948853,
-          0.6399999856948853,
+          0.639999986,
+          0.639999986,
+          0.639999986,
           1
         ]
       },
@@ -623,9 +631,9 @@
       {
         "colorMap": "Grass-02-D.dds",
         "diffuseColor": [
-          0.8745099902153015,
-          0.8549020290374756,
-          0.6392160058021545,
+          0.87450999,
+          0.854902029,
+          0.639216006,
           1
         ],
         "normalMap": "Grass-02-N.dds"
@@ -648,9 +656,9 @@
       {
         "colorMap": "RockyDirt-01-D.dds",
         "diffuseColor": [
-          0.8352940082550049,
-          0.807843029499054,
-          0.800000011920929,
+          0.835294008,
+          0.807843029,
+          0.800000012,
           1
         ],
         "normalMap": "RockyDirt-01-N.dds",

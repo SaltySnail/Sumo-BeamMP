@@ -1,0 +1,27 @@
+{
+  "CastleIslandRocks": {
+    "name": "CastleIslandRocks",
+    "mapTo": "CastleIslandRocks",
+    "class": "Material",
+    "Stages": [
+      {
+        "diffuseColor": [
+          0.841203511,
+          0.567012906,
+          0.586504579,
+          1
+        ]
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
+    ],
+    "translucentBlendOp": "None"
+  }
+}

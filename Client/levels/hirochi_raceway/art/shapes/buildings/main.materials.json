@@ -31,32 +31,6 @@
     "materialTag1": "building",
     "translucentBlendOp": "None"
   },
-  "chainlink": {
-    "name": "chainlink",
-    "mapTo": "hr_bld_chainlink",
-    "class": "Material",
-    "persistentId": "2869aa61-026c-4539-b2cf-2107a1a97c2c",
-    "Stages": [
-      {
-        "colorMap": "levels/hirochi_raceway/art/shapes/buildings/hr_bld_chainlink_d.dds",
-        "normalMap": "levels/hirochi_raceway/art/shapes/buildings/hr_bld_chainlink_n.dds",
-        "pixelSpecular": true,
-        "specularPower": 32,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 40,
-    "annotation": "OBSTACLES",
-    "doubleSided": true,
-    "invertBackFaceNormals": true,
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucent": true
-  },
   "cladding_rectangular": {
     "name": "cladding_rectangular",
     "mapTo": "cladding_rectangular",

@@ -1,0 +1,27 @@
+{
+  "stones": {
+    "name": "stones",
+    "mapTo": "stones",
+    "class": "Material",
+    "Stages": [
+      {
+        "diffuseColor": [
+          0.278317004,
+          0.278317004,
+          0.278317004,
+          1
+        ]
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
+    ],
+    "translucentBlendOp": "None"
+  }
+}
