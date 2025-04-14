@@ -15,6 +15,7 @@ local mapData = {}
 local isPlayerInCircle = false
 local isPlayerBelowSpeedLimit = false
 local isPlayerDead = false
+local hasReset = false
 
 local currentArena = ""
 local currentLevel = ""
@@ -454,7 +455,7 @@ function onReverseGravityTrigger(data)
 			local veh = be:getObjectByID(data.subjectID)
 			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
 			--print(dump(upVector))
-			if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+			if hasReset and upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
 				local pos = veh:getPosition()
 				local rot = veh:getRotation()
 				rot = rot:toEuler() * (180/math.pi)
@@ -464,6 +465,7 @@ function onReverseGravityTrigger(data)
 				--print("Rot is now: " ..  dump(rot))
 				rot = quatFromEuler(rot.x, rot.y, rot.z)
 				veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+				hasReset = false
 			end
 		end
 	end
@@ -541,6 +543,7 @@ function updateSumoGameState(data)
 		-- end
 		disallowSumoResets(allInputActions)
 		isPlayerDead = false
+		hasReset = false
 	end
 	if time and time == 0 then 
 		guihooks.trigger('sumoStartTimer', 30)
@@ -911,6 +914,15 @@ function spawnSumoRandomVehicle()
 	--print("Fairmode: "..chosenModel.key)
 end
 
+function onVehicleResetted(vehID)
+	-- print( "onVehicleResetted called")
+	if MPVehicleGE then
+		if MPVehicleGE.isOwn(vehID) then
+			hasReset = true
+		end
+	end
+end
+
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
 if MPGameNetwork then AddEventHandler("onSumoCreateGoal", onSumoCreateGoal) end
@@ -936,8 +948,7 @@ if MPGameNetwork then AddEventHandler("setSumoArenasData", setSumoArenasData) en
 if MPGameNetwork then AddEventHandler("onSumoSaveArena", onSumoSaveArena) end
 if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) end
 if MPGameNetwork then AddEventHandler("spawnSumoRandomVehicle", spawnSumoRandomVehicle) end
-
--- if MPGameNetwork then AddEventHandler("onSumoVehicleSpawned", onSumoVehicleSpawned) end
+if MPGameNetwork then AddEventHandler("onVehicleResetted", onVehicleResetted) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
@@ -963,7 +974,7 @@ M.onExtensionUnloaded = onExtensionUnloaded
 M.onResetGameplay = onResetGameplay
 M.allowSumoResets = allowSumoResets
 M.disallowSumoResets = disallowSumoResets
--- M.onVehicleResetted = onVehicleResetted
+M.onVehicleResetted = onVehicleResetted
 -- M.onSumoFlagTrigger = onSumoFlagTrigger
 -- M.onSumoGoalTrigger = onSumoGoalTrigger
 M.explodeSumoCar = explodeSumoCar
