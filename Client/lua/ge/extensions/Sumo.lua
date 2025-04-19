@@ -10,12 +10,17 @@ local gamestate = {players = {}, settings = {}}
 local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 local allInputActions = 					{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 
+-- hand picked vehicles using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
+-- for random config mode. This avoids spawning vehicles that are not worthy or configs of mods (to some extent).
+local allAllowedVehicleKeys = {'autobello',"miramar","etk800","vivace","etkc","etki","bluebuck","nine","sbr","bx","utv","burnside","moonhawk","barstow","covet","bolide","legran","pigeon","wigeon","bastion","scintilla","midsize","pessima","fullsize","sunburst2","lansdale","wendover"}
+
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
 local isPlayerInCircle = false
 local isPlayerBelowSpeedLimit = false
 local isPlayerDead = false
-local hasReset = false
+local isPlayerInReverseGravity = false
+local reverseGravitySubjectId = 0 -- may be unnecessary
 
 local currentArena = ""
 local currentLevel = ""
@@ -323,6 +328,76 @@ function teleportToSumoArena()
 	end
 end
 
+--[[         this function comes from spawn.lua in beamng's lua folder. I need this to pick a valid spawn point but not spawn the default vehicle.
+pickSpawnPoint s responsible for finding a valid spawn point for a player and camera
+@param spawnName string represent player or camera spawn point
+]]
+local function pickSpawnPoint(spawnName)
+	local playerSP,spawnPointName
+	local defaultSpawnPoint = setSpawnpoint.loadDefaultSpawnpoint()
+	local spawnDefaultGroups = {"CameraSpawnPoints", "PlayerSpawnPoints", "PlayerDropPoints"}
+	if defaultSpawnPoint then
+	  local spawnPoint = scenetree.findObject(defaultSpawnPoint)
+	  if spawnPoint then
+		return spawnPoint
+	  else
+		log('W', logTag, 'No SpawnPointName in mission file vehicle spawn in the default position')
+	  end
+	end
+	--Walk through the groups until we find a valid object
+	for i,v in pairs(spawnDefaultGroups) do
+	  if scenetree.findObject(spawnDefaultGroups[i]) then
+		local spawngroupPoint = scenetree.findObject(spawnDefaultGroups[i]):getRandom()
+		if not spawngroupPoint then
+		  break
+		end
+		local sgPpointID = scenetree.findObjectById(spawngroupPoint:getId())
+		if not sgPpointID then
+		  break
+		end
+		return sgPpointID
+	  end
+	end
+  
+	--[[ ensuring backward compability with mods
+	]]
+	local dps = scenetree.findObject("DefaultPlayerSpawnSphere")
+	if dps then
+	  return scenetree.findObjectById(dps.obj:getId())
+	end
+  
+	--[[Didn't find a spawn point by looking for the groups so let's return the
+	 "default" SpawnSphere First create it if it doesn't already exist
+	]]
+	playerSP = createObject('SpawnSphere')
+	if not playerSP then
+	  log('E', logTag, 'could not create playerSP')
+	  return
+	end
+	playerSP.dataBlock = scenetree.findObject('SpawnSphereMarker')
+	if spawnName == "player" then
+	  playerSP.spawnClass = "BeamNGVehicle"
+	  playerSP.spawnDatablock = "default_vehicle"
+	  spawnPointName = "DefaultPlayerSpawnSphere"
+	  playerSP:registerObject(spawnPointName)
+	elseif spawnName == 'camera' then
+	  playerSP.spawnClass = "Camera"
+	  playerSP.spawnDatablock = "Observer"
+	  spawnPointName = "DefaultCameraSpawnSphere"
+	  playerSP:registerObject(spawnPointName)
+	end
+	local missionCleanup = scenetree.MissionCleanup
+	if not missionCleanup then
+	  log('E', logTag, 'MissionCleanup does not exist')
+	  return
+	end
+	--[[ Add it to the MissionCleanup group so that it doesn't get saved
+	  to the Mission (and gets cleaned up of course)
+	]]
+	missionCleanup:addObject(playerSP.obj)
+	return playerSP
+  end
+
 function onSumoGameEnd()
 	core_gamestate.setGameState('scenario', 'multiplayer', 'multiplayer') --reset the app layout
 	allowSumoResets(blockedInputActionsOnRound)
@@ -330,6 +405,17 @@ function onSumoGameEnd()
 	goalScale = 1
 	goalLocation = nil
 	removeSumoPrefabs("all")
+	local spawnPoint = pickSpawnPoint('player')
+	if not spawnPoint then return end
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		local veh = be:getObjectByID(vehID)
+		if not veh then return end
+		local spawnPos = spawnPoint:getPosition()
+		local spawnQuat = quat(spawnPoint:getRotation()) * quat(0,0,1,0)
+		veh:setPositionRotation(spawnPos.x, spawnPos.y, spawnPos.z, spawnQuat.x, spawnQuat.y, spawnQuat.z, spawnQuat.w)
+		veh:queueLuaCommand("recovery.startRecovering()")
+		veh:queueLuaCommand("recovery.stopRecovering()")
+	end
 end
 
 function handleResetState()
@@ -440,32 +526,20 @@ function onReverseGravityTrigger(data)
 			if data.event == "enter" then
 				ogCamName = core_camera.getActiveCamName(0)
 				if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
-					core_camera.setBySlotId(0, 6) --this isn't always chase TODO: figure out how to call it by name
-				core_camera.resetCamera(0)
+					core_camera.setByName(0,"chase")
+					core_camera.resetCamera(0)
 				end
 				core_environment.setGravity(9.81)
+				isPlayerInReverseGravity = true
+				reverseGravitySubjectId = data.subjectID
 			elseif data.event == "exit" then
 				if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
-					core_camera.setBySlotId(0, 1)
+					core_camera.setByName(0,ogCamName)
 					core_camera.resetCamera(0)
 					ogCamName = ""
 				end
 				core_environment.setGravity(-9.81)
-			end
-			local veh = be:getObjectByID(data.subjectID)
-			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
-			--print(dump(upVector))
-			if hasReset and upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
-				local pos = veh:getPosition()
-				local rot = veh:getRotation()
-				rot = rot:toEuler() * (180/math.pi)
-				--print(dump(rot))
-				rot.y = rot.y + 180
-				rot = rot * (math.pi/180)
-				--print("Rot is now: " ..  dump(rot))
-				rot = quatFromEuler(rot.x, rot.y, rot.z)
-				veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
-				hasReset = false
+				isPlayerInReverseGravity = false
 			end
 		end
 	end
@@ -515,25 +589,28 @@ function updateSumoGameState(data)
 	local time = 0
 
 	if gamestate.time then time = gamestate.time-1 end
-	-- for playerName, player in pairs(gamestate.players) do
-	-- 	if player.resetTimerActive then
-	-- 		if player.resetTimer > 0 then
-	-- 			player.resetTimer = player.resetTimer - 1
-	-- 		else
-	-- 			player.resetTimerActive = false
-	-- 			extensions.core_input_actionFilter.setGroup('sumo', blockedInputActionsOnDeath)
-	-- 			extensions.core_input_actionFilter.addAction(0, 'sumo', false)	
-	-- 		end
-	-- 	end
-	-- end
 
 	local txt = ""
 	if gamestate.randomVehicles and time and time == -28 then 
 		spawnSumoRandomVehicle()
 		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
+		disallowSumoResets(allInputActions)
+	end
+	if gamestate.randomVehicles and time and time == -20 then 
+		reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)
+	end
+	if gamestate.randomVehicles and time and time >= -18 and time <= -8 then 
+		MPVehicleGE.applyQueuedEvents()
 	end
 	if not gamestate.randomVehicles and time and time == -8 then 
 		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
+		disallowSumoResets(allInputActions)
+	end
+	if time and time == -5 then
+		teleportToSumoArena()
+		if not goalPrefabActive then -- mitigation for when no goal spawned
+			spawnSumoGoal("art/goal1.prefab.json")
+		end
 	end
 	if time and time < 0 then
 		be:queueAllObjectLua("controller.setFreeze(1)")
@@ -543,7 +620,6 @@ function updateSumoGameState(data)
 		-- end
 		disallowSumoResets(allInputActions)
 		isPlayerDead = false
-		hasReset = false
 	end
 	if time and time == 0 then 
 		guihooks.trigger('sumoStartTimer', 30)
@@ -593,74 +669,19 @@ function updateSumoGameState(data)
 		handleResetState() 		
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
 		local timeLeft = gamestate.endtime - time
-		txt = "Sumo Colors reset in "..math.abs(timeLeft-1).." seconds" --game ended
-		
+		txt = "Arena will be removed in "..math.abs(timeLeft-1).." seconds" --game ended
 		guihooks.trigger('sumoRemoveTimer', 0)
 	end
 	if txt ~= "" then
 		guihooks.message({txt = txt}, 1, "Sumo.time")
 	end
-	-- if uiMessages.showMSGYouScored then
-	-- 	if gamestate.time >= uiMessages.showMSGYouScoredEndTime then
-	-- 	uiMessages.showMSGYouScored = false
-	-- 	uiMessages.showMSGYouScoredEndTime = 0
-	-- 	end
-	-- end
-	-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-	-- 	-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
-	-- 	print("veh:" .. vehID .." : " .. dump(vehData))
-	-- 	local veh = be:getObjectByID(vehID)
-	-- 	if veh:electrics.value.airspeed * 3.6 > 30 then
-	-- 		disallowSumoResets(allInputActions)
-	-- 		break
-	-- 	end
-	-- end
-
-	-- if gamestate.gameEnded then
-	-- 	resetSumoCarColors()
-	-- end
 end
 
 function requestSumoGameState()
 	if TriggerServerEvent then TriggerServerEvent("requestSumoGameState","nil") end
 end
 
--- function onVehicleSwitched(oldID,ID)
--- 	local currentOwnerName = MPConfig.getNickname()
--- 	if ID and MPVehicleGE.getVehicleByGameID(ID) then
--- 		currentOwnerName = MPVehicleGE.getVehicleByGameID(ID).ownerName
--- 	end
--- end
-
 local distancecolor = -1
-
--- function SumoNametags(ownerName,player,vehicle) --draws flag SumoNametags on people
--- 	-- if player and player.hasFlag == true then
--- 	-- 	local veh = be:getObjectByID(vehicle.gameVehicleID)
--- 	-- 	if veh then
--- 	-- 		local vehPos = veh:getPosition()
--- 	-- 		local posOffset = vec3(0,0,2)
--- 	-- 		debugDrawer:drawTextAdvanced(vehPos+posOffset, String("Flag"), ColorF(1,1,1,1), true, false, ColorI(50,50,200,255))
--- 	-- 	end
--- 	-- end
--- end
-
--- function onVehicleResetted(gameVehicleID)
--- 	print( "OnVehicleResetted called")
--- 	if MPVehicleGE then
--- 		if MPVehicleGE.isOwn(gameVehicleID) then
--- 			local veh = be:getObjectByID(gameVehicleID)
--- 			if veh then
--- 				if not gamestate.players[veh.ownerName].allowedResets then
--- 					local txt = ""
--- 					txt = "You can reset in " .. gamestate.players[veh.ownerName].resetTimer .. "seconds"
--- 					gamestate.players[veh.ownerName].resetTimerActive = true
--- 					guihooks.message({txt = txt}, 1, "nil")
--- 				end
--- 			end
--- 		end
--- 	end
--- end
 
 function sumoColor(player,vehicle,team,dt)
 	local teamColor
@@ -802,45 +823,6 @@ function onPreRender(dt)
 			onSumoTrigger(trigger)
 		end
 	end
-
-	-- local currentVehID = be:getPlayerVehicleID(0)
-	-- local currentOwnerName = MPConfig.getNickname()
-	-- if currentVehID and MPVehicleGE.getVehicleByGameID(currentVehID) then
-	-- 	currentOwnerName = MPVehicleGE.getVehicleByGameID(currentVehID).ownerName
-	-- end
-
-	-- resetSumoCarColors()
-	-- print( "onPreRender called")
-
-	-- local closestOpponent = 100000000
-
-	-- for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
-	-- 	if gamestate.players then
-	-- 		local player = gamestate.players[vehicle.ownerName]
-	-- 		if player and currentOwnerName and vehicle then
-	-- 			-- SumoNametags(currentOwnerName,player,vehicle)
-	-- 			-- sumoColor(player,vehicle,gamestate.players[vehicle.ownerName].team,dt)
-	-- 			if gamestate.players[currentOwnerName] and currentVehID and gamestate.players[currentOwnerName].hasFlag and not gamestate.players[vehicle.ownerName].hasFlag and currentVehID ~= vehicle.gameVehicleID then
-	-- 				local myVeh = be:getObjectByID(currentVehID)
-	-- 				local veh = be:getObjectByID(vehicle.gameVehicleID)				
-	-- 				if veh and myVeh then
-	-- 					if not gamestate.players[vehicle.ownerName].hasFlag and gamestate.players[vehicle.ownerName].team ~= gamestate.players[currentOwnername].team then
-	-- 						local distance = distance(myVeh:getPosition(),veh:getPosition())
-	-- 						if distance < closestOpponent then
-	-- 							closestOpponent = distance
-	-- 						end
-	-- 					end
-	-- 				end
-	-- 			end
-	-- 			if gamestate.teams then
-	-- 				local veh = be:getObjectByID(vehicle.gameVehicleID)	
-	-- 				local vehPos = veh:getPosition()
-	-- 				local posOffset = vec3(0,0,1.5)
-	-- 				-- debugDrawer:drawTextAdvanced(vehPos + posOffset, String("Team " .. gamestate.players[vehicle.ownerName].team), ColorF(1,1,1,1), true, false, ColorI(colors[gamestate.players[vehicle.ownerName].team][1], colors[gamestate.players[vehicle.ownerName].team][2], colors[gamestate.players[vehicle.ownerName].team][3], colors[gamestate.players[vehicle.ownerName].team][4]))
-	-- 			end
-	-- 		end
-	-- 	end
-	-- end
 end
 
 function onResetGameplay(id)
@@ -879,6 +861,15 @@ function onSumoSaveArena(name)
 	TriggerServerEvent("sumoSaveArena", jsonEncode(newArena))
 end
 
+function isInTable(tbl, value)
+    for _, v in ipairs(tbl) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
+
 function spawnSumoRandomVehicle()
 	
 	local chosenConfig = ''
@@ -887,7 +878,7 @@ function spawnSumoRandomVehicle()
 	local chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
 	
 	-- Reroll away undesired results
-	while not chosenModel or chosenModel.Type ~= 'Car' do
+	while not chosenModel or chosenModel.Type ~= 'Car' or not isInTable(allAllowedVehicleKeys, chosenModel.key) do
 		chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
 	end 
 	
@@ -901,26 +892,68 @@ function spawnSumoRandomVehicle()
 		end
 	end
 
-	-- Randomly choose a config
-	if (#modelConfigs == 0) then ui_message("No configs found for "..chosenModel.Name)
-	else chosenConfig = modelConfigs[math.random(1,#modelConfigs)]
+	while (#modelConfigs == 0) do -- choose a new car if it has no configs
+		chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
+		while not chosenModel or chosenModel.Type ~= 'Car' or not isInTable(allAllowedVehicleKeys, chosenModel.key) do
+			chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
+		end 
+		modelConfigs = {}
+		for i,v in pairs(allConfigs.configs) do
+			if (v.model_key == chosenModel.key) then
+				table.insert(modelConfigs, {key = v.key, name = v.Name})
+			end
+		end
 	end
+
+	-- Randomly choose a config
+	chosenConfig = modelConfigs[math.random(1,#modelConfigs)]
 
 	-- Spawn the vehicle
 	core_vehicles.replaceVehicle(chosenModel.key, {config = chosenConfig.key})
-	ui_message('Spawned: '..chosenConfig.name)
-
-	--Create a log for examining spawn frequencies
-	--print("Fairmode: "..chosenModel.key)
 end
 
 function onVehicleResetted(vehID)
 	-- print( "onVehicleResetted called")
-	if MPVehicleGE then
+	if MPVehicleGE and isPlayerInReverseGravity then -- roll the vehicle so the wheels touch the ground when resetting in the reverse gravity area
 		if MPVehicleGE.isOwn(vehID) then
-			hasReset = true
+			local veh = be:getObjectByID(reverseGravitySubjectId)
+			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
+			--print(dump(upVector))
+			if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+				local pos = veh:getPosition()
+				local rot = veh:getRotation()
+				rot = rot:toEuler() * (180/math.pi)
+				--print(dump(rot))
+				rot.y = rot.y + 180
+				rot = rot * (math.pi/180)
+				--print("Rot is now: " ..  dump(rot))
+				rot = quatFromEuler(rot.x, rot.y, rot.z)
+				veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+			end
 		end
 	end
+end
+
+function onSumoShowScoreboard(data)
+	print("onSumoShowScoreboard called ")
+	if not data then return end
+	print("data: " .. data)
+	data = jsonDecode(data)
+	guihooks.trigger('scoreboardSpawn', {})
+	guihooks.trigger('scoreboardSetScores', data)
+	-- if data then 
+	-- 	local overallWinner = nil
+	-- 	local highestScore = 0
+	-- 	for i, player in pairs(data) do
+	-- 		if player.score and player.score > highestScore then
+	-- 			highestScore = player.score
+	-- 			overallWinner = player.name
+	-- 		end
+	-- 	end
+	-- 	if not (highestScore > 0) then return end
+	-- 	-- guihooks.trigger('scoreboardSelectRoundWinner', roundWinner)
+	-- 	-- guihooks.trigger('scoreboardSelectOverallWinner', overallWinner)
+	-- end
 end
 
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
@@ -949,6 +982,7 @@ if MPGameNetwork then AddEventHandler("onSumoSaveArena", onSumoSaveArena) end
 if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) end
 if MPGameNetwork then AddEventHandler("spawnSumoRandomVehicle", spawnSumoRandomVehicle) end
 if MPGameNetwork then AddEventHandler("onVehicleResetted", onVehicleResetted) end
+if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboard) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
@@ -987,8 +1021,7 @@ M.onSumoSaveArena = onSumoSaveArena
 M.onSumoCreateSpawn = onSumoCreateSpawn
 M.onReverseGravityTrigger = onReverseGravityTrigger
 M.spawnSumoRandomVehicle = spawnSumoRandomVehicle
+M.onSumoShowScoreboard = onSumoShowScoreboard
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
-
--- for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end

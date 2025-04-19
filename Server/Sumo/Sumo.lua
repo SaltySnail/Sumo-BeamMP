@@ -38,7 +38,7 @@ local defaultFlagTint = true -- if the infecor should have a blue tint
 local defaultDistancecolor = 0.3 -- max intensity of the red filter
 local teams = false
 local alivePlayers = {}
-local MAX_ALIVE = 0 --for debugging use 0, else use 1
+local MAX_ALIVE = 1 --for debugging use 0, else use 1
 local playersNeededForGame = 2 --minimum players needed to start a game
 local randomVehicles = false
 local autoStart = false
@@ -337,6 +337,7 @@ function sumoGameSetup()
 			gameState.players[Name].ID = ID
 			gameState.players[Name].team = chosenTeam
 			gameState.players[Name].dead = false
+			gameState.players[Name].isRoundWinner = false
 			teamCount = teamCount + 1
 		end
 	end
@@ -363,9 +364,7 @@ function sumoGameSetup()
 	gameState.goalScale = 1
 	gameState.safezoneEndAlarm = safezoneEndAlarm
 
-	-- MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. levelName .. "/multiplayer/" .. arena .. "/obstacles.prefab.json")
 	MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
-	MP.TriggerClientEvent(-1, "teleportToSumoArena", "nil")
 	updateSumoClients()
 	spawnSumoGoal()
 
@@ -377,7 +376,7 @@ function sumoGameEnd(reason)
 	gameState.gameEnding = true
 	gameState.goalScale = 1
 	if reason == nil or reason == "nil" then
-		MP.SendChatMessage(-1,"Game stopped for uknown reason")
+		MP.SendChatMessage(-1,"Game stopped for unknown reason")
 	else
 		if reason == "time" then
 			if #alivePlayers > 0 then
@@ -390,6 +389,7 @@ function sumoGameEnd(reason)
 						else
 							gameState.players[alivePlayers[i]].score = 1
 						end
+						gameState.players[alivePlayers[i]].isRoundWinner = true
 					end
 				end
 			else
@@ -397,10 +397,6 @@ function sumoGameEnd(reason)
 			end
 		elseif reason == "manual" then
 			MP.SendChatMessage(-1,"Game stopped, Everyone Looses")
-			gameState.endtime = gameState.time + 10
-		elseif reason == "score" then
-			MP.SendChatMessage(-1,"Game over, score limit was reached")
-			gameState.endtime = gameState.time + 10
 		elseif reason == "last alive" then
 			if #alivePlayers > 0 then
 				MP.SendChatMessage(-1,"Game over, " .. alivePlayers[1] .. " wins!") --FIXME: if MAX_ALIVE is more than 1 this is fucked, don't think you should set it to more though
@@ -410,25 +406,29 @@ function sumoGameEnd(reason)
 					else
 						gameState.players[alivePlayers[1]].score = 1
 					end
+					gameState.players[alivePlayers[1]].isRoundWinner = true
 				end
 			else
 				MP.SendChatMessage(-1,"Game over, everyone died!")
 			end
-			gameState.endtime = gameState.time + 10
 		end
 	end
+	gameState.endtime = gameState.time + 10
 
 	if scoringSystem then
-		local hasAnyoneScored = false
+		MP.SendChatMessage(-1,"The total scores are now: ")
+		local data = { players = {} }
 		for playername, player in pairs(gameState.players) do
-			if player.score then hasAnyoneScored = true end
+			if not player.score then player.score = 0 end
+			MP.SendChatMessage(-1, "" .. playername .. " : " .. player.score)
+			table.insert(data.players, {
+				name  = playername,
+				score = player.score,
+				isRoundWinner = player.isRoundWinner
+			})
 		end
-		if hasAnyoneScored then
-			MP.SendChatMessage(-1,"The scores this round are: ")
-			for playername, player in pairs(gameState.players) do
-				MP.SendChatMessage(-1, "" .. playername .. " : " .. player.score or 0)
-			end
-		end
+		MP.TriggerClientEvent(-1, "onSumoShowScoreboard", Util.JsonEncode(data))
+		saveAddedScores()
 	end
 end
 
@@ -582,7 +582,6 @@ function sumoGameRunningLoop()
 	end
 	if not gameState.gameEnding and gameState.time == gameState.roundLength then
 		sumoGameEnd("time")
-		gameState.endtime = gameState.time + 10
 	elseif gameState.gameEnding and gameState.time == gameState.endtime then
 		gameState = {}
 		gameState.players = {}
@@ -832,6 +831,7 @@ function loadScores()
     if file then
         local content = file:read("*all")
         file:close()
+		if not content then content = "{}" end
         local data = Util.JsonDecode(content)
 		if data then
 			return data
@@ -846,13 +846,15 @@ function saveAddedScores() -- reads the scores.json file and adds the new scores
 	local scores = loadScores()
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
     if file then
-		local storedScores = Util.JsonDecode(file:read("*all"))
+		local content = file:read("*a")
+		if not content then content = "{}" end
+		local storedScores = Util.JsonDecode(content)
 		for playername, player in pairs(gameState.players) do
-			if player.score then
-				scores[playername] = scores[playername] + player.score
-			end
+			if not player.score then player.score = 0 end
+			if not scores[playername] then scores[playername] = 0 end
+			scores[playername] = scores[playername] + player.score
 		end
-		file.write(Util.JsonPrettify(Util.JsonEncode(scores)))
+		file:write(Util.JsonPrettify(Util.JsonEncode(scores)))
 		file:close()
     else
         print("Cannot open file:", path)

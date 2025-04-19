@@ -1,0 +1,15 @@
+{
+    "name": "Sumo Scoreboard",
+    "author": "Julianstap",
+    "version": "0.3",
+    "description": "The scoreboard UI of the Sumo gamemode.",
+    "directive": "sumoscoreboard",
+    "domElement": "<sumoscoreboard></sumoscoreboard>",
+    "css": {
+      "width": "500px",
+      "height": "500px",
+      "top": "0px",
+      "left": "0px"
+    },
+    "preserveAspectRatio": true
+  }

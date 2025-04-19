@@ -127,6 +127,19 @@
         "top":0,
         "width":"400px"
       }
+    },
+    {
+      "appName":"sumoscoreboard",
+      "placement":{
+        "bottom":0,
+        "height":"400px",
+        "left":0,
+        "margin":"auto",
+        "position":"absolute",
+        "right":0,
+        "top":0,
+        "width":"400px"
+      }
     }
   ],
   "title":"Sumo",

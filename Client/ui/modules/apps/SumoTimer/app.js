@@ -19,6 +19,13 @@ angular.module('beamng.apps')
                 StreamsManager.remove(streamsList);
             });
             
+            function ensureCanvas() {
+                if (!canvas || !ctx) {
+                    canvas = document.getElementById('circleCanvas');
+                    ctx = canvas ? canvas.getContext('2d') : null;
+                }
+            }
+
             function saveScopeDataToLocalStorage() {
                 localStorage.setItem('endTime', scope.endTime);
             }
@@ -44,10 +51,15 @@ angular.module('beamng.apps')
                 } else {
                     fillColor = 'white';
                 }
+                time -= 0.01; // Adjust time to account for the 0.01 increment in updateTime
+                updateTime();
             }
 
             function startTimer() {
-                removeTimer()
+                if (timers.length > 0) {
+                    return;
+                }
+                removeTimer(); 
                 timerID = setInterval(updateTime, 10);
                 timers.push(timerID);
             }
@@ -57,6 +69,7 @@ angular.module('beamng.apps')
                     clearInterval(timer);
                 }
                 // clearInterval(timerID);
+                ensureCanvas();
                 if (ctx) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                 }
@@ -75,6 +88,7 @@ angular.module('beamng.apps')
                 const totalSteps = duration / stepTime;
 
                 const sizeInterval = setInterval(() => {
+                    ensureCanvas();
                     currentStep++;
                     const stepRatio = currentStep / totalSteps;
                     if (currentStep <= totalSteps / 2) {
