@@ -35,9 +35,7 @@ local goalPrefabObj
 local goalLocation
 
 local obstaclesPrefabActive = false
-local obstaclesPrefabPath
-local obstaclesPrefabName
-local obstaclesPrefabObj
+local spawnedObstaclePrefabs = {}
 
 local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
@@ -256,14 +254,20 @@ function onSumoRemoveSpawns()
 		newArena.spawnLocations = {}
 	end
 end
-
-function spawnSumoObstacles(filepath) 
-	print(filepath)
+-- for _, file in ipairs(FS:findFiles("art/CastleIslands/", "*", 0, true, false)) do print(file) end
+function spawnSumoObstacles(filepath)
+	-- Find and spawn all prefab files in the specified directory
+	for _, file in ipairs(FS:findFiles(filepath, "*", 0, true, false)) do
+		if file:match("%.prefab%.json$") or file:match("%.json$") then
+			print("Spawning prefab: " .. file)
+			local prefabName = string.gsub(file, "(.*/)(.*)", "%2"):sub(1, -13)
+			local prefabObj = spawnPrefab(prefabName, file, '0 0 0', '0 0 1', '1 1 1')
+			table.insert(spawnedObstaclePrefabs, prefabName)
+		end
+	end
 	obstaclesPrefabActive = true
-	obstaclesPrefabPath   = filepath
-	obstaclesPrefabName   = string.gsub(obstaclesPrefabPath, "(.*/)(.*)", "%2"):sub(1, -13)
-	obstaclesPrefabObj    = spawnPrefab(obstaclesPrefabName, obstaclesPrefabPath, '0 0 0', '0 0 1', '1 1 1')
 	be:reloadStaticCollision(true)
+	print("Spawned prefabs: " .. dump(spawnedObstaclePrefabs))
 end
 
 function removeSumoPrefabs(type)
@@ -287,8 +291,10 @@ function removeSumoPrefabs(type)
 			goalPrefabActive = false
 		end
 		if obstaclesPrefabActive then
-			removePrefab(obstaclesPrefabName)
-			-- print( "Removing: " .. obstaclesPrefabName)
+			for _, prefabName in ipairs(spawnedObstaclePrefabs) do
+				removePrefab(prefabName)
+				print( "Removing: " .. prefabName)
+			end
 			obstaclesPrefabActive = false
 			be:reloadStaticCollision(true)
 		end

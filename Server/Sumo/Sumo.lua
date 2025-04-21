@@ -364,7 +364,7 @@ function sumoGameSetup()
 	gameState.goalScale = 1
 	gameState.safezoneEndAlarm = safezoneEndAlarm
 
-	MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
+	MP.TriggerClientEvent(-1, "spawnSumoObstacles", "art/" .. arena .. "/")
 	updateSumoClients()
 	spawnSumoGoal()
 
@@ -438,7 +438,7 @@ function sumoGameEnd(reason)
 end
 
 function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
-	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
+	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. arena .. "/")
 	for goalID=1,goalPrefabCount do
 		MP.TriggerClientEvent(player.playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
@@ -697,7 +697,7 @@ function onPlayerJoin(playerID)
 		end
 	end
 	if arena and gameState.gameRunning then
-		MP.TriggerClientEvent(playerID, "spawnSumoObstacles", "art/" .. arena .. "/obstacles.prefab.json")
+		MP.TriggerClientEvent(playerID, "spawnSumoObstacles", "art/" .. arena .. "/")
 		MP.TriggerClientEvent(playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
 end
