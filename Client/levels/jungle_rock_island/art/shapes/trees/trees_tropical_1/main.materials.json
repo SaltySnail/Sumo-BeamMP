@@ -1,0 +1,166 @@
+{
+  "tro_tree_1_branches": {
+    "name": "tro_tree_1_branches",
+    "mapTo": "tro_tree_1_branches",
+    "class": "Material",
+    "persistentId": "b2047208-0c7e-4353-a7f5-75076636f86a",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_branch_01_ao.data.png",
+        "baseColorMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_branch_01_b.color.png",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_branch_01_nm.normal.png",
+        "opacityMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_branch_01_o.data.png",
+        "roughnessMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_branch_01_r.data.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 51,
+    "alphaTest": true,
+    "doubleSided": true,
+    "groundType": "LEAVES_STRONG",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "Natural",
+    "materialTag3": "vegetation",
+    "version": 1.5
+  },
+  "tro_tree_1_trunk": {
+    "name": "tro_tree_1_trunk",
+    "mapTo": "tro_tree_1_trunk",
+    "class": "Material",
+    "persistentId": "07db6a08-f02a-444e-bd6c-2d99b4c497d3",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_bark_01_ao.data.png",
+        "baseColorFactor": [
+          1,
+          0.999994993,
+          0.999989986,
+          1
+        ],
+        "baseColorMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_bark_01_b.color.png",
+        "detailMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_bark_01_detail.data.png",
+        "detailNormalMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_bark_01_detail_nm.normal.png",
+        "detailScale": [
+          0.400000006,
+          0.400000006
+        ],
+        "normalMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_bark_01_nm.normal.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_bark_01_r.data.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "WOOD",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "Natural",
+    "specularStrength0": "0.392157",
+    "version": 1.5
+  },
+  "tro_tree_1_leaves": {
+    "name": "tro_tree_1_leaves",
+    "mapTo": "tro_tree_1_leaves",
+    "class": "Material",
+    "persistentId": "c2658ff7-544c-4f52-a1fe-d692a66bb4a8",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_ao.data.png",
+        "baseColorMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_b.color.png",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_nm.normal.png",
+        "opacityMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_o.data.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_r.data.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 60,
+    "alphaTest": true,
+    "doubleSided": true,
+    "groundType": "LEAVES_THIN",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "Natural",
+    "materialTag3": "vegetation",
+    "specularStrength0": "0.882353",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "tro_tree_1_leaves_02": {
+    "name": "tro_tree_1_leaves_02",
+    "mapTo": "tro_tree_1_leaves_02",
+    "class": "Material",
+    "persistentId": "6aa12e70-710b-4195-9519-49fe03bbb1ca",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_02_ao.data.png",
+        "baseColorFactor": [
+          0.999998987,
+          1,
+          0.999989986,
+          1
+        ],
+        "baseColorMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_02_b.color.png",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_02_nm.normal.png",
+        "opacityMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_02_o.data.png",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.800000012,
+        "roughnessMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_02_r.data.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 90,
+    "alphaTest": true,
+    "doubleSided": true,
+    "groundType": "LEAVES_THIN",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "Natural",
+    "materialTag3": "vegetation",
+    "specularStrength0": "0.882353",
+    "version": 1.5
+  },
+  "tro_tree_1_leaves_03": {
+    "name": "tro_tree_1_leaves_03",
+    "mapTo": "tro_tree_1_leaves_03",
+    "class": "Material",
+    "persistentId": "cf3f278a-2af6-435b-80dd-354e2d312943",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_03_ao.data.png",
+        "baseColorFactor": [
+          0.999992013,
+          1,
+          0.999989986,
+          1
+        ],
+        "baseColorMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_03_b.color.png",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_03_nm.normal.png",
+        "opacityMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_03_o.data.png",
+        "roughnessFactor": 0.643000007,
+        "roughnessMap": "/levels/jungle_rock_island/art/shapes/trees/trees_tropical_1/t_tro_tree_01_leaves_03_r.data.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 90,
+    "alphaTest": true,
+    "doubleSided": true,
+    "groundType": "LEAVES_THIN",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "Natural",
+    "materialTag3": "vegetation",
+    "specularStrength0": "0.490196",
+    "version": 1.5
+  }
+}

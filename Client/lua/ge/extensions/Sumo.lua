@@ -180,7 +180,10 @@ function spawnSumoGoal(filepath, offset, rotation)
 	local rotationString = '0 0 1'
 	local scaleString = '1 1 1'
 	print("Spawning goal: " .. currentArena .. " " .. goalNumber)
-	if mapData.arenaData[currentArena].goals[goalNumber] then
+	if 		mapData.arenaData 
+		and mapData.arenaData[currentArena] 
+		and mapData.arenaData[currentArena].goals 
+		and mapData.arenaData[currentArena].goals[goalNumber] then
 		offsetString = "" .. mapData.arenaData[currentArena].goals[goalNumber].x .. " " .. mapData.arenaData[currentArena].goals[goalNumber].y .. " " .. mapData.arenaData[currentArena].goals[goalNumber].z
 		goalLocation = {}
 		goalLocation = mapData.arenaData[currentArena].goals[goalNumber]
@@ -228,7 +231,7 @@ function onSumoCreateGoal()
 	local pos = veh:getPosition()
 	local rot = veh:getRotation()
 	rot = rot:toEuler()
-	removeSumoPrefabs("goal")
+	-- removeSumoPrefabs("goal")
 	-- rot = rot * (180/math.pi) --convert to degrees so people can read it in the json file
 	local upVec = veh:getDirectionVectorUp()
 	if upVec.z > 50 and upVec.z < 60 then
@@ -246,6 +249,12 @@ function onSumoCreateSpawn()
 	vehRot = veh:getDirectionVector()
 	table.insert(newArena.spawnLocations, {x = vehPos.x, y = vehPos.y, z = vehPos.z, rx = vehRot.x * (180/math.pi),  ry = vehRot.y * (180/math.pi),  rz = vehRot.z * (180/math.pi)})
 	print(dump(newArena.spawnLocations))
+end
+
+function onSumoRemoveSpawns()
+	if newArena.spawnLocations then
+		newArena.spawnLocations = {}
+	end
 end
 
 function spawnSumoObstacles(filepath) 
@@ -762,6 +771,9 @@ local vecZ = vec3(0,0,1)
 
 function onPreRender(dt)
 	if not gamestate.gameRunning then return end
+	if simTimeAuthority.get ~= 1 then
+		simTimeAuthority.setInstant(1)
+	end
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		local veh = be:getObjectByID(vehID)
 		veh:queueLuaCommand("requestSumoAirSpeedKmh()")
@@ -871,7 +883,12 @@ function isInTable(tbl, value)
 end
 
 function spawnSumoRandomVehicle()
-	
+	local hasCar = false
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		hasCar = true
+		break
+	end
+	if not hasCar then return end -- skip spectators
 	local chosenConfig = ''
 	
 	local numVehicles = #core_vehicles.getModelList(true).models
@@ -983,6 +1000,7 @@ if MPGameNetwork then AddEventHandler("onSumoCreateSpawn", onSumoCreateSpawn) en
 if MPGameNetwork then AddEventHandler("spawnSumoRandomVehicle", spawnSumoRandomVehicle) end
 if MPGameNetwork then AddEventHandler("onVehicleResetted", onVehicleResetted) end
 if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboard) end
+if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
@@ -1022,6 +1040,7 @@ M.onSumoCreateSpawn = onSumoCreateSpawn
 M.onReverseGravityTrigger = onReverseGravityTrigger
 M.spawnSumoRandomVehicle = spawnSumoRandomVehicle
 M.onSumoShowScoreboard = onSumoShowScoreboard
+M.onSumoRemoveSpawns = onSumoRemoveSpawns
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M

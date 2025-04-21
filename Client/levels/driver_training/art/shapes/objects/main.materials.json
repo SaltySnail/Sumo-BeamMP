@@ -206,7 +206,7 @@
     "persistentId": "e38ee739-1ace-42a8-8061-8ac3f9471f89",
     "Stages": [
       {
-        "colorMap": "/levels/driver_training/art/shapes/objects/t_billboards_drivingschool_01.png",
+        "colorMap": "/levels/driver_training/art/shapes/objects/t_billboards_drivingschool_01_b.color.png",
         "overlayMap": "/levels/driver_training/art/shapes/objects/utah_breakup_texture.dds",
         "pixelSpecular": true,
         "roughnessFactor": 0.275999993,
@@ -243,7 +243,7 @@
     "persistentId": "2c929c19-6fc2-4b81-bdbf-273aa6c57b52",
     "Stages": [
       {
-        "colorMap": "/levels/driver_training/art/shapes/objects/t_billboards_sponsors_01.png",
+        "colorMap": "/levels/driver_training/art/shapes/objects/t_billboards_sponsors_01_b.color.png",
         "overlayMap": "/levels/driver_training/art/shapes/objects/utah_breakup_texture.dds",
         "pixelSpecular": true,
         "roughnessFactor": 0.169,

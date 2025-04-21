@@ -416,10 +416,15 @@ function sumoGameEnd(reason)
 	gameState.endtime = gameState.time + 10
 
 	if scoringSystem then
+		local prevScore = loadScores()
 		MP.SendChatMessage(-1,"The total scores are now: ")
 		local data = { players = {} }
 		for playername, player in pairs(gameState.players) do
 			if not player.score then player.score = 0 end
+			if not prevScore[playername] then prevScore[playername] = 0 end
+			if prevScore[playername] > player.score then
+				player.score = player.score + prevScore[playername] -- show the total score over all rounds, including server restarts
+			end
 			MP.SendChatMessage(-1, "" .. playername .. " : " .. player.score)
 			table.insert(data.players, {
 				name  = playername,
@@ -516,6 +521,13 @@ function sumo(player, argument)
 			MP.TriggerClientEvent(player.playerID, "onSumoCreateGoal", "nil")
 		elseif createString == "spawn" then
 			MP.TriggerClientEvent(player.playerID, "onSumoCreateSpawn", "nil")
+		end
+	elseif string.find(argument, "remove %S") then
+		local createString = string.sub(argument,8,10000) 
+		if createString == "goals" then
+			MP.TriggerClientEvent(player.playerID, "removeSumoPrefabs", "goal")
+		elseif createString == "spawns" then
+			MP.TriggerClientEvent(player.playerID, "onSumoRemoveSpawns", "nil")
 		end
 	elseif string.find(argument, "save as %S") then
 		local arenaName = string.sub(argument,9,10000)
@@ -843,16 +855,21 @@ function loadScores()
 end
 
 function saveAddedScores() -- reads the scores.json file and adds the new scores to it
-	local scores = loadScores()
+	-- local scores = loadScores()
+	local scores = {}
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
     if file then
-		local content = file:read("*a")
-		if not content then content = "{}" end
-		local storedScores = Util.JsonDecode(content)
+		-- local content = file:read("*a")
+		-- if not content then content = "{}" end
+		-- local storedScores = Util.JsonDecode(content)
+		-- for playername, player in pairs(gameState.players) do
+		-- 	if not player.score then player.score = 0 end
+		-- 	if not scores[playername] then scores[playername] = 0 end
+		-- 	scores[playername] = scores[playername] + player.score
+		-- end
 		for playername, player in pairs(gameState.players) do
 			if not player.score then player.score = 0 end
-			if not scores[playername] then scores[playername] = 0 end
-			scores[playername] = scores[playername] + player.score
+			scores[playername] = player.score
 		end
 		file:write(Util.JsonPrettify(Util.JsonEncode(scores)))
 		file:close()

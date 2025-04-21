@@ -1,0 +1,122 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "df93f0db-81ca-4314-a91e-844825e6b3cb",
+    "Stages": [
+      {
+        "colorMap": "/art/SumoMaterials/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  },
+  "desert_bush": {
+    "name": "desert_bush",
+    "mapTo": "desert_bush",
+    "class": "Material",
+    "persistentId": "74730fd2-d4e5-494a-976a-feca25e5efe3",
+    "Stages": [
+      {
+        "colorMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_d.color.png",
+        "detailNormalMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_n.normal.png",
+        "detailNormalMapStrength": 0.699999988,
+        "detailScale": [
+          1,
+          1
+        ],
+        "normalMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_n.normal.png",
+        "roughnessFactor": 0.746999979,
+        "specularMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_s.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 55,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS"
+  },
+  "desert_bush_branch": {
+    "name": "desert_bush_branch",
+    "mapTo": "desert_bush_branch",
+    "class": "Material",
+    "persistentId": "a5a95caa-ecb4-4ccd-bf87-970d8fb58e47",
+    "Stages": [
+      {
+        "colorMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_branch_d.color.png",
+        "detailNormalMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_branch_n.normal.png",
+        "detailNormalMapStrength": 0.5,
+        "detailScale": [
+          1,
+          1
+        ],
+        "normalMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_branch_n.normal.png",
+        "specularMap": "/levels/johnson_valley/art/shapes/groundcover/dry_bush_branch_s.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 59,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS"
+  },
+  "dry_grass": {
+    "name": "dry_grass",
+    "mapTo": "dry_grass",
+    "class": "Material",
+    "persistentId": "a58a2f27-8d2f-4556-bbc0-f7e2b2672bd5",
+    "Stages": [
+      {
+        "colorMap": "levels/johnson_valley/art/shapes/groundcover/dry_grass_d.color.png",
+        "detailNormalMapStrength": 0.5,
+        "detailScale": [
+          1,
+          1
+        ],
+        "diffuseColor": [
+          0.905882418,
+          0.905882418,
+          0.905882418,
+          1
+        ],
+        "normalMap": "/levels/johnson_valley/art/shapes/groundcover/dry_grass_n.normal.png",
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "/levels/johnson_valley/art/shapes/groundcover/dry_grass_s2.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 59,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "translucentBlendOp": "None"
+  }
+}

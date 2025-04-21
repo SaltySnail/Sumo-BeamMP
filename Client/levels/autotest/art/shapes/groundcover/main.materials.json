@@ -1,0 +1,23 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "66c7518b-25a5-43d4-a66e-c243319f88ca",
+    "Stages": [
+      {
+        "colorMap": "levels/template/art/shapes/groundcover/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  }
+}

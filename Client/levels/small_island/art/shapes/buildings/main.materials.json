@@ -1725,27 +1725,43 @@
     "persistentId": "1aef8a02-213d-42fa-89e7-ae67ac7865ce",
     "Stages": [
       {
-        "ambientOcclusionMap": "/levels/small_island/art/terrains/t_asphalt_ao.png",
+        "ambientOcclusionMap": "/levels/small_island/art/shapes/buildings/t_asphalt_ao.data.png",
         "baseColorFactor": [
-          0.869799972,
-          0.859301984,
-          0.850925982,
+          0.843464017,
+          0.856409013,
+          0.856020987,
           1
         ],
-        "baseColorMap": "/levels/small_island/art/terrains/t_asphalt_b.png",
-        "detailMap": "/levels/small_island/art/terrains/t_macro_asphalt_b.png",
+        "baseColorMap": "/levels/small_island/art/shapes/buildings/t_asphalt_b.color.png",
+        "detailBaseColorMapStrength": 0.720000029,
+        "detailMap": "/levels/small_island/art/shapes/buildings/t_asphalt_detail_b.color.png",
         "detailScale": [
-          1,
-          1
+          0.100000001,
+          0.100000001
         ],
-        "normalMap": "/levels/small_island/art/terrains/t_asphalt_nm.png",
+        "normalMap": "/levels/small_island/art/shapes/buildings/t_asphalt_nm.normal.png",
         "overlayMap": "levels/small_island/art/shapes/buildings/utah_breakup_texture.dds",
-        "roughnessFactor": 0.736999989,
+        "roughnessMap": "/levels/small_island/art/shapes/buildings/t_asphalt_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "baseColorFactor": null,
+        "detailBaseColorMapStrength": null,
+        "detailScale": null,
+        "vertColor": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailBaseColorMapStrength": null,
+        "detailScale": null,
+        "vertColor": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailBaseColorMapStrength": null,
+        "detailScale": null,
+        "vertColor": null
+      }
     ],
     "annotation": "ASPHALT",
     "groundType": "ASPHALT_OLD",

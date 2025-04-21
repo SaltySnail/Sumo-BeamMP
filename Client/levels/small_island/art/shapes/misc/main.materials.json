@@ -325,7 +325,7 @@
     "persistentId": "db16d184-65a8-47b8-b1c7-39e2f545323d",
     "Stages": [
       {
-        "colorMap": "/levels/small_island/art/shapes/misc/containers_branding.png",
+        "colorMap": "/levels/small_island/art/shapes/misc/containers_branding_b.color.png",
         "diffuseColor": [
           0.992156982,
           0.992156982,
@@ -335,9 +335,21 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null,
+        "vertColor": null
+      }
     ],
     "castShadows": false,
     "groundType": "ASPHALT_OLD",
@@ -438,20 +450,29 @@
     "persistentId": "91e6f851-8734-4883-9161-ca5c0e361350",
     "Stages": [
       {
-        "colorMap": "/levels/small_island/art/terrains/t_beachsand_b.png",
+        "colorMap": "/levels/small_island/art/shapes/misc/t_beachsand_b.color.png",
         "diffuseColor": [
           1,
           0.999989986,
           0.999989986,
           1
         ],
-        "normalMap": "/levels/small_island/art/terrains/t_beachsand_nm.png",
+        "normalMap": "/levels/small_island/art/shapes/misc/t_beachsand_nm.normal.png",
         "overlayMap": "levels/small_island/art/shapes/buildings/utah_breakup_texture.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 0,
     "doubleSided": true,

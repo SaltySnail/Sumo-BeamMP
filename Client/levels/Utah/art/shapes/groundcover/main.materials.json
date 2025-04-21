@@ -1,0 +1,120 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "df93f0db-81ca-4314-a91e-844825e6b3cb",
+    "Stages": [
+      {
+        "colorMap": "/art/SumoMaterials/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  },
+  "dry_grass": {
+    "name": "dry_grass",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "a269c30f-2863-4077-907b-5bfba1dc1f2f",
+    "Stages": [
+      {
+        "colorMap": "levels/Utah/art/shapes/groundcover/dry_grass_d.dds",
+        "diffuseColor": [
+          0.905882418,
+          0.905882418,
+          0.905882418,
+          1
+        ],
+        "normalMap": "levels/Utah/art/shapes/groundcover/dry_grass_n.dds",
+        "specular": [
+          0.988235354,
+          0.988235354,
+          0.988235354,
+          1
+        ],
+        "specularMap": "levels/Utah/art/shapes/groundcover/dry_grass_s.dds",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 60,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "translucentBlendOp": "None"
+  },
+  "utah_bush_vegetation": {
+    "name": "utah_bush_vegetation",
+    "mapTo": "utah_bush_vegetation",
+    "class": "Material",
+    "persistentId": "bac5d1ea-ea54-41fa-9260-0e9e83b7e00c",
+    "Stages": [
+      {
+        "colorMap": "levels/Utah/art/shapes/groundcover/Greybush_d.dds",
+        "normalMap": "levels/Utah/art/shapes/groundcover/Greybush_n.dds",
+        "pixelSpecular": true,
+        "specular": [
+          0.321568638,
+          0.321568638,
+          0.321568638,
+          1
+        ],
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 60,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "beamng",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural"
+  },
+  "utah_grasses": {
+    "name": "utah_grasses",
+    "mapTo": "utah_grasses",
+    "class": "Material",
+    "persistentId": "2a803828-ddf5-43f2-9073-22dd54564917",
+    "Stages": [
+      {
+        "colorMap": "levels/Utah/art/shapes/groundcover/utah_grasses_d.dds",
+        "normalMap": "levels/Utah/art/shapes/groundcover/utah_grasses_n.dds",
+        "roughnessFactor": 0.672736585,
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 80,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "beamng",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural"
+  }
+}

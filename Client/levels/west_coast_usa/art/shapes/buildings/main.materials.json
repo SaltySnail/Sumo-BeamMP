@@ -247,39 +247,6 @@
     "materialTag1": "building",
     "translucentBlendOp": "None"
   },
-  "clutter_commercial": {
-    "name": "clutter_commercial",
-    "mapTo": "clutter_commercial",
-    "class": "Material",
-    "persistentId": "bef10247-df48-4f55-b111-303c87da4cc0",
-    "Stages": [
-      {
-        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/clutter_commercial_b.color.png",
-        "opacityMap": "/levels/west_coast_usa/art/shapes/buildings/clutter_commercial_o.data.png",
-        "roughnessFactor": 0.607767701,
-        "vertColor": true
-      },
-      {
-        "roughnessFactor": null,
-        "vertColor": null
-      },
-      {
-        "roughnessFactor": null,
-        "vertColor": null
-      },
-      {
-        "roughnessFactor": null,
-        "vertColor": null
-      }
-    ],
-    "alphaRef": 64,
-    "alphaTest": true,
-    "annotation": "BUILDINGS",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucentBlendOp": "None",
-    "version": 1.5
-  },
   "columns": {
     "name": "columns",
     "mapTo": "columns",
@@ -326,34 +293,6 @@
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucentBlendOp": "None"
-  },
-  "construction": {
-    "name": "construction",
-    "mapTo": "construction",
-    "class": "Material",
-    "persistentId": "e691b834-d02e-4785-9249-1e0f1ba2c487",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/construction_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/construction_n.dds",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/construction_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 70,
-    "alphaTest": true,
-    "annotation": "BUILDINGS",
-    "doubleSided": true,
-    "invertBackFaceNormals": true,
     "materialTag0": "beamng",
     "materialTag1": "building",
     "translucentBlendOp": "None"
@@ -408,36 +347,6 @@
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "dynamicCubemap": true,
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucentBlendOp": "None"
-  },
-  "industrial": {
-    "name": "industrial",
-    "mapTo": "industrial",
-    "class": "Material",
-    "persistentId": "16b8fab9-d948-47a6-bd21-a30afbff6ca3",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/industrial_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/industrial_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/industrial_r.dds",
-        "reflectivityMapFactor": 0.300000012,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/industrial_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 127,
-    "alphaTest": true,
-    "annotation": "BUILDINGS",
-    "cubemap": "cubemap_wca_reflection",
-    "groundType": "METAL",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "translucentBlendOp": "None"
@@ -977,33 +886,6 @@
     "materialTag0": "beamng",
     "materialTag1": "building",
     "translucentBlendOp": "None"
-  },
-  "walls_transparent": {
-    "name": "walls_transparent",
-    "mapTo": "walls_transparent",
-    "class": "Material",
-    "persistentId": "29265fa6-1a99-4983-9607-7aef556448a4",
-    "Stages": [
-      {
-        "baseColorMap": "levels/west_coast_usa/art/shapes/buildings/walls_transparent_d.dds",
-        "metallicFactor": 1,
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/walls_transparent_n.dds",
-        "opacityFactor": 0.500999987,
-        "pixelSpecular": true,
-        "roughnessFactor": 0,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 127,
-    "annotation": "BUILDINGS",
-    "dynamicCubemap": true,
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucent": true,
-    "version": 1.5
   },
   "weatherboards": {
     "name": "weatherboards",

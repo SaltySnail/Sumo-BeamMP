@@ -1,0 +1,28 @@
+{
+  "tro_bush_1_leaves": {
+    "name": "tro_bush_1_leaves",
+    "mapTo": "tro_bush_1_leaves",
+    "class": "Material",
+    "persistentId": "e0bcda08-3bed-42b9-98a5-e64c07db4aa9",
+    "Stages": [
+      {
+        "colorMap": "/art/SumoMaterials/trees/bush_tropical_1/tro_bush_1_leaves_d.dds",
+        "normalMap": "/art/SumoMaterials/trees/bush_tropical_1/tro_bush_1_leaves_n.dds",
+        "specularMap": "/art/SumoMaterials/trees/bush_tropical_1/tro_bush_1_leaves_s.dds",
+        "specularPower": 1,
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 50,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "Natural",
+    "materialTag3": "vegetation",
+    "specularStrength0": "0.490196"
+  }
+}

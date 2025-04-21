@@ -1,0 +1,49 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "b9a7716f-de7f-4df0-80bf-979ca74d043c",
+    "Stages": [
+      {
+        "colorMap": "levels/jungle_rock_island/art/shapes/groundcover/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  },
+  "plants_grasses_v2": {
+    "name": "plants_grasses_v2",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "eb4fddfd-97d4-4b42-a404-5fe37d8b032e",
+    "Stages": [
+      {
+        "colorMap": "/levels/jungle_rock_island/art/shapes/groundcover/tropical_undergrowth_d.color.png",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/groundcover/tropical_undergrowth_n.normal.png",
+        "roughnessFactor": 0.616999984,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/groundcover/tropical_undergrowth_s.color.png"
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 94,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "beamng",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural"
+  }
+}

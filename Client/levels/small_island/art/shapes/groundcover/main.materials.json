@@ -1,0 +1,176 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "df93f0db-81ca-4314-a91e-844825e6b3cb",
+    "Stages": [
+      {
+        "colorMap": "/art/SumoMaterials/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  },
+  "GrassDry": {
+    "name": "GrassDry",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "34aea39f-1ab7-4f35-9539-972437b7006a",
+    "Stages": [
+      {
+        "colorMap": "levels/small_island/art/shapes/groundcover/Grass_Dry_d.dds",
+        "diffuseColor": [
+          0.996078491,
+          0.996078491,
+          0.996078491,
+          1
+        ],
+        "normalMap": "levels/small_island/art/shapes/groundcover/Grass_Green_n.dds",
+        "roughnessFactor": 0.511003792,
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "levels/small_island/art/shapes/groundcover/Grass_Green_s.dds",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 60,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "translucentBlendOp": "None"
+  },
+  "GrassMiddle": {
+    "name": "GrassMiddle",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "c6552e8a-3784-44da-998b-3dca87552aca",
+    "Stages": [
+      {
+        "colorMap": "levels/small_island/art/shapes/groundcover/Grass_Middle_d.dds",
+        "diffuseColor": [
+          0.874509871,
+          0.874509871,
+          0.874509871,
+          1
+        ],
+        "normalMap": "levels/small_island/art/shapes/groundcover/Grass_Green_n.dds",
+        "roughnessFactor": 0.481729686,
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "levels/small_island/art/shapes/groundcover/Grass_Green_s.dds",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 95,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "translucentBlendOp": "None"
+  },
+  "dry_grass": {
+    "name": "dry_grass",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "a58a2f27-8d2f-4556-bbc0-f7e2b2672bd5",
+    "Stages": [
+      {
+        "colorMap": "levels/small_island/art/shapes/groundcover/dry_grass_d.dds",
+        "diffuseColor": [
+          0.905882418,
+          0.905882418,
+          0.905882418,
+          1
+        ],
+        "normalMap": "levels/small_island/art/shapes/groundcover/dry_grass_n.dds",
+        "roughnessFactor": 0.842635155,
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "levels/small_island/art/shapes/groundcover/dry_grass_s.dds",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 60,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "translucentBlendOp": "None"
+  },
+  "wca_groundcover": {
+    "name": "wca_groundcover",
+    "mapTo": "wca_groundcover",
+    "class": "Material",
+    "persistentId": "f51ee056-430f-42a6-9640-72fa3d87557d",
+    "Stages": [
+      {
+        "colorMap": "levels/small_island/art/shapes/groundcover/wca_groundcover_d.dds",
+        "diffuseColor": [
+          0.752941251,
+          0.756862819,
+          0.717647076,
+          1
+        ],
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 128,
+    "alphaTest": true,
+    "annotation": "GRASS",
+    "doubleSided": true,
+    "groundType": "GRASS",
+    "materialTag0": "beamng",
+    "materialTag1": "beamng",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa"
+  }
+}

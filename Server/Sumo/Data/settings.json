@@ -2,6 +2,6 @@
     "autoStart":false,
     "chatCommands":true,
     "safezoneEndAlarm":true,
-    "randomVehicles":false,
+    "randomVehicles":true,
     "playersNeededForGame":2
 }

@@ -1,0 +1,30 @@
+{
+  "leaves_strong": {
+    "name": "leaves_strong",
+    "mapTo": "leaves_strong",
+    "class": "Material",
+    "persistentId": "8ea5cefd-1c50-4eed-9a1e-787623cb76b9",
+    "Stages": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "groundDepth": 0.6000000238418579,
+    "groundType": "leaves_strong"
+  },
+  "leaves_thin": {
+    "name": "leaves_thin",
+    "mapTo": "leaves_thin",
+    "class": "Material",
+    "persistentId": "344f00cd-069e-4669-a57f-88e19a6b0e2c",
+    "Stages": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "groundDepth": 1,
+    "groundType": "leaves_thin"
+  }
+}

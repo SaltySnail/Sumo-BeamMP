@@ -1,0 +1,180 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "df93f0db-81ca-4314-a91e-844825e6b3cb",
+    "Stages": [
+      {
+        "colorMap": "/art/SumoMaterials/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  },
+  "BNGGrass": {
+    "name": "BNGGrass",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "904bd9d8-dacd-4ff2-8363-fe783491e84c",
+    "Stages": [
+      {
+        "colorMap": "levels/hirochi_raceway/art/shapes/groundcover/Grass_Green_d.dds",
+        "diffuseColor": [
+          0.9960784912109376,
+          0.9960784912109376,
+          0.9960784912109376,
+          1
+        ],
+        "normalMap": "levels/hirochi_raceway/art/shapes/groundcover/Grass_Green_n.dds",
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "levels/hirochi_raceway/art/shapes/groundcover/Grass_Green_s.dds",
+        "specularPower": 71,
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 70,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "translucentBlendOp": "None"
+  },
+  "BNGGrass02": {
+    "name": "BNGGrass02",
+    "mapTo": "BNGGrass02",
+    "class": "Material",
+    "persistentId": "28384706-8467-472f-b374-3bffc34bf600",
+    "Stages": [
+      {
+        "colorMap": "/levels/hirochi_raceway/art/shapes/groundcover/Grass_Green_d.dds",
+        "diffuseColor": [
+          0.870845973,
+          0.922631979,
+          1,
+          1
+        ],
+        "normalMap": "levels/hirochi_raceway/art/shapes/groundcover/Grass_Green_n.dds",
+        "roughnessFactor": 0.507772148,
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "levels/hirochi_raceway/art/shapes/groundcover/Grass_Green_s.dds",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 70,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "translucentBlendOp": "None"
+  },
+  "Groundcover_spring": {
+    "name": "Groundcover_spring",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "a457fcc4-556f-4320-9957-38e423d01f19",
+    "Stages": [
+      {
+        "colorMap": "/levels/hirochi_raceway/art/shapes/groundcover/t_undergrowth_01_d.color.png",
+        "diffuseColor": [
+          1,
+          0.999989986,
+          0.999989986,
+          1
+        ],
+        "normalMap": "/levels/hirochi_raceway/art/shapes/groundcover/t_undergrowth_01_nm.normal.png",
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "/levels/hirochi_raceway/art/shapes/groundcover/t_undergrowth_01_s.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 86,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa"
+  },
+  "forest_vegetation": {
+    "name": "forest_vegetation",
+    "mapTo": "forest_vegetation",
+    "class": "Material",
+    "persistentId": "792eadfc-1f77-4fe8-bced-90e4ce4a207a",
+    "Stages": [
+      {
+        "colorMap": "/levels/hirochi_raceway/art/shapes/groundcover/t_undergrowth_01_d.color.png",
+        "diffuseColor": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "normalMap": "/levels/hirochi_raceway/art/shapes/groundcover/t_undergrowth_01_nm.normal.png",
+        "pixelSpecular": true,
+        "specular": [
+          0.501960993,
+          0.501960993,
+          0.501960993,
+          1
+        ],
+        "specularMap": "/levels/hirochi_raceway/art/shapes/groundcover/t_undergrowth_01_s.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 80,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa"
+  }
+}

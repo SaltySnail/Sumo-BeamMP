@@ -118,43 +118,6 @@
     "materialTag1": "vehicle",
     "version": 1.5
   },
-  "barrierfence": {
-    "name": "barrierfence",
-    "mapTo": "barrierfence",
-    "class": "Material",
-    "persistentId": "d3b64894-86be-415e-8dc9-85b738f6a2ef",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/barrierfence_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/barrierfence_n.dds",
-        "overlayMap": "levels/west_coast_usa/art/shapes/roads/sponsors.dds",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/barrierfence_s.dds",
-        "useAnisotropic": true
-      },
-      {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
-      },
-      {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
-      },
-      {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
-      }
-    ],
-    "alphaRef": 0,
-    "annotation": "OBSTACLES",
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
-  },
   "billboards": {
     "name": "billboards",
     "mapTo": "billboards",
@@ -312,6 +275,41 @@
     "annotation": "BUILDINGS",
     "cubemap": "cubemap_wca_reflection",
     "groundType": "METAL",
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None"
+  },
+  "covet_blueprint": {
+    "name": "covet_blueprint",
+    "mapTo": "covet_blueprint",
+    "class": "Material",
+    "persistentId": "e42254b5-81aa-4c7b-a07f-85fe25141236",
+    "Stages": [
+      {
+        "colorMap": "levels/west_coast_usa/art/shapes/objects/covet_blueprint_d.dds",
+        "pixelSpecular": true,
+        "roughnessFactor": 0.607767701,
+        "useAnisotropic": true
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "useAnisotropic": null
+      }
+    ],
+    "alphaRef": 0,
+    "doubleSided": true,
+    "invertBackFaceNormals": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
     "translucentBlendOp": "None"
@@ -1200,24 +1198,6 @@
     "groundType": "RUMBLE_STRIP",
     "translucent": true,
     "translucentZWrite": true
-  },
-  "shock_absorber": {
-    "name": "shock_absorber",
-    "mapTo": "shock_absorber",
-    "class": "Material",
-    "persistentId": "b60dbea7-4cf4-4f08-b3f6-31ec2557bcb9",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/roads/invisible.dds"
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "alphaTest": true,
-    "groundDepth": 0.600000024,
-    "groundType": "shock_absorber"
   },
   "solar_panel": {
     "name": "solar_panel",

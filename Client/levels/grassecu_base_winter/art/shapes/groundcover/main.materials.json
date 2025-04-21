@@ -1,0 +1,147 @@
+{
+  "BNG_Grass_03": {
+    "name": "BNG_Grass_03",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "df93f0db-81ca-4314-a91e-844825e6b3cb",
+    "Stages": [
+      {
+        "colorMap": "/art/SumoMaterials/Grass03_tropical_d.dds",
+        "specularPower": 1
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 107,
+    "alphaTest": true,
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation"
+  },
+  "BNGGrass": {
+    "name": "BNGGrass",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "b2d38e39-359b-4603-b334-a3263a4bcc57",
+    "Stages": [
+      {
+        "colorMap": "/levels/grassecu_base_winter/art/shapes/groundcover/t_grass_01_d.color.png",
+        "diffuseColor": [
+          0.996078491,
+          0.996078491,
+          0.996078491,
+          1
+        ],
+        "normalMap": "/levels/east_coast_usa/art/shapes/groundcover/t_grass_01_nm.normal.png",
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "/levels/east_coast_usa/art/shapes/groundcover/t_grass_01_s.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 60,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "translucentBlendOp": "None"
+  },
+  "Groundcover_spring": {
+    "name": "Groundcover_spring",
+    "mapTo": "unmapped_mat",
+    "class": "Material",
+    "persistentId": "f68bc39e-8fb1-4aaf-80c0-469fedd808f3",
+    "Stages": [
+      {
+        "colorMap": "/levels/grassecu_base_winter/art/shapes/groundcover/t_undergrowth_01_d.color.png",
+        "detailNormalMapStrength": 0.5,
+        "detailScale": [
+          1,
+          1
+        ],
+        "diffuseColor": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "normalMap": "/levels/east_coast_usa/art/shapes/groundcover/t_undergrowth_01_nm.normal.png",
+        "specular": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "specularMap": "/levels/east_coast_usa/art/shapes/groundcover/t_undergrowth_01_s.color.png",
+        "useAnisotropic": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 42,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa"
+  },
+  "forest_vegetation": {
+    "name": "forest_vegetation",
+    "mapTo": "forest_vegetation",
+    "class": "Material",
+    "persistentId": "7c001266-ad0a-45da-97db-b3d7086c0f64",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/levels/east_coast_usa/art/shapes/groundcover/t_undergrowth_01_ao.data.png",
+        "baseColorFactor": [
+          0.992156923,
+          0.992156923,
+          0.992156923,
+          1
+        ],
+        "baseColorMap": "/levels/grassecu_base_winter/art/shapes/groundcover/t_undergrowth_01_b.color.png",
+        "normalMap": "/levels/east_coast_usa/art/shapes/groundcover/t_undergrowth_01_nm.normal.png",
+        "normalMapStrength": 0,
+        "opacityMap": "/levels/east_coast_usa/art/shapes/groundcover/t_undergrowth_01_o.data.png",
+        "pixelSpecular": true,
+        "roughnessMap": "/levels/east_coast_usa/art/shapes/groundcover/t_undergrowth_01_r.data.png",
+        "specular": [
+          0.501960993,
+          0.501960993,
+          0.501960993,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "alphaRef": 80,
+    "alphaTest": true,
+    "annotation": "NATURE",
+    "doubleSided": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vegetation",
+    "materialTag2": "vegetation",
+    "materialTag3": "Natural",
+    "materialTag4": "east_coast_usa",
+    "version": 1.5
+  }
+}
