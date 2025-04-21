@@ -916,7 +916,7 @@ function spawnSumoRandomVehicle()
 		end 
 		modelConfigs = {}
 		for i,v in pairs(allConfigs.configs) do
-			if (v.model_key == chosenModel.key) then
+			if (v.model_key == chosenModel.key) and v.Source and v.Source["BeamNG - Official"] then
 				table.insert(modelConfigs, {key = v.key, name = v.Name})
 			end
 		end
@@ -927,6 +927,7 @@ function spawnSumoRandomVehicle()
 
 	-- Spawn the vehicle
 	core_vehicles.replaceVehicle(chosenModel.key, {config = chosenConfig.key})
+	-- for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then for _, config in pairs(core_vehicles.getConfigList(true)) do if config.Source then print(dump(config.Source["BeamNG - Official"])) end end end end
 end
 
 function onVehicleResetted(vehID)

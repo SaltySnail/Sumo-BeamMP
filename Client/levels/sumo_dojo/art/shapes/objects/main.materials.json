@@ -1,0 +1,69 @@
+{
+  "containers_shipping": {
+    "name": "containers_shipping",
+    "mapTo": "containers_shipping",
+    "class": "Material",
+    "persistentId": "54ab4b85-e352-4833-a604-3fb87a8fddd6",
+    "Stages": [
+      {
+        "ambientOcclusionMap": "/art/SumoMaterials/t_containers_shipping_ao.data.png",
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "baseColorMap": "/art/SumoMaterials/t_containers_shipping_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/art/SumoMaterials/t_containers_shipping_m.data.png",
+        "normalMap": "/art/SumoMaterials/t_containers_shipping_nm.normal.png",
+        "roughnessMap": "/art/SumoMaterials/t_containers_shipping_r.data.png"
+      },
+      {
+        "metallicMap": "/art/SumoMaterials/t_containers_shipping_m.data.png",
+        "normalMap": "/art/SumoMaterials/t_containers_shipping_nm.normal.png",
+        "opacityMap": "/art/SumoMaterials/t_containers_shipping_o.data.png",
+        "roughnessMap": "/art/SumoMaterials/t_containers_shipping_r.data.png",
+        "vertColor": true
+      },
+      {},
+      {}
+    ],
+    "activeLayers": 2,
+    "annotation": "OBSTACLES",
+    "groundType": "ASPHALT",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "version": 1.5
+  },
+  "containers_shipping_branding": {
+    "name": "containers_shipping_branding",
+    "mapTo": "containers_shipping_branding",
+    "class": "Material",
+    "persistentId": "db16d184-65a8-47b8-b1c7-39e2f545323d",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.992156982,
+          0.992156982,
+          0.992156982,
+          1
+        ],
+        "baseColorMap": "/art/SumoMaterials/t_containers_shipping_branding_b.color.png",
+        "opacityMap": "/art/SumoMaterials/t_containers_shipping_branding_o.data.png",
+        "roughnessFactor": 0.635999978,
+        "vertColor": true
+      },
+      {},
+      {},
+      {}
+    ],
+    "castShadows": false,
+    "groundType": "ASPHALT_OLD",
+    "materialTag0": "beamng",
+    "materialTag1": "Industrial",
+    "translucent": true,
+    "translucentZWrite": true,
+    "version": 1.5
+  }
+}

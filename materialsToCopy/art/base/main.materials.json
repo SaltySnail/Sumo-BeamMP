@@ -1,0 +1,60 @@
+{
+  "Material_001": {
+    "name": "Material_001",
+    "mapTo": "Material.001",
+    "class": "Material",
+    "Stages": [
+      {
+        "diffuseColor": [
+          0.101055004,
+          0.734636009,
+          0.85680902,
+          1
+        ]
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
+    ],
+    "groundType": "PLASTIC",
+    "translucentBlendOp": "None"
+  },
+  "Material_003": {
+    "name": "Material_003",
+    "mapTo": "Material.003",
+    "class": "Material",
+    "Stages": [
+      {
+        "colorMap": "/REPLACE_ME/Landscape.003 Base Color"
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None"
+  },
+  "Material_004": {
+    "name": "Material_004",
+    "mapTo": "Material.004",
+    "class": "Material",
+    "Stages": [
+      {
+        "colorMap": "/REPLACE_ME/Cylinder Base Color"
+      },
+      {},
+      {},
+      {}
+    ],
+    "doubleSided": true,
+    "groundType": "LEAVES_STRONG",
+    "translucentBlendOp": "None"
+  }
+}
