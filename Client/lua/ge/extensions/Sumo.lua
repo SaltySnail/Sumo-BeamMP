@@ -42,7 +42,7 @@ local spawnedObstaclePrefabs = {}
 
 local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
-local debugView = true
+local debugView = false
 
 local newArena = {}
 newArena.goals = {}
