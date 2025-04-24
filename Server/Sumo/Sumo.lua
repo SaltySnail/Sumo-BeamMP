@@ -48,6 +48,10 @@ local scoringSystem = true
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
 local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
+local allowedConfigs = {}
+-- The following line was used to generate the allowedConfigs.json file.
+-- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
+-- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
 
 function dump(o)
     if type(o) == 'table' then
@@ -60,6 +64,18 @@ function dump(o)
     else
        return tostring(o)
     end
+end
+
+local function readAllowedConfigs()
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "allowedConfigs.json", "r")
+	if not file then 
+		print("allowedConfigs.json not found")
+		return
+	end
+	local contents = file:read("*a")
+	file:close()
+	-- print("onPlayerJoin" .. playerID .. ": " .. Util.JsonPrettify(contents))
+	allowedConfigs = Util.JsonDecode(contents)
 end
 
 --called whenever the extension is loaded
@@ -98,6 +114,7 @@ function onInit()
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
+
 
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
@@ -338,6 +355,9 @@ function sumoGameSetup()
 			gameState.players[Name].team = chosenTeam
 			gameState.players[Name].dead = false
 			gameState.players[Name].isRoundWinner = false
+			if randomVehicles then
+				gameState.players[Name].chosenConfig = allowedConfigs[rand(1,#allowedConfigs)]
+			end
 			teamCount = teamCount + 1
 		end
 	end
@@ -509,6 +529,7 @@ function sumo(player, argument)
 		local randomVehiclesString = string.sub(argument,17,10000)
 		if randomVehiclesString == "true" then
 			randomVehicles = true
+			readAllowedConfigs()
 		elseif randomVehiclesString == "false" then
 			randomVehicles = false
 		else
@@ -836,6 +857,9 @@ function loadSettings()
     else
         print("Cannot open file:", path)
     end
+	if randomVehicles then
+		readAllowedConfigs()
+	end
 end
 
 function loadScores()

@@ -10,10 +10,6 @@ local gamestate = {players = {}, settings = {}}
 local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 local allInputActions = 					{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
 
--- hand picked vehicles using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
--- for random config mode. This avoids spawning vehicles that are not worthy or configs of mods (to some extent).
-local allAllowedVehicleKeys = {'autobello',"miramar","etk800","vivace","etkc","etki","bluebuck","nine","sbr","bx","utv","burnside","moonhawk","barstow","covet","bolide","legran","pigeon","wigeon","bastion","scintilla","midsize","pessima","fullsize","sunburst2","lansdale","wendover"}
-
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
 local isPlayerInCircle = false
@@ -33,13 +29,20 @@ local goalPrefabPath
 local goalPrefabName
 local goalPrefabObj
 local goalLocation
+local goalPos
+local goalVecX
+local goalVecY
+local goalVecZ
+local vecX = vec3(1,0,0)
+local vecY = vec3(0,1,0)
+local vecZ = vec3(0,0,1)
 
 local obstaclesPrefabActive = false
 local spawnedObstaclePrefabs = {}
 
 local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
-local debugView = false
+local debugView = true
 
 local newArena = {}
 newArena.goals = {}
@@ -220,6 +223,14 @@ function spawnSumoGoal(filepath, offset, rotation)
 	newObj.canSave = true
 	newObj:registerObject(goalPrefabName .. "TSStatic")
 	scenetree.MissionGroup:addObject(newObj)
+	
+	-- set position for checking the trigger
+	local rot, scl
+	goalPos, rot, scl = newObj:getPosition(), quat(newObj:getRotation()), newObj:getScale()
+	goalVecZ, goalVecY, goalVecX = rot*vecZ*scl.z, rot*vecY*scl.y, rot*vecX*scl.x
+	goalVecX = goalVecX * 1.5 --make the hitbox of the safezone the same size as the visual safezone
+	goalVecY = goalVecY * 3
+	goalVecZ = goalVecZ * 2
 end
 
 function onSumoCreateGoal()
@@ -282,6 +293,7 @@ function removeSumoPrefabs(type)
 				scenetree.findObject(objectName):delete()
 			end
 		end
+		goalVecX, goalVecY, goalVecZ = nil, nil, nil
 		-- print( "Removing: " .. goalPrefabName)
 		goalPrefabActive = false
 	elseif type == "all" then
@@ -771,10 +783,6 @@ function sumoColor(player,vehicle,team,dt)
 	-- end
 end
 
-local vecX = vec3(1,0,0)
-local vecY = vec3(0,1,0)
-local vecZ = vec3(0,0,1)
-
 function onPreRender(dt)
 	if not gamestate.gameRunning then return end
 	if simTimeAuthority.get ~= 1 then
@@ -787,26 +795,11 @@ function onPreRender(dt)
 	if goalLocation and goalPrefabActive then
 		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
 	end
-	local pos, rot, scl
-	local zVec, yVec, xVec
-	for _, objectName in pairs(scenetree.getAllObjects()) do --TODO: move this to when a goal is created
-		-- print(objectName)
-		if string.find(objectName, "^goal%d*TSStatic") then 
-			goalObj = scenetree.findObject(objectName)
-			-- goalObj.getField("ID")
-			pos, rot, scl = goalObj:getPosition(), quat(goalObj:getRotation()), goalObj:getScale()
-      		zVec, yVec, xVec = rot*vecZ*scl.z, rot*vecY*scl.y, rot*vecX*scl.x
-			-- print(dump(goalObj) .. " " .. dump(pos))
-		end
-	end
-	if not goalObj or not pos or not xVec or not yVec or not zVec then return end
+	if not goalPos or not goalVecX or not goalVecY or not goalVecZ then return end
 	if not be:getPlayerVehicle(0) then return end
 	local playerVehicle = be:getPlayerVehicle(0)
 	local bb1 = playerVehicle:getSpawnWorldOOBB()
-	xVec = xVec * 1.5 --make the hitbox of the safezone the same size as the visual safezone
-	yVec = yVec * 3
-	zVec = zVec * 2
-	local isInsideSafezone = overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, pos, xVec, yVec, zVec)
+	local isInsideSafezone = overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, goalPos, goalVecX, goalVecY, goalVecZ)
 
 	-- this checks if player has transistioned from inside to outside the safezone or vice versa or it is the first time checking
 	if not playerVehicle.isInsideSafezone 
@@ -817,10 +810,10 @@ function onPreRender(dt)
 		playerVehicle.isInsideSafezone = isInsideSafezone
 		if isInsideSafezone then
 			if debugView then
-				debugDrawer:drawSphere(pos, 0.1, debugSphereColorTriggered)
-				debugDrawer:drawSphere(pos + xVec, 0.1, debugSphereColorTriggered)
-				debugDrawer:drawSphere(pos + yVec, 0.1, debugSphereColorTriggered)
-				debugDrawer:drawSphere(pos + zVec, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos + goalVecX, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos + goalVecY, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos + goalVecZ, 0.1, debugSphereColorTriggered)
 			end
 			trigger = {}
 			trigger.event = "enter"
@@ -829,10 +822,10 @@ function onPreRender(dt)
 			onSumoTrigger(trigger)
 		else
 			if debugView then
-				debugDrawer:drawSphere(pos, 0.1, debugSphereColorNeutral)
-				debugDrawer:drawSphere(pos + xVec, 0.1, debugSphereColorNeutral)
-				debugDrawer:drawSphere(pos + yVec, 0.1, debugSphereColorNeutral)
-				debugDrawer:drawSphere(pos + zVec, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos + goalVecX, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos + goalVecY, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos + goalVecZ, 0.1, debugSphereColorNeutral)
 			end
 			trigger = {}
 			trigger.event = "exit"
@@ -895,45 +888,18 @@ function spawnSumoRandomVehicle()
 		break
 	end
 	if not hasCar then return end -- skip spectators
-	local chosenConfig = ''
-	
-	local numVehicles = #core_vehicles.getModelList(true).models
-	local chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
-	
-	-- Reroll away undesired results
-	while not chosenModel or chosenModel.Type ~= 'Car' or not isInTable(allAllowedVehicleKeys, chosenModel.key) do
-		chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
-	end 
-	
-	local allConfigs = core_vehicles.getConfigList(true)
-	local modelConfigs = {}
-	
-	-- Build a list of configs for the chosen model
-	for i,v in pairs(allConfigs.configs) do
-		if (v.model_key == chosenModel.key) then
-			table.insert(modelConfigs, {key = v.key, name = v.Name})
+	local playerName = ""
+	for _, veh in pairs(MPVehicleGE.getOwnMap()) do
+		playerName = veh.ownerName
+		break
+	end
+	if not playerName then print("No playername!?!?") return end
+	for playername, player in pairs(gamestate.players) do
+		if playername == playerName then
+			core_vehicles.replaceVehicle(player.chosenConfig.model_key, player.chosenConfig)
+			break
 		end
 	end
-
-	while (#modelConfigs == 0) do -- choose a new car if it has no configs
-		chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
-		while not chosenModel or chosenModel.Type ~= 'Car' or not isInTable(allAllowedVehicleKeys, chosenModel.key) do
-			chosenModel = core_vehicles.getModelList(true).models[math.random(1,numVehicles)]
-		end 
-		modelConfigs = {}
-		for i,v in pairs(allConfigs.configs) do
-			if (v.model_key == chosenModel.key) and v.Source and v.Source["BeamNG - Official"] then
-				table.insert(modelConfigs, {key = v.key, name = v.Name})
-			end
-		end
-	end
-
-	-- Randomly choose a config
-	chosenConfig = modelConfigs[math.random(1,#modelConfigs)]
-
-	-- Spawn the vehicle
-	core_vehicles.replaceVehicle(chosenModel.key, {config = chosenConfig.key})
-	-- for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then for _, config in pairs(core_vehicles.getConfigList(true)) do if config.Source then print(dump(config.Source["BeamNG - Official"])) end end end end
 end
 
 function onVehicleResetted(vehID)
