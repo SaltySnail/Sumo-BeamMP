@@ -45,6 +45,7 @@ local autoStart = false
 local commandsAllowed = true
 local safezoneEndAlarm = true
 local scoringSystem = true
+local blockConsole = false 
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
 local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
@@ -721,6 +722,9 @@ function onPlayerJoin(playerID)
 		MP.TriggerClientEvent(playerID, "spawnSumoObstacles", "art/" .. arena .. "/")
 		MP.TriggerClientEvent(playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
+	if blockConsole then
+		MP.TriggerClientEvent(playerID, "blockConsole", "nil")
+	end
 end
 
 --called whenever a player disconnects from the server
@@ -853,6 +857,7 @@ function loadSettings()
 			safezoneEndAlarm = data["safezoneEndAlarm"]
 			randomVehicles = data["randomVehicles"]
 			playersNeededForGame = data["playersNeededForGame"]
+			blockConsole = data["blockConsole"]
 		end
     else
         print("Cannot open file:", path)

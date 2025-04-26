@@ -1,6 +1,7 @@
 {
     "autoStart":false,
     "chatCommands":true,
+    "blockConsole":false,
     "safezoneEndAlarm":true,
     "randomVehicles":true,
     "playersNeededForGame":2

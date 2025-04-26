@@ -946,6 +946,12 @@ function onSumoShowScoreboard(data)
 	-- end
 end
 
+function blockConsole()
+	print("blockConsole called")
+	extensions.core_input_actionFilter.setGroup('sumoConsole', {"toggleConsoleNG"})
+	extensions.core_input_actionFilter.addAction(0, 'sumoConsole', true)
+end
+
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
 if MPGameNetwork then AddEventHandler("onSumoCreateGoal", onSumoCreateGoal) end
@@ -974,6 +980,7 @@ if MPGameNetwork then AddEventHandler("spawnSumoRandomVehicle", spawnSumoRandomV
 if MPGameNetwork then AddEventHandler("onVehicleResetted", onVehicleResetted) end
 if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboard) end
 if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
+if MPGameNetwork then AddEventHandler("blockConsole", blockConsole) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
@@ -1014,6 +1021,7 @@ M.onReverseGravityTrigger = onReverseGravityTrigger
 M.spawnSumoRandomVehicle = spawnSumoRandomVehicle
 M.onSumoShowScoreboard = onSumoShowScoreboard
 M.onSumoRemoveSpawns = onSumoRemoveSpawns
+M.blockConsole = blockConsole
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
