@@ -46,6 +46,7 @@ local commandsAllowed = true
 local safezoneEndAlarm = true
 local scoringSystem = true
 local blockConsole = false 
+local blockEditor = false
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
 local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
@@ -77,6 +78,11 @@ local function readAllowedConfigs()
 	file:close()
 	-- print("onPlayerJoin" .. playerID .. ": " .. Util.JsonPrettify(contents))
 	allowedConfigs = Util.JsonDecode(contents)
+	if allowedConfigs.allowedConfigs then
+		allowedConfigs = allowedConfigs.allowedConfigs
+	else
+		print("allowedConfigs.json is not valid")
+	end
 end
 
 --called whenever the extension is loaded
@@ -725,6 +731,9 @@ function onPlayerJoin(playerID)
 	if blockConsole then
 		MP.TriggerClientEvent(playerID, "blockConsole", "nil")
 	end
+	if blockEditor then
+		MP.TriggerClientEvent(playerID, "blockEditor", "nil")
+	end
 end
 
 --called whenever a player disconnects from the server
@@ -858,6 +867,7 @@ function loadSettings()
 			randomVehicles = data["randomVehicles"]
 			playersNeededForGame = data["playersNeededForGame"]
 			blockConsole = data["blockConsole"]
+			blockEditor = data["blockEditor"]
 		end
     else
         print("Cannot open file:", path)

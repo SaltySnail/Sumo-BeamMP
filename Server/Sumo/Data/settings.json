@@ -2,6 +2,7 @@
     "autoStart":false,
     "chatCommands":true,
     "blockConsole":false,
+    "blockEditor":false,
     "safezoneEndAlarm":true,
     "randomVehicles":true,
     "playersNeededForGame":2

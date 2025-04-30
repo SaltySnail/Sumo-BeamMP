@@ -7,8 +7,8 @@ local rand = math.random
 local gamestate = {players = {}, settings = {}}
 
 --blocked inputs when dead
-local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
-local allInputActions = 					{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset'} 
+local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+local allInputActions = 					{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
@@ -176,6 +176,14 @@ function spawnSumoGoal(filepath, offset, rotation)
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
 	local goalNumber = tonumber(string.match(goalPrefabName, "%d+"))
+	if 		goalNumber
+		and mapData.arenaData
+		and mapData.arenaData[currentArena]
+		and mapData.arenaData[currentArena].goals
+		and goalNumber > #mapData.arenaData[currentArena].goals then
+			goalNumber = #mapData.arenaData[currentArena].goals		
+			--if goal number is greater than amount of goals on the client side, just spawn the last goal
+	end
 	goalPrefabPath = "art/goal.prefab.json"
 	local offsetString = '0 0 0'
 	local rotationString = '0 0 1'
@@ -206,7 +214,10 @@ function spawnSumoGoal(filepath, offset, rotation)
 	local newObj = createObject('TSStatic')
 	if offset then
 		newObj:setPosition(vec3(offset.x, offset.y, offset.z))
-	elseif mapData.arenaData[currentArena].goals[goalNumber] then
+	elseif 		mapData.arenaData
+			and mapData.arenaData[currentArena]
+			and mapData.arenaData[currentArena].goals
+			and mapData.arenaData[currentArena].goals[goalNumber] then
 		newObj:setPosition(vec3(mapData.arenaData[currentArena].goals[goalNumber].x, mapData.arenaData[currentArena].goals[goalNumber].y, mapData.arenaData[currentArena].goals[goalNumber].z))
 	else
 		newObj:setPosition(vec3(0,0,0))
@@ -321,7 +332,12 @@ function removeSumoPrefabs(type)
 		local arenaData = {}
 		arenaData = levelData[currentArena]
 		-- print( "arenaData (" .. currentArena .. "): " .. dump(arenaData))
-		goals = #arenaData["goals"]
+		if arenaData 
+			and arenaData.goals then
+			goals = #arenaData.goals
+		else
+			goals = 1
+		end
 		for goalID=1,tonumber(goals) do
 			prefabPath = "goal" .. goalID
 			-- print( "Removing: " .. prefabPath)
@@ -883,20 +899,18 @@ end
 
 function spawnSumoRandomVehicle()
 	local hasCar = false
+	local playerName = ""
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		hasCar = true
+		playerName = vehData.ownerName
 		break
 	end
 	if not hasCar then return end -- skip spectators
-	local playerName = ""
-	for _, veh in pairs(MPVehicleGE.getOwnMap()) do
-		playerName = veh.ownerName
-		break
-	end
 	if not playerName then print("No playername!?!?") return end
 	for playername, player in pairs(gamestate.players) do
 		if playername == playerName then
-			core_vehicles.replaceVehicle(player.chosenConfig.model_key, player.chosenConfig)
+			print("Playername: " .. playername .. " chosenConfig: " .. dump(player.chosenConfig))
+			core_vehicles.replaceVehicle(player.chosenConfig:match("^vehicles/([^/]+)/") , {config = player.chosenConfig})
 			break
 		end
 	end
@@ -952,6 +966,12 @@ function blockConsole()
 	extensions.core_input_actionFilter.addAction(0, 'sumoConsole', true)
 end
 
+function blockEditor()
+	print("blockEditor called")
+	extensions.core_input_actionFilter.setGroup('sumoEditor', {"editorToggle", "objectEditorToggle", "editorSafeModeToggle"})
+	extensions.core_input_actionFilter.addAction(0, 'sumoEditor', true)
+end
+
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
 if MPGameNetwork then AddEventHandler("onSumoCreateGoal", onSumoCreateGoal) end
@@ -981,6 +1001,7 @@ if MPGameNetwork then AddEventHandler("onVehicleResetted", onVehicleResetted) en
 if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboard) end
 if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
 if MPGameNetwork then AddEventHandler("blockConsole", blockConsole) end
+if MPGameNetwork then AddEventHandler("blockEditor", blockEditor) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
@@ -1022,6 +1043,7 @@ M.spawnSumoRandomVehicle = spawnSumoRandomVehicle
 M.onSumoShowScoreboard = onSumoShowScoreboard
 M.onSumoRemoveSpawns = onSumoRemoveSpawns
 M.blockConsole = blockConsole
+M.blockEditor = blockEditor
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
