@@ -1,0 +1,19 @@
+{
+    "name": "Sumo Reset Rules",
+    "author": "Julianstap",
+    "version": "0.3",
+    "description": "The reset rules UI of the Sumo gamemode.",
+    "directive": "sumoresetrules",
+    "domElement": "<sumoresetrules></sumoresetrules>",
+    "css": {
+        "width": "500px",
+        "height": "500px",
+        "top": "0px",
+        "left": "0px",
+        "@font-face": {
+            "font-family": "reset_rules_font",
+            "src": "url(fonts/roboto.ttf) format(\"truetype\")"
+        }
+    },
+    "preserveAspectRatio": true
+  }

@@ -99,7 +99,7 @@
         "min-width":"240px",
         "right":"0px",
         "top":"90px",
-        "width":"auto"
+        "width":"200px"
       }
     },
     {
@@ -139,6 +139,20 @@
         "right":0,
         "top":0,
         "width":"400px"
+      }
+    },
+    {
+      "appName":"sumoresetrules",
+      "placement":{
+      "bottom":"",
+      "height":"600px",
+      "left":"",
+      "margin":"auto",
+      "position":"absolute",
+      "right":"0px",
+      "top":"50%",
+      "transform":"translateY(-50%)",
+      "width":"200px"
       }
     }
   ],
