@@ -2,54 +2,37 @@ angular.module('beamng.apps')
 .directive('sumoresetrules', function () {
   return {
     template: `
-      <div
-        style="
-          display: grid;
-          grid-template-columns: 1fr 1fr;   /* equal-width columns */
-          gap: 10px;
-          width: 100%;
-          background: transparent;
-        ">
-        <!-- Left column: main icons -->
+      <div style="
+        display: grid;
+        grid-template-columns: 1fr; /* Single column */
+        gap: 10px;
+        width: 100%;
+        background: transparent;
+      ">
         <div
+          ng-repeat="item in statusItems"
           style="
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;            /* center icons horizontally */
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            box-sizing: border-box;
           ">
           <img
-            ng-repeat="item in statusItems"
             ng-src="{{item.image}}"
             alt="{{item.name}}"
+            ng-style="{
+              'opacity': (item.status === 'ok' ? '1' : '0.5')
+            }"
             style="
-              width: 100%;                    /* fill column width */
-              max-width: 100%;
-              object-fit: contain;
-            ">
-        </div>
-        <!-- Right column: status icons -->
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;            /* center icons horizontally */
-          ">
-          <img
-            ng-repeat="item in statusItems"
-            ng-src="{{ item.status === 'ok' ? 'checkmarkIcon.png' : 'crossIcon.png'}}"
-            alt="Status Icon"
-            style="
-              width: 100%;                    /* fill column width */
-              max-width: 80px;                /* cap icon size */
-              height: 80px;
-              cursor: pointer;
+              width: 140px;
+              height: 140px;
+              transition: opacity 0.2s ease-in-out;
             "
             ng-click="toggleStatus(item)">
         </div>
       </div>
-  `,
+    `,
     restrict: 'EA',
     replace: true,
     link: function (scope) {
@@ -64,15 +47,15 @@ angular.module('beamng.apps')
       };
 
       scope.$on('sumoSetRuleStatus', function (event, data) {
-            data.rule = data.rule || '';
-            data.status = data.status || 'ok';
-            for (var i = 0; i < scope.statusItems.length; i++) {
-                if (scope.statusItems[i].name === data.rule) {
-                    scope.statusItems[i].status = data.status;
-                    break;
-                }
-            }
-        });
-    }    
+        data.rule = data.rule || '';
+        data.status = data.status || 'ok';
+        for (var i = 0; i < scope.statusItems.length; i++) {
+          if (scope.statusItems[i].name === data.rule) {
+            scope.statusItems[i].status = data.status;
+            break;
+          }
+        }
+      });
+    }
   };
 });
