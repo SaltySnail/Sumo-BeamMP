@@ -44,6 +44,8 @@ local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
 local debugView = false
 
+local teleported = false
+
 local newArena = {}
 newArena.goals = {}
 newArena.spawnLocations = {}
@@ -365,6 +367,7 @@ function teleportToSumoArena()
 			-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
 			local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
 			veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
+			teleported = true
 		end
 		veh:queueLuaCommand("recovery.startRecovering()")
 		veh:queueLuaCommand("recovery.stopRecovering()")
@@ -459,6 +462,7 @@ function onSumoGameEnd()
 		veh:queueLuaCommand("recovery.startRecovering()")
 		veh:queueLuaCommand("recovery.stopRecovering()")
 	end
+	teleported = false
 end
 
 function handleResetState()
@@ -657,8 +661,10 @@ function updateSumoGameState(data)
 		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
 		disallowSumoResets(allInputActions)
 	end
-	if time and time == -5 then
-		teleportToSumoArena()
+	if time and time >= -5 and time <= 0 then
+		if not teleported then
+			teleportToSumoArena()
+		end
 		if not goalPrefabActive then -- mitigation for when no goal spawned
 			spawnSumoGoal("art/goal1.prefab.json")
 		end
@@ -697,7 +703,6 @@ function updateSumoGameState(data)
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
-		
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
 		-- 	-- print("veh:" .. vehID .." : " .. dump(vehData))
