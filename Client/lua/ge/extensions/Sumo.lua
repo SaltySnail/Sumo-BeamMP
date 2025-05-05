@@ -362,7 +362,22 @@ function teleportToSumoArena()
 		local veh = be:getObjectByID(vehID)
 		if not veh then return end --Should not be called but just to be safe
 		local arenaData = mapData.arenaData[currentArena]
-		local chosenLocation = rand(1, #arenaData.spawnLocations)
+		local playerCount = #MPVehicleGE.getOwnMap()
+		local spawnCount = #arenaData.spawnLocations
+
+		if spawnCount >= playerCount and spawnCount % playerCount == 0 then
+			local playerIndex = 1
+			for index, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				if vehID == index then
+					break
+				end
+				playerIndex = playerIndex + 1
+			end
+			chosenLocation = ((playerIndex - 1) % spawnCount) + 1
+		else
+			chosenLocation = rand(1, spawnCount)
+		end
+		-- local chosenLocation = rand(1, #arenaData.spawnLocations)
 		if arenaData.spawnLocations[chosenLocation] then
 			-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
 			local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
@@ -652,7 +667,10 @@ function updateSumoGameState(data)
 		disallowSumoResets(allInputActions)
 	end
 	if gamestate.randomVehicles and time and time == -20 then 
-		reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)
+		reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)		
+		for vehID, _ in pairs(MPVehicleGE.getOwnMap()) do
+			core_camera.setVehicleCameraByNameWithId(vehID, 'orbit', true, {}) 
+		end
 	end
 	if gamestate.randomVehicles and time and time >= -18 and time <= -8 then 
 		MPVehicleGE.applyQueuedEvents()
@@ -913,13 +931,21 @@ end
 function spawnSumoRandomVehicle()
 	local hasCar = false
 	local playerName = ""
+	local vehCount = 0
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		hasCar = true
 		playerName = vehData.ownerName
+		print("Playername: " .. playerName .. " vehCount: " .. vehCount)
 		break
 	end
 	if not hasCar then return end -- skip spectators
 	if not playerName then print("No playername!?!?") return end
+	for vehID, theCar in pairs(MPVehicleGE.getOwnMap()) do
+		local vehicle = scenetree.findObjectById(theCar.gameVehicleID)
+		if vehicle then
+			vehicle:delete()
+		end
+    end
 	for playername, player in pairs(gamestate.players) do
 		if playername == playerName then
 			print("Playername: " .. playername .. " chosenConfig: " .. dump(player.chosenConfig))
@@ -984,6 +1010,24 @@ function blockEditor()
 	extensions.core_input_actionFilter.setGroup('sumoEditor', {"editorToggle", "objectEditorToggle", "editorSafeModeToggle"})
 	extensions.core_input_actionFilter.addAction(0, 'sumoEditor', true)
 end
+
+core_vehicles.removeCurrent = function() -- overwrite in-game function to not remove other players vehicles
+	local isLocalVehicle = false
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		if vehID == be:getPlayerVehicleID(0) then
+			isLocalVehicle = true
+			break
+		end
+	end
+	if not isLocalVehicle then return end
+	local vehicle = getPlayerVehicle(0)
+	if vehicle then
+	  vehicle:delete()
+	  if be:getEnterableObjectCount() == 0 then
+		commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicle
+	  end
+	end
+  end
 
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
