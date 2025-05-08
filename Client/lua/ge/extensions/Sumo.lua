@@ -721,12 +721,9 @@ function updateSumoGameState(data)
 
 	if time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
-		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-		-- 	-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
-		-- 	-- print("veh:" .. vehID .." : " .. dump(vehData))
-		-- 	local veh = be:getObjectByID(vehID)
-		if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", be:getPlayerVehicleID(0)) end --TODO: change the be:getPlayerVehicleID to MPVehicleGE.getOwnMap stuff 
-		-- end
+		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehID) end
+		end
 	elseif gamestate.gameRunning and not gamestate.gameEnding and time or gamestate.endtime and (gamestate.endtime - time) > 9 then
 		local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
 		txt = "Sumo Time Left: ".. timeLeft --game is still going
@@ -932,7 +929,7 @@ function spawnSumoRandomVehicle()
 	local hasCar = false
 	local playerName = ""
 	local vehCount = 0
-	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do --this is dumb and I know it, just to lazy to find a better way for now
 		hasCar = true
 		playerName = vehData.ownerName
 		print("Playername: " .. playerName .. " vehCount: " .. vehCount)
@@ -940,6 +937,9 @@ function spawnSumoRandomVehicle()
 	end
 	if not hasCar then return end -- skip spectators
 	if not playerName then print("No playername!?!?") return end
+	local ogCamNameRVeh = core_camera.getActiveCamName(0)
+	core_camera.setByName(0, "free")
+	core_camera.resetCamera(0)
 	for vehID, theCar in pairs(MPVehicleGE.getOwnMap()) do
 		local vehicle = scenetree.findObjectById(theCar.gameVehicleID)
 		if vehicle then
@@ -953,6 +953,8 @@ function spawnSumoRandomVehicle()
 			break
 		end
 	end
+	core_camera.setByName(0, ogCamNameRVeh)
+	core_camera.resetCamera(0)
 end
 
 function onVehicleResetted(vehID)
