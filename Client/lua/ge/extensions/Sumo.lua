@@ -15,8 +15,11 @@ local mapData = {}
 local isPlayerInCircle = false
 local isPlayerBelowSpeedLimit = false
 local isPlayerDead = false
+local playerDiedAtTime = 0
 local isPlayerInReverseGravity = false
 local reverseGravitySubjectId = 0 -- may be unnecessary
+
+local ogCamBeforeDeath = "orbit"
 
 local currentArena = ""
 local currentLevel = ""
@@ -510,6 +513,7 @@ function explodeSumoCar(vehID)
 				if vid == vehID then
 					disallowSumoResets(allInputActions)
 					isPlayerDead = true
+					playerDiedAtTime = gamestate.time 
 					local vehicle = MPVehicleGE.getVehicleByGameID(vid)
 					if TriggerServerEvent and vehicle and vehicle.ownerName then
 						TriggerServerEvent("onSumoPlayerExplode", vehicle.ownerName) 
@@ -737,8 +741,32 @@ function updateSumoGameState(data)
 				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 5})
 			end
 		end
-		handleResetState() 		
+		handleResetState() 	
+		if isPlayerDead and gamestate.time == playerDiedAtTime + 3 then -- 3 seconds after player died		
+			for playername, player in pairs(gamestate.players) do
+				if not player.dead then
+					MPVehicleGE.focusCameraOnPlayer(playername)
+					ogCamBeforeDeath = core_camera.getActiveCamName(0)
+					core_camera.setByName(0,"external")
+					core_camera.resetCamera(0)
+					break
+				end
+			end
+		end
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
+		if isPlayerDead and (gamestate.endtime - time) == 6 then
+			local name = ""
+			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				local veh = be:getObjectByID(vehID)
+				if veh then
+					name = vehData.ownerName
+					break
+				end
+			end
+			MPVehicleGE.focusCameraOnPlayer(name)
+			core_camera.setByName(0,ogCamBeforeDeath)
+			core_camera.resetCamera(0)
+		end
 		local timeLeft = gamestate.endtime - time
 		txt = "Arena will be removed in "..math.abs(timeLeft-1).." seconds" --game ended
 		guihooks.trigger('sumoRemoveTimer', 0)
