@@ -357,29 +357,29 @@ function removeSumoPrefabs(type)
 	triggersThatPlayerIsIn = 0
 end
 
-function teleportToSumoArena()
+function teleportToSumoArena(spawnPointID)
 	print("teleportToSumoArena Called")
+	if teleported == true then return end -- only teleport once per round
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- local veh = be:getObjectByID(be:getPlayerVehicleID(0))
-		print("veh:" .. vehID .." : " .. dump(vehData))
+		-- print("veh:" .. vehID .." : " .. dump(vehData))
 		local veh = be:getObjectByID(vehID)
 		if not veh then return end --Should not be called but just to be safe
 		local arenaData = mapData.arenaData[currentArena]
-		local playerCount = #MPVehicleGE.getOwnMap()
-		local spawnCount = #arenaData.spawnLocations
+		local chosenLocation = (spawnPointID % #arenaData.spawnLocations) + 1 -- make sure the spawn point is within the range of the spawn locations
 
-		if spawnCount >= playerCount and spawnCount % playerCount == 0 then
-			local playerIndex = 1
-			for index, vehData in pairs(MPVehicleGE.getOwnMap()) do
-				if vehID == index then
-					break
-				end
-				playerIndex = playerIndex + 1
-			end
-			chosenLocation = ((playerIndex - 1) % spawnCount) + 1
-		else
-			chosenLocation = rand(1, spawnCount)
-		end
+		-- if spawnCount >= playerCount and spawnCount % playerCount == 0 then
+		-- 	local playerIndex = 1
+		-- 	for index, vehData in pairs(MPVehicleGE.getOwnMap()) do
+		-- 		if vehID == index then
+		-- 			break
+		-- 		end
+		-- 		playerIndex = playerIndex + 1
+		-- 	end
+		-- 	chosenLocation = ((playerIndex - 1) % spawnCount) + 1
+		-- else
+		-- 	chosenLocation = rand(1, spawnCount)
+		-- end
 		-- local chosenLocation = rand(1, #arenaData.spawnLocations)
 		if arenaData.spawnLocations[chosenLocation] then
 			-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
@@ -684,9 +684,6 @@ function updateSumoGameState(data)
 		disallowSumoResets(allInputActions)
 	end
 	if time and time >= -5 and time <= 0 then
-		if not teleported then
-			teleportToSumoArena()
-		end
 		if not goalPrefabActive then -- mitigation for when no goal spawned
 			spawnSumoGoal("art/goal1.prefab.json")
 		end

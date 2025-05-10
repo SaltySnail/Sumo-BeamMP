@@ -594,6 +594,14 @@ function sumoGameRunningLoop()
 		sumoGameStarting()
 	end
 
+	if gameState.time < -3 and gameState.time > -10 then
+		for ID,Player in pairs(MP.GetPlayers()) do
+			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+				MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. ID)
+			end
+		end
+	end
+
 	if not gameState.gameEnding and gameState.playerCount == 0 then
 		gameState.gameEnding = true
 		gameState.endtime = gameState.time + 2
