@@ -21,6 +21,7 @@ local possibleTeams = {"Red", "LightBlue", "Green", "Yellow", "Purple"}
 local chosenTeams = {}
 local vehiclesToExplode = {}
 local goalID = -1
+local neededPlayers = 0
 
 gameState.gameRunning = false
 gameState.gameEnding = false
@@ -78,11 +79,6 @@ local function readAllowedConfigs()
 	file:close()
 	-- print("onPlayerJoin" .. playerID .. ": " .. Util.JsonPrettify(contents))
 	allowedConfigs = Util.JsonDecode(contents)
-	if allowedConfigs.allowedConfigs then
-		allowedConfigs = allowedConfigs.allowedConfigs
-	else
-		print("allowedConfigs.json is not valid")
-	end
 end
 
 --called whenever the extension is loaded
@@ -344,6 +340,14 @@ function sumoGameSetup()
 	end
 	local chosenTeam = possibleTeams[rand(1,#possibleTeams)]
 	local teamCount = 0
+	local class = ""
+	if randomVehicles then
+		local keys = {}
+		for k,_ in pairs(allowedConfigs) do
+			table.insert(keys, k)
+		end
+		class = keys[rand(1,#keys)]
+	end
 	for ID,Name in pairs(MP.GetPlayers()) do
 		if teams then
 			if teamCount == teamSize then
@@ -355,17 +359,20 @@ function sumoGameSetup()
 			end
 			teamCount = 0
 		end
-		if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+		if MP.IsPlayerConnected(ID) then
 			local player = {}
 			if not gameState.players[Name] then gameState.players[Name] = {} end
-			gameState.players[Name].ID = ID
-			gameState.players[Name].team = chosenTeam
-			gameState.players[Name].dead = false
-			gameState.players[Name].isRoundWinner = false
-			if randomVehicles then
-				gameState.players[Name].chosenConfig = allowedConfigs[rand(1,#allowedConfigs)]
+			if randomVehicles then		
+				print("Chosen class: " .. class)
+				gameState.players[Name].chosenConfig = allowedConfigs[class][rand(1,#allowedConfigs[class])]
 			end
-			teamCount = teamCount + 1
+			if MP.GetPlayerVehicles(ID) then
+				gameState.players[Name].ID = ID
+				gameState.players[Name].team = chosenTeam
+				gameState.players[Name].dead = false
+				gameState.players[Name].isRoundWinner = false
+				teamCount = teamCount + 1
+			end
 		end
 	end
 
@@ -423,6 +430,7 @@ function sumoGameEnd(reason)
 				MP.SendChatMessage(-1,"Game over, time limit was reached")
 			end
 		elseif reason == "manual" then
+
 			MP.SendChatMessage(-1,"Game stopped, Everyone Looses")
 		elseif reason == "last alive" then
 			if #alivePlayers > 0 then
@@ -675,14 +683,17 @@ function sumoTimer()
 				sumoGameEnd("last alive")
 			end
 		end
-	elseif autoStart and MP.GetPlayerCount() > MAX_ALIVE then
+	elseif autoStart and MP.GetPlayerCount() >= playersNeededForGame then
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
 			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
 				playerCount = playerCount + 1
 			end
 		end
-		if playerCount <= MAX_ALIVE then return end
+		if playerCount < playersNeededForGame then 
+			neededPlayers = playersNeededForGame - playerCount
+			return
+		end
 		autoStartTimer = autoStartTimer + 1
 		MP.SendChatMessage(-1, "New round starts in: " .. 30 - autoStartTimer .. "s")
 		if autoStartTimer >= 30 then
@@ -742,6 +753,7 @@ function onPlayerJoin(playerID)
 	if blockEditor then
 		MP.TriggerClientEvent(playerID, "blockEditor", "nil")
 	end
+	MP.TriggerClientEvent(playerID, "setSumoLayout", "nil")
 end
 
 --called whenever a player disconnects from the server
@@ -768,7 +780,21 @@ end
 
 --called whenever a player spawns a vehicle.
 function onVehicleSpawn(playerID, vehID,  data)
-
+	if autoStart then
+		local playerCount = 0
+		for ID,Player in pairs(MP.GetPlayers()) do
+			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+				playerCount = playerCount + 1
+			end
+		end
+		neededPlayers = playersNeededForGame - playerCount
+		if neededPlayers < 0 then
+			neededPlayers = 0
+		end
+	end
+	if autoStart and neededPlayers > 0 then
+		MP.SendChatMessage(-1, "Not enough players to start a game, " .. neededPlayers .. " more player(s) need to spawn a car.")
+	end
 end
 
 --called whenever a player applies their vehicle edits.

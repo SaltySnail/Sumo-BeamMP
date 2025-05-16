@@ -18,8 +18,10 @@ local isPlayerDead = false
 local playerDiedAtTime = 0
 local isPlayerInReverseGravity = false
 local reverseGravitySubjectId = 0 -- may be unnecessary
+local spectatingPlayer = "" -- player that is being spectated
 
-local ogCamBeforeDeath = "orbit"
+local ogCamBeforeSpectating = "orbit"
+local ogUIState = "multiplayer"
 
 local currentArena = ""
 local currentLevel = ""
@@ -47,7 +49,17 @@ local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
 local debugView = false
 
+local gui_module = require("ge/extensions/editor/api/gui")
+local gui = {setupEditorGuiTheme = nop}
+local im = ui_imgui
+local windowOpen = im.BoolPtr(true)
+local ffi = require('ffi')
+
 local teleported = false
+local joinNextRound = false
+local joinNextRoundCheckboxState = im.BoolPtr(joinNextRound)
+local autoSpectate = true
+local autoSpectateCheckboxState = im.BoolPtr(autoSpectate)
 
 local newArena = {}
 newArena.goals = {}
@@ -91,6 +103,26 @@ function angle2D(vec1, vec2) --in degrees, because I thought it would be less co
 	-- if vec1 == nil or vec2 == nil then return end
 	local angle = math.atan2( vec1.y - vec2.y, vec2.x - vec1.x)
 	return angle * (180 / math.pi)
+end
+
+function sumoSpectateAlivePlayer()
+	for playername, player in pairs(gamestate.players) do
+		if not player.dead then
+			spectatingPlayer = playername
+			MPVehicleGE.focusCameraOnPlayer(playername)
+			ogCamBeforeSpectating = core_camera.getActiveCamName(0)
+			core_camera.setByName(0,"external")
+			core_camera.resetCamera(0)
+			break
+		end
+	end
+end
+
+function sumoStopSpectating()
+	spectatingPlayer = ""
+	MPVehicleGE.focusCameraOnPlayer(MPConfig.getNickname())
+	core_camera.setByName(0,ogCamBeforeSpectating)
+	core_camera.resetCamera(0)
 end
 
 function resetSumoCarColors(data)
@@ -463,7 +495,7 @@ local function pickSpawnPoint(spawnName)
   end
 
 function onSumoGameEnd()
-	core_gamestate.setGameState('scenario', 'multiplayer', 'multiplayer') --reset the app layout
+	core_gamestate.setGameState(ogUIState['state'], ogUIState['menuItems'], ogUIState['appLayout']) --reset the app layout
 	allowSumoResets(blockedInputActionsOnRound)
 	allowSumoResets(allInputActions)
 	goalScale = 1
@@ -476,7 +508,7 @@ function onSumoGameEnd()
 		if not veh then return end
 		local spawnPos = spawnPoint:getPosition()
 		local spawnQuat = quat(spawnPoint:getRotation()) * quat(0,0,1,0)
-		veh:setPositionRotation(spawnPos.x, spawnPos.y, spawnPos.z, spawnQuat.x, spawnQuat.y, spawnQuat.z, spawnQuat.w)
+		veh:setPositionRotation(spawnPos.x + rand(-10,10), spawnPos.y + rand(-10,10), spawnPos.z + rand(1,10), spawnQuat.x, spawnQuat.y, spawnQuat.z, spawnQuat.w) -- random offset to make it less likely to spawn inside of each other
 		veh:queueLuaCommand("recovery.startRecovering()")
 		veh:queueLuaCommand("recovery.stopRecovering()")
 	end
@@ -515,6 +547,9 @@ function explodeSumoCar(vehID)
 					isPlayerDead = true
 					playerDiedAtTime = gamestate.time 
 					local vehicle = MPVehicleGE.getVehicleByGameID(vid)
+					if vehicle and vehicle.ownerName == spectatingPlayer then
+						sumoSpectateAlivePlayer() -- spectate a new player when the current one dies
+					end
 					if TriggerServerEvent and vehicle and vehicle.ownerName then
 						TriggerServerEvent("onSumoPlayerExplode", vehicle.ownerName) 
 					end
@@ -573,6 +608,7 @@ function onSumoTrigger(data)
 		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 		end
 	elseif string.find(trigger, "outOfBoundTrigger") then
+		if gamestate.time < 0 then return end
 		--explode player
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then
@@ -656,6 +692,12 @@ function requestSumoGoalCount()
 	if TriggerServerEvent then TriggerServerEvent("setSumoGoalCount", goals) end
 end
 
+function setSumoLayout(appLayout)
+	if gamestate.gameRunning then
+		core_gamestate.setGameState('scenario', appLayout, 'scenario')
+	end
+end
+
 function updateSumoGameState(data)
 	print('updateSumoGameState called: ' .. data)
 	mergeSumoTable(jsonDecode(data),gamestate)
@@ -665,30 +707,30 @@ function updateSumoGameState(data)
 	if gamestate.time then time = gamestate.time-1 end
 
 	local txt = ""
-	if gamestate.randomVehicles and time and time == -28 then 
+	if gamestate.gameRunning and gamestate.randomVehicles and time and time == -28 then 
 		spawnSumoRandomVehicle()
-		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
+		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)
 	end
-	if gamestate.randomVehicles and time and time == -20 then 
+	if gamestate.gameRunning and gamestate.randomVehicles and time and time == -20 then 
 		reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)		
 		for vehID, _ in pairs(MPVehicleGE.getOwnMap()) do
 			core_camera.setVehicleCameraByNameWithId(vehID, 'orbit', true, {}) 
 		end
 	end
-	if gamestate.randomVehicles and time and time >= -18 and time <= -8 then 
+	if gamestate.gameRunning and gamestate.randomVehicles and time and time >= -18 and time <= -8 then 
 		MPVehicleGE.applyQueuedEvents()
 	end
-	if not gamestate.randomVehicles and time and time == -8 then 
-		core_gamestate.setGameState('scenario', 'sumo', 'scenario')
+	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == -8 then 
+		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)
 	end
-	if time and time >= -5 and time <= 0 then
+	if gamestate.gameRunning and time and time >= -5 and time <= 0 then
 		if not goalPrefabActive then -- mitigation for when no goal spawned
 			spawnSumoGoal("art/goal1.prefab.json")
 		end
 	end
-	if time and time < 0 then
+	if gamestate.gameRunning and time and time < 0 then
 		be:queueAllObjectLua("controller.setFreeze(1)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	local veh = be:getObjectByID(vehID)
@@ -697,7 +739,7 @@ function updateSumoGameState(data)
 		disallowSumoResets(allInputActions)
 		isPlayerDead = false
 	end
-	if time and time == 0 then 
+	if gamestate.gameRunning and time and time == 0 then 
 		guihooks.trigger('sumoStartTimer', 30)
 		be:queueAllObjectLua("controller.setFreeze(0)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -707,27 +749,29 @@ function updateSumoGameState(data)
 		-- allowSumoResets(allInputActions)
 		disallowSumoResets(blockedInputActionsOnRound)
 	end
-	if time and time <= 0 and time > -4 then
+	if gamestate.gameRunning and time and time <= 0 and time > -4 then
 		guihooks.trigger('sumoCountdown', math.abs(time))
 		if time < 0 then
-			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 50})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 30})
 		else
-			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 40})
+			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 25})
 		end
 	end
-	if time and time == 1 then
+	if gamestate.gameRunning and time and time == 1 then
 		guihooks.trigger('sumoClearCountdown', 0)
 	end
 
 
-	if time and time < 0 then
+	if gamestate.gameRunning and time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehID) end
 		end
 	elseif gamestate.gameRunning and not gamestate.gameEnding and time or gamestate.endtime and (gamestate.endtime - time) > 9 then
-		local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
-		txt = "Sumo Time Left: ".. timeLeft --game is still going
+		if gamestate.roundLength and time then
+			local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
+			txt = "Sumo Time Left: ".. timeLeft --game is still going
+		end
 		
 		if time % 30 == 0 then
 			guihooks.trigger('sumoSyncTimer', 30);
@@ -735,34 +779,19 @@ function updateSumoGameState(data)
 		if time and time > 0 and time % 30 >= 24 and time % 30 <= 29 then
 			guihooks.trigger('sumoAnimateCircleSize', 30)
 			if gamestate.safezoneEndAlarm then
-				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 5})
+				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 3})
 			end
 		end
 		handleResetState() 	
 		if isPlayerDead and gamestate.time == playerDiedAtTime + 3 then -- 3 seconds after player died		
-			for playername, player in pairs(gamestate.players) do
-				if not player.dead then
-					MPVehicleGE.focusCameraOnPlayer(playername)
-					ogCamBeforeDeath = core_camera.getActiveCamName(0)
-					core_camera.setByName(0,"external")
-					core_camera.resetCamera(0)
-					break
-				end
+			playerDiedAtTime = 0
+			if autoSpectate then 
+				sumoSpectateAlivePlayer() 
 			end
 		end
 	elseif time and gamestate.endtime and (gamestate.endtime - time) < 7 then
-		if isPlayerDead and (gamestate.endtime - time) == 6 then
-			local name = ""
-			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-				local veh = be:getObjectByID(vehID)
-				if veh then
-					name = vehData.ownerName
-					break
-				end
-			end
-			MPVehicleGE.focusCameraOnPlayer(name)
-			core_camera.setByName(0,ogCamBeforeDeath)
-			core_camera.resetCamera(0)
+		if autoSpectate and isPlayerDead and (gamestate.endtime - time) == 3 then
+			sumoStopSpectating()
 		end
 		local timeLeft = gamestate.endtime - time
 		txt = "Arena will be removed in "..math.abs(timeLeft-1).." seconds" --game ended
@@ -853,6 +882,7 @@ function sumoColor(player,vehicle,team,dt)
 end
 
 function onPreRender(dt)
+	onDrawSumoMenu()
 	if not gamestate.gameRunning then return end
 	if simTimeAuthority.get ~= 1 then
 		simTimeAuthority.setInstant(1)
@@ -905,12 +935,40 @@ function onPreRender(dt)
 	end
 end
 
+function onDrawSumoMenu()
+	-- print("onDrawSumoMenu called")	
+	gui.setupWindow("Sumo Menu")
+	im.Begin("Sumo Menu")
+    local joinNextRoundChanged = im.Checkbox("Join next round", joinNextRoundCheckboxState)
+    if joinNextRoundChanged then
+		print("Join next round changed, state: " .. dump(joinNextRoundCheckboxState))
+		joinNextRound = joinNextRoundCheckboxState[0]
+		print("Join next round: " .. dump(joinNextRound))
+	end
+	if im.Button("Spectate an alive player") then
+		sumoSpectateAlivePlayer()
+	end
+	local autoSpectateChanged = im.Checkbox("Auto Spectate", autoSpectateCheckboxState)
+	if autoSpectateChanged then
+		print("Auto spectate changed, state: " .. dump(autoSpectateCheckboxState))
+		autoSpectate = autoSpectateCheckboxState[0]
+		print("Auto spectate: " .. dump(autoSpectate))
+	end
+    im.End()
+end
+
 function onResetGameplay(id)
 	-- print( "onResetGameplay called")
 end
 
 function onExtensionUnloaded()
 	-- resetSumoCarColors()
+end
+
+function onExtensionLoaded()
+	gui_module.initialize(gui)
+	gui.registerWindow("Sumo Menu", im.ImVec2(256, 256))
+	gui.showWindow("Sumo Menu")
 end
 
 function onSumoVehicleSpawned(vehID)
@@ -954,13 +1012,14 @@ function spawnSumoRandomVehicle()
 	local hasCar = false
 	local playerName = ""
 	local vehCount = 0
-	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do --this is dumb and I know it, just to lazy to find a better way for now
+	playerName = MPConfig.getNickname()
+	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		hasCar = true
-		playerName = vehData.ownerName
 		print("Playername: " .. playerName .. " vehCount: " .. vehCount)
 		break
-	end
-	if not hasCar then return end -- skip spectators
+	end 
+	print("Join next round in spawn vehicle: " .. dump(joinNextRound))
+	if not hasCar and not joinNextRound then return end -- skip spectators
 	if not playerName then print("No playername!?!?") return end
 	local ogCamNameRVeh = core_camera.getActiveCamName(0)
 	core_camera.setByName(0, "free")
@@ -1038,6 +1097,13 @@ function blockEditor()
 	extensions.core_input_actionFilter.addAction(0, 'sumoEditor', true)
 end
 
+local function onGameStateUpdate(state)
+	print("onGameStateUpdate called ")
+	print(dump(state))
+	if state["appLayout"] == "sumo" then return end
+	ogUIState = state
+end
+
 core_vehicles.removeCurrent = function() -- overwrite in-game function to not remove other players vehicles
 	local isLocalVehicle = false
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -1086,6 +1152,7 @@ if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboa
 if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
 if MPGameNetwork then AddEventHandler("blockConsole", blockConsole) end
 if MPGameNetwork then AddEventHandler("blockEditor", blockEditor) end
+if MPGameNetwork then AddEventHandler("setSumoLayout", setSumoLayout) end
 -- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
 
 -- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
@@ -1128,6 +1195,11 @@ M.onSumoShowScoreboard = onSumoShowScoreboard
 M.onSumoRemoveSpawns = onSumoRemoveSpawns
 M.blockConsole = blockConsole
 M.blockEditor = blockEditor
+M.onExtensionLoaded = onExtensionLoaded
+M.sumoSpectateAlivePlayer = sumoSpectateAlivePlayer
+M.sumoStopSpectating = sumoStopSpectating
+M.onGameStateUpdate = onGameStateUpdate
+M.setSumoLayout = setSumoLayout
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M

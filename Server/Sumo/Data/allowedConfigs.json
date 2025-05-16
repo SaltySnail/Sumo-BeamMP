@@ -1,5 +1,10 @@
 {
-  "allowedConfigs": [
+  "Mini Class": [
+    "vehicles/miramar/EVENTS_Mirmar_Sumo.pc",
+    "vehicles/covet/EVENTS_Covet_Sumo.pc",
+    "vehicles/autobello/EVENTS_Piccolina_Sumo.pc"
+  ],
+  "allVanillaConfigs": [
     "vehicles/autobello/110a_m.pc",
     "vehicles/autobello/110b_m.pc",
     "vehicles/autobello/110_m.pc",
