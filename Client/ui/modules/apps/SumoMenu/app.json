@@ -1,0 +1,19 @@
+{
+    "name": "Sumo Menu",
+    "author": "Julianstap",
+    "version": "0.1",
+    "description": "The Sumo menu UI of the Sumo gamemode.",
+    "directive": "sumomenu",
+    "domElement": "<sumomenu></sumomenu>",
+    "css": {
+        "width": "200px",
+        "height": "200px",
+        "top": "0px",
+        "left": "0px",
+        "@font-face": {
+            "font-family": "sumo_menu_font",
+            "src": "url(fonts/roboto.ttf) format(\"truetype\")"
+        }
+    },
+    "preserveAspectRatio": true
+  }

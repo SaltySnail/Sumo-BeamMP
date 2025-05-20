@@ -22,6 +22,11 @@ local spectatingPlayer = "" -- player that is being spectated
 
 local ogCamBeforeSpectating = "orbit"
 local ogUIState = "multiplayer"
+local ogUIStateBeforeMenu = "multiplayer"
+-- local showHelpWindow = false
+-- local helpPage = 0
+-- local maxHelpPages = 6
+local sumoMenuOpen = false
 
 local currentArena = ""
 local currentLevel = ""
@@ -49,17 +54,40 @@ local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
 local debugView = false
 
-local gui_module = require("ge/extensions/editor/api/gui")
-local gui = {setupEditorGuiTheme = nop}
-local im = ui_imgui
-local windowOpen = im.BoolPtr(true)
-local ffi = require('ffi')
+-- local gui_module = require("ge/extensions/editor/api/gui")
+-- local gui = {setupEditorGuiTheme = nop}
+-- local im = ui_imgui
+-- local windowOpen = im.BoolPtr(true)
+-- local ffi = require('ffi')
 
 local teleported = false
 local joinNextRound = false
-local joinNextRoundCheckboxState = im.BoolPtr(joinNextRound)
+-- local joinNextRoundCheckboxState = im.BoolPtr(joinNextRound)
 local autoSpectate = true
-local autoSpectateCheckboxState = im.BoolPtr(autoSpectate)
+-- local autoSpectateCheckboxState = im.BoolPtr(autoSpectate)
+
+local motd = {}
+motd.title = "This server is running Sumo"
+motd.description = [[
+    [h2]Rules[/h2]
+		[color=#AFAF00]1. Join by Spawning:[/color][br] Spawn a car to participate in the game. Use 'Join next round' to auto spawn in the next round.
+		[color=#AFAF00]2. Automatic Start:[/color][br] The game begins once two or more players are active (configurable).
+		[color=#AFAF00]3. Safezone Mechanics:[/color][br] Every 30 seconds, a new safezone spawns at 70% the size of the last one.
+		[color=#AFAF00]4. Explosive Elimination:[/color][br] If you're outside the zone when the timer ends, you'll explode!
+		[color=#AFAF00]5. Reset Rule (Enforced):[/color][br] Resets are only allowed if you're outside the safezone and moving slower than 20 km/h.
+		[color=#AFAF00]6. No Resets After Death:[/color][br] If you're eliminated, all reset functions are locked until the round ends.
+		[color=#AFAF00]7. Victory Conditions:[/color][br] Last player standing wins OR: All players inside the final zone when the last timer ends.
+    [br]
+	[h2]Controls[/h2]
+	[list]
+		[*] Press ctrl+s to toggle the Sumo menu.
+		[*] To join an active game, spawn a car in between rounds, or enable the 'Join next round' checkbox in the Sumo menu.
+	[/list]
+    [br][br]
+    [color=#7F7F00][i][right]Brought to you by Julianstap & the BeamMP team![/right][/i][/color]
+]]
+motd.type = "htmlOnly" -- htmlOnly: simple (large) motd || selectableVehicle: motd with the ability to select a vehicle
+motd.enabled = true
 
 local newArena = {}
 newArena.goals = {}
@@ -495,7 +523,7 @@ local function pickSpawnPoint(spawnName)
   end
 
 function onSumoGameEnd()
-	core_gamestate.setGameState(ogUIState['state'], ogUIState['menuItems'], ogUIState['appLayout']) --reset the app layout
+	core_gamestate.setGameState(ogUIState['state'], ogUIState['appLayout'], ogUIState['appLayout']) --reset the app layout
 	allowSumoResets(blockedInputActionsOnRound)
 	allowSumoResets(allInputActions)
 	goalScale = 1
@@ -713,7 +741,7 @@ function updateSumoGameState(data)
 		disallowSumoResets(allInputActions)
 	end
 	if gamestate.gameRunning and gamestate.randomVehicles and time and time == -20 then 
-		reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)		
+		-- reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)		
 		for vehID, _ in pairs(MPVehicleGE.getOwnMap()) do
 			core_camera.setVehicleCameraByNameWithId(vehID, 'orbit', true, {}) 
 		end
@@ -727,7 +755,7 @@ function updateSumoGameState(data)
 	end
 	if gamestate.gameRunning and time and time >= -5 and time <= 0 then
 		if not goalPrefabActive then -- mitigation for when no goal spawned
-			spawnSumoGoal("art/goal1.prefab.json")
+			spawnSumoGoal("art/goal1.prefab.json") -- might be causing two safezones to spawn in each other
 		end
 	end
 	if gamestate.gameRunning and time and time < 0 then
@@ -882,7 +910,7 @@ function sumoColor(player,vehicle,team,dt)
 end
 
 function onPreRender(dt)
-	onDrawSumoMenu()
+	-- onDrawSumoMenu()
 	if not gamestate.gameRunning then return end
 	if simTimeAuthority.get ~= 1 then
 		simTimeAuthority.setInstant(1)
@@ -935,27 +963,164 @@ function onPreRender(dt)
 	end
 end
 
-function onDrawSumoMenu()
-	-- print("onDrawSumoMenu called")	
-	gui.setupWindow("Sumo Menu")
-	im.Begin("Sumo Menu")
-    local joinNextRoundChanged = im.Checkbox("Join next round", joinNextRoundCheckboxState)
-    if joinNextRoundChanged then
-		print("Join next round changed, state: " .. dump(joinNextRoundCheckboxState))
-		joinNextRound = joinNextRoundCheckboxState[0]
-		print("Join next round: " .. dump(joinNextRound))
-	end
-	if im.Button("Spectate an alive player") then
-		sumoSpectateAlivePlayer()
-	end
-	local autoSpectateChanged = im.Checkbox("Auto Spectate", autoSpectateCheckboxState)
-	if autoSpectateChanged then
-		print("Auto spectate changed, state: " .. dump(autoSpectateCheckboxState))
-		autoSpectate = autoSpectateCheckboxState[0]
-		print("Auto spectate: " .. dump(autoSpectate))
-	end
-    im.End()
-end
+-- function onDrawSumoMenu()
+-- 	-- print("onDrawSumoMenu called")	
+-- 	gui.setupWindow("Sumo Menu")
+-- 	im.Begin("Sumo Menu")
+-- 	-- if im.Button("Spawn Sumo Menu") then
+-- 	-- 	-- spawn layout and 	
+-- 	-- end
+-- 	local joinNextRoundChanged = im.Checkbox("Join next round", joinNextRoundCheckboxState)
+-- 	if joinNextRoundChanged then
+-- 		print("Join next round changed, state: " .. dump(joinNextRoundCheckboxState))
+-- 		joinNextRound = joinNextRoundCheckboxState[0]
+-- 		print("Join next round: " .. dump(joinNextRound))
+-- 	end
+-- 	if im.Button("Spectate an alive player") then
+-- 		sumoSpectateAlivePlayer()
+-- 	end
+-- 	local autoSpectateChanged = im.Checkbox("Auto Spectate", autoSpectateCheckboxState)
+-- 	if autoSpectateChanged then
+-- 		print("Auto spectate changed, state: " .. dump(autoSpectateCheckboxState))
+-- 		autoSpectate = autoSpectateCheckboxState[0]
+-- 		print("Auto spectate: " .. dump(autoSpectate))
+-- 	end
+
+-- 	-- Help button and popup
+-- 	if im.Button("Help") then    
+-- 		showHelpWindow = not showHelpWindow
+--     	helpPage       = 0
+-- 		im.OpenPopup("SumoHelpModal") 
+-- 		-- im.OpenPopup("SumoHelpPopup0")
+-- 		-- im.OpenPopup("SumoHelpPopup2")
+-- 		-- im.OpenPopup("SumoHelpPopup3")
+-- 	end
+
+-- 	-- Single modal popup
+-- 	if showHelpWindow then
+-- 		if im.BeginPopupModal("Sumo Game Help", nil, im.WindowFlags_AlwaysAutoResize) then
+-- 			-- im.TextColored(im.ImVec4(1,1,0,1), "Sumo Game Help")
+-- 			-- im.Separator()
+-- 			-- Page content
+-- 			if helpPage == 0 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("1. Join by Spawning:")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("Spawn a car to participate in the game. Use 'Join next round' to auto spawn in the next round.")
+-- 			elseif helpPage == 1 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("2. Automatic Start:")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("The game begins once two or more players are active (configurable).")
+-- 			elseif helpPage == 2 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("3. Safezone Mechanics:")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("Every 30 seconds, a new safezone spawns at 70% the size of the last one.")
+-- 			elseif helpPage == 3 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("4. Explosive Elimination:")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("If you're outside the zone when the timer ends, you'll explode!")
+-- 			elseif helpPage == 4 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("5. Reset Rule (Enforced):")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("Resets are only allowed if you're outside the safezone and moving slower than 20 km/h.")
+-- 			elseif helpPage == 5 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("6. No Resets After Death:")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("If you're eliminated, all reset functions are locked until the round ends.")
+-- 			elseif helpPage == 6 then
+-- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
+-- 				im.TextWrapped("7. Victory Conditions:")
+-- 				im.PopStyleColor()
+-- 				im.TextWrapped("Last player standing wins OR: All players inside the final zone when the last timer ends.")
+-- 			end
+
+-- 			im.Separator()
+-- 			-- Navigation
+-- 			if helpPage > 0 then
+-- 				if im.Button("Previous") then
+-- 					helpPage = helpPage - 1
+-- 				end
+-- 				im.SameLine()
+-- 			end
+-- 			if helpPage < maxHelpPages then
+-- 				if im.Button("Next") then
+-- 					helpPage = helpPage + 1
+-- 				end
+-- 			else
+-- 				if im.Button("Close") then
+-- 					im.CloseCurrentPopup()
+-- 					showHelp = false
+-- 				end
+-- 			end
+
+-- 			im.EndPopup()
+-- 		end
+-- 	end
+
+
+
+
+
+-- 		-- if im.BeginPopup("SumoHelpPopup0") then
+-- 		-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
+-- 		-- 	im.Separator()
+-- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "1. Join by Spawning:")
+-- 		-- 	im.TextWrapped("Spawn a car to participate in the game. You can use the 'Join next round' option to automatically spawn a car in the next round.")
+-- 		-- 	im.Separator()
+-- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "2. Automatic Start:")
+-- 		-- 	im.TextWrapped("The game begins once two or more players are active (depending on config).")
+-- 		-- 	if im.Button("Next Page") then
+-- 		-- 		currentHelpPopup = "SumoHelpPopup1"
+-- 		-- 		im.CloseCurrentPopup()
+-- 		-- 	end
+-- 		-- 	im.EndPopup()
+-- 		-- end
+
+-- 		-- if currentHelpPopup == "SumoHelpPopup1" then
+-- 		-- 	im.OpenPopup("SumoHelpPopup1")
+-- 		-- end
+
+-- 		-- if im.BeginPopup("SumoHelpPopup1") then --FIXME this doesn't get shown.
+-- 		-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
+-- 		-- 	im.Separator()
+-- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "3. Safezone Mechanics:")
+-- 		-- 	im.TextWrapped("Every 30 seconds, a new safezone spawns at 70% the size of the last one.")
+-- 		-- 	im.Separator()
+-- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "4. Explosive Elimination:")
+-- 		-- 	im.TextWrapped("If you're outside the zone when the timer ends, you'll explode!")
+-- 		-- 	if im.Button("Next Page") then
+-- 		-- 		currentPopup = "SumoHelpPopup2"
+-- 		-- 		im.CloseCurrentPopup()
+-- 		-- 	end
+-- 		-- 	im.EndPopup()
+-- 		-- end
+	
+-- 	-- if im.BeginPopup("SumoHelpPopup2") then
+-- 	-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
+-- 	-- 	im.Separator()
+-- 	-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "5. Reset Rule (Enforced):")
+-- 	-- 	im.TextWrapped("Resets are only allowed by the gamemode if:")
+-- 	-- 	im.TextWrapped("- You're outside the safezone")
+-- 	-- 	im.TextWrapped("- Moving slower than 20 km/h")
+-- 	-- 	im.EndPopup()
+-- 	-- end
+-- 	-- if im.BeginGroup("SumoHelpPopup3") then
+-- 	-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
+-- 	-- 	im.Separator()
+-- 	-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "6. No Resets After Death:")
+-- 	-- 	im.TextWrapped("If you're eliminated, all reset functions are locked until the round ends.")
+-- 	-- 	im.Separator()
+-- 	-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "7. Victory Conditions:")
+-- 	-- 	im.TextWrapped("Last player standing wins OR: All players inside the final zone when the last timer ends.")
+-- 	-- 	im.EndGroup()
+-- 	-- end
+-- 	im.End()
+-- end
 
 function onResetGameplay(id)
 	-- print( "onResetGameplay called")
@@ -1100,8 +1265,44 @@ end
 local function onGameStateUpdate(state)
 	print("onGameStateUpdate called ")
 	print(dump(state))
-	if state["appLayout"] == "sumo" then return end
-	ogUIState = state
+	if state["appLayout"] ~= "sumo" then
+		ogUIState = state
+	end
+	if state["appLayout"] ~= "sumomenu" then
+		ogUIStateBeforeMenu = state
+	end
+end
+
+local function onWorldReadyState(state)
+	if motd.enabled then
+		guihooks.trigger("ChangeState", {state = "scenario-start"})
+	end
+end
+
+local function onScenarioUIReady(state)
+	if state == "start" then
+		guihooks.trigger('ScenarioChange', {name = motd.title, description = motd.description, introType = motd.type})
+	end
+end
+
+local function onToggleSumoMenu()
+	print("onToggleSumoMenu called")
+	sumoMenuOpen = not sumoMenuOpen
+	if sumoMenuOpen then
+		core_gamestate.setGameState(nil, 'sumomenu', nil)
+	else	
+		core_gamestate.setGameState(ogUIStateBeforeMenu['state'], ogUIStateBeforeMenu['appLayout'], ogUIStateBeforeMenu['menuItems']) --reset the app layout
+	end
+end
+
+local function setAutoSpectate(state)
+	print("setAutoSpectate called")
+	autoSpectate = state
+end
+
+local function setJoinNextRound(state)
+	print("setJoinNextRound called")
+	joinNextRound = state
 end
 
 core_vehicles.removeCurrent = function() -- overwrite in-game function to not remove other players vehicles
@@ -1200,6 +1401,11 @@ M.sumoSpectateAlivePlayer = sumoSpectateAlivePlayer
 M.sumoStopSpectating = sumoStopSpectating
 M.onGameStateUpdate = onGameStateUpdate
 M.setSumoLayout = setSumoLayout
+M.onScenarioUIReady = onScenarioUIReady
+M.onWorldReadyState = onWorldReadyState
+M.onToggleSumoMenu = onToggleSumoMenu
+M.setAutoSpectate = setAutoSpectate
+M.setJoinNextRound = setJoinNextRound
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M

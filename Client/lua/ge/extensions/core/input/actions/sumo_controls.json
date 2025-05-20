@@ -1,0 +1,3 @@
+{
+    "ToggleSumoMenu":{"cat":"gameplay","order":1,"ctx":"tlua","onDown":"Sumo.onToggleSumoMenu()", "isCentered":true, "title": "Toggle Sumo menu", "desc": "This lets you open up the menu to let you configure settings for the Sumo gamemode" }
+}

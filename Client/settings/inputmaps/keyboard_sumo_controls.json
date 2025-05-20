@@ -1,0 +1,6 @@
+
+{
+  "bindings": [
+    {"action": "ToggleSumoMenu", "control": "ctrl s"}
+  ]
+}
