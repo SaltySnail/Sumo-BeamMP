@@ -1,4 +1,8 @@
 local M = {}
+-- TODO: FIXME: PLS: uncomment blockEditor & console and uncomment reset stuff & uncomment closeAllMenus() stuff
+
+local sock = require('socket')
+local sumoStartTime
 
 local floor = math.floor
 local mod = math.fmod
@@ -8,7 +12,7 @@ local gamestate = {players = {}, settings = {}}
 
 --blocked inputs when dead
 local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
-local allInputActions = 					{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+local allInputActions = 								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
@@ -65,18 +69,18 @@ local joinNextRound = false
 -- local joinNextRoundCheckboxState = im.BoolPtr(joinNextRound)
 local autoSpectate = true
 -- local autoSpectateCheckboxState = im.BoolPtr(autoSpectate)
-
 local motd = {}
 motd.title = "This server is running Sumo"
 motd.description = [[
     [h2]Rules[/h2]
-		[color=#AFAF00]1. Join by Spawning:[/color][br] Spawn a car to participate in the game. Use 'Join next round' to auto spawn in the next round.
-		[color=#AFAF00]2. Automatic Start:[/color][br] The game begins once two or more players are active (configurable).
-		[color=#AFAF00]3. Safezone Mechanics:[/color][br] Every 30 seconds, a new safezone spawns at 70% the size of the last one.
-		[color=#AFAF00]4. Explosive Elimination:[/color][br] If you're outside the zone when the timer ends, you'll explode!
-		[color=#AFAF00]5. Reset Rule (Enforced):[/color][br] Resets are only allowed if you're outside the safezone and moving slower than 20 km/h.
-		[color=#AFAF00]6. No Resets After Death:[/color][br] If you're eliminated, all reset functions are locked until the round ends.
-		[color=#AFAF00]7. Victory Conditions:[/color][br] Last player standing wins OR: All players inside the final zone when the last timer ends.
+			[color=#AFAF00]1. Join by Spawning:[/color][br] Spawn a car to participate in the game. Use 'Join next round' to auto spawn in the next round.
+			[color=#AFAF00]2. Automatic Start:[/color][br] The game begins once two or more players are active (configurable).
+			[color=#AFAF00]3. Safezone Mechanics:[/color][br] Every 30 seconds (depending on config), a new safezone spawns at 70% the size of the last one.
+			[color=#AFAF00]4. Explosive Elimination:[/color][br] If you're outside the zone when the timer ends, you'll explode!
+			[color=#AFAF00]5. Reset Rule (Enforced):[/color][br] Resets are only allowed if you're outside the safezone and moving slower than 20 km/h.
+			[color=#AFAF00]6. No Resets After Death:[/color][br] If you're eliminated, all reset functions are locked until the round ends.
+			[color=#AFAF00]7. Victory Conditions:[/color][br] Last player standing wins OR: All players inside the final zone when the last timer ends.
+			[color=#AFAF00]8. Scoring:[/color][br] Survive a safezone rotation to earn 1 point. Win the round to earn 10 points.
     [br]
 	[h2]Controls[/h2]
 	[list]
@@ -343,6 +347,7 @@ function onSumoRemoveSpawns()
 end
 -- for _, file in ipairs(FS:findFiles("art/CastleIslands/", "*", 0, true, false)) do print(file) end
 function spawnSumoObstacles(filepath)
+	career_career.closeAllMenus() -- just to be sure
 	-- Find and spawn all prefab files in the specified directory
 	for _, file in ipairs(FS:findFiles(filepath, "*", 0, true, false)) do
 		if file:match("%.prefab%.json$") or file:match("%.json$") then
@@ -562,13 +567,13 @@ function handleResetState()
 end
 
 -- Function to explode a car by its vehicle ID
-function explodeSumoCar(vehID)
+function explodeSumoCar(vehID) -- FIXME: make this use the players name or multiplayer vehicle ID, this ID is prob different on other's their PC
 	for vid, veh in activeVehiclesIterator() do
 		if vid == tonumber(vehID) then
 			veh:queueLuaCommand("fire.explodeVehicle()")
-			veh:queueLuaCommand("fire.igniteVehicle()")
-			veh:queueLuaCommand("beamstate.breakAllBreakgroups()")
+			-- veh:queueLuaCommand("fire.igniteVehicle()") -- TODO make sure this is not causing the issues and update random about it
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+				veh:queueLuaCommand("beamstate.breakAllBreakgroups()")
 				print(vid .. " " .. vehID)
 				if vid == vehID then
 					disallowSumoResets(allInputActions)
@@ -722,6 +727,7 @@ end
 
 function setSumoLayout(appLayout)
 	if gamestate.gameRunning then
+		career_career.closeAllMenus()
 		core_gamestate.setGameState('scenario', appLayout, 'scenario')
 	end
 end
@@ -735,21 +741,21 @@ function updateSumoGameState(data)
 	if gamestate.time then time = gamestate.time-1 end
 
 	local txt = ""
-	if gamestate.gameRunning and gamestate.randomVehicles and time and time == -28 then 
+	if gamestate.gameRunning and gamestate.randomVehicles and time and time == gamestate.randomVehicleStartWaitTime + 2 then 
 		spawnSumoRandomVehicle()
 		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)
 	end
-	if gamestate.gameRunning and gamestate.randomVehicles and time and time == -20 then 
+	if gamestate.gameRunning and gamestate.randomVehicles and time and time == gamestate.randomVehicleStartWaitTime + 10 then 
 		-- reloadUI() --ensures all apps are on the screen (sometimes the gauge cluster wasn't)		
 		for vehID, _ in pairs(MPVehicleGE.getOwnMap()) do
 			core_camera.setVehicleCameraByNameWithId(vehID, 'orbit', true, {}) 
 		end
 	end
-	if gamestate.gameRunning and gamestate.randomVehicles and time and time >= -18 and time <= -8 then 
+	if gamestate.gameRunning and gamestate.randomVehicles and time and time >= gamestate.randomVehicleStartWaitTime + 12 and time <= gamestate.randomVehicleStartWaitTime + 22 then 
 		MPVehicleGE.applyQueuedEvents()
 	end
-	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == -8 then 
+	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == gamestate.randomVehicleStartWaitTime + 22 then 
 		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)
 	end
@@ -768,7 +774,8 @@ function updateSumoGameState(data)
 		isPlayerDead = false
 	end
 	if gamestate.gameRunning and time and time == 0 then 
-		guihooks.trigger('sumoStartTimer', 30)
+		guihooks.trigger('sumoStartTimer', gamestate.safezoneLength)
+		sumoStartTime = sock.gettime()
 		be:queueAllObjectLua("controller.setFreeze(0)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	local veh = be:getObjectByID(vehID)
@@ -801,11 +808,11 @@ function updateSumoGameState(data)
 			txt = "Sumo Time Left: ".. timeLeft --game is still going
 		end
 		
-		if time % 30 == 0 then
-			guihooks.trigger('sumoSyncTimer', 30);
+		if time % gamestate.safezoneLength == 0 then
+			guihooks.trigger('sumoSyncTimer', gamestate.safezoneLength);
 		end
-		if time and time > 0 and time % 30 >= 24 and time % 30 <= 29 then
-			guihooks.trigger('sumoAnimateCircleSize', 30)
+		if time and time > 0 and time % gamestate.safezoneLength >= gamestate.safezoneLength - 6 and time % gamestate.safezoneLength <= gamestate.safezoneLength - 1 then
+			guihooks.trigger('sumoAnimateCircleSize', gamestate.safezoneLength)
 			if gamestate.safezoneEndAlarm then
 				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 3})
 			end
@@ -927,6 +934,9 @@ function onPreRender(dt)
 	local playerVehicle = be:getPlayerVehicle(0)
 	local bb1 = playerVehicle:getSpawnWorldOOBB()
 	local isInsideSafezone = overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, goalPos, goalVecX, goalVecY, goalVecZ)
+
+
+	sock.gettime() -- FIXME: make this control the sumo UI timer in ms
 
 	-- this checks if player has transistioned from inside to outside the safezone or vice versa or it is the first time checking
 	if not playerVehicle.isInsideSafezone 
@@ -1131,9 +1141,9 @@ function onExtensionUnloaded()
 end
 
 function onExtensionLoaded()
-	gui_module.initialize(gui)
-	gui.registerWindow("Sumo Menu", im.ImVec2(256, 256))
-	gui.showWindow("Sumo Menu")
+	-- gui_module.initialize(gui)
+	-- gui.registerWindow("Sumo Menu", im.ImVec2(256, 256))
+	-- gui.showWindow("Sumo Menu")
 end
 
 function onSumoVehicleSpawned(vehID)
@@ -1185,16 +1195,19 @@ function spawnSumoRandomVehicle()
 	end 
 	print("Join next round in spawn vehicle: " .. dump(joinNextRound))
 	if not hasCar and not joinNextRound then return end -- skip spectators
-	if not playerName then print("No playername!?!?") return end
+	if not playerName then print("No playername!?!?") return end	
+	career_career.closeAllMenus()
 	local ogCamNameRVeh = core_camera.getActiveCamName(0)
 	core_camera.setByName(0, "free")
 	core_camera.resetCamera(0)
+	career_career.closeAllMenus()
 	for vehID, theCar in pairs(MPVehicleGE.getOwnMap()) do
 		local vehicle = scenetree.findObjectById(theCar.gameVehicleID)
 		if vehicle then
 			vehicle:delete()
 		end
     end
+	career_career.closeAllMenus() -- spam this son of a bitch
 	for playername, player in pairs(gamestate.players) do
 		if playername == playerName then
 			print("Playername: " .. playername .. " chosenConfig: " .. dump(player.chosenConfig))
@@ -1251,21 +1264,25 @@ function onSumoShowScoreboard(data)
 end
 
 function blockConsole()
-	print("blockConsole called")
+	-- print("blockConsole called")
 	extensions.core_input_actionFilter.setGroup('sumoConsole', {"toggleConsoleNG"})
 	extensions.core_input_actionFilter.addAction(0, 'sumoConsole', true)
 end
 
 function blockEditor()
-	print("blockEditor called")
-	extensions.core_input_actionFilter.setGroup('sumoEditor', {"editorToggle", "objectEditorToggle", "editorSafeModeToggle"})
+	-- print("blockEditor called")
+	extensions.core_input_actionFilter.setGroup('sumoEditor', {"editorToggle", "objectEditorToggle", "editorSafeModeToggle"}) 
 	extensions.core_input_actionFilter.addAction(0, 'sumoEditor', true)
 end
 
 local function onGameStateUpdate(state)
 	print("onGameStateUpdate called ")
 	print(dump(state))
-	if state["appLayout"] ~= "sumo" then
+	if gamestate and gamestate.gameRunning and state["state"] == "radial" then
+		setSumoLayout(ogUIState['state'],ogUIState['appLayout'],ogUIState['menuItems'])
+		return
+	end
+	if state["appLayout"] ~= "sumo" and state["appLayout"] ~= "sumomenu" then
 		ogUIState = state
 	end
 	if state["appLayout"] ~= "sumomenu" then
@@ -1273,16 +1290,22 @@ local function onGameStateUpdate(state)
 	end
 end
 
-local function onWorldReadyState(state)
+local function onWorldReadyState(state) -- FIXME: re-enable this to make the MOTD work again and figure out how to make it not block change state scenario-start
 	if motd.enabled then
-		guihooks.trigger("ChangeState", {state = "scenario-start"})
+	 	guihooks.trigger("ChangeState", {state = "scenario-start"})
 	end
 end
 
 local function onScenarioUIReady(state)
 	if state == "start" then
-		guihooks.trigger('ScenarioChange', {name = motd.title, description = motd.description, introType = motd.type})
-	end
+	 	guihooks.trigger('ScenarioChange', {name = motd.title, description = motd.description, introType = motd.type})
+  end
+end
+
+local function setSumoMenuSettings()
+	guihooks.trigger('setSumoMenuSettings', {joinNextRound=joinNextRound,autoSpectate=autoSpectate})
+	-- guihooks.trigger('setSumoMenuSettingsJoinNextRound', joinNextRound) 
+	-- guihooks.trigger('setSumoMenuSettingsAutoSpectate', autoSpectate)
 end
 
 local function onToggleSumoMenu()
@@ -1290,6 +1313,7 @@ local function onToggleSumoMenu()
 	sumoMenuOpen = not sumoMenuOpen
 	if sumoMenuOpen then
 		core_gamestate.setGameState(nil, 'sumomenu', nil)
+		setSumoMenuSettings()
 	else	
 		core_gamestate.setGameState(ogUIStateBeforeMenu['state'], ogUIStateBeforeMenu['appLayout'], ogUIStateBeforeMenu['menuItems']) --reset the app layout
 	end
@@ -1303,6 +1327,10 @@ end
 local function setJoinNextRound(state)
 	print("setJoinNextRound called")
 	joinNextRound = state
+end
+
+local function getSumoMenuState()
+	setSumoMenuSettings()
 end
 
 core_vehicles.removeCurrent = function() -- overwrite in-game function to not remove other players vehicles
@@ -1321,7 +1349,18 @@ core_vehicles.removeCurrent = function() -- overwrite in-game function to not re
 		commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicle
 	  end
 	end
+end
+
+extensions.load("core_quickAccess") -- ensure this is loaded as it is normally only loaded when switching to a mode (like freeroam)
+core_quickAccess.toggle = function(level) -- overwrite in-game function to disable radial menu while sumo round is in progress 
+  if core_quickAccess.isEnabled() then
+    setEnabled(false)
+  elseif gamestate and gamestate.gameRunning then
+  		return 
+  else
+    setEnabled(true, level)
   end
+end
 
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
 if MPGameNetwork then AddEventHandler("spawnSumoGoal", spawnSumoGoal) end
@@ -1353,10 +1392,6 @@ if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboa
 if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
 if MPGameNetwork then AddEventHandler("blockConsole", blockConsole) end
 if MPGameNetwork then AddEventHandler("blockEditor", blockEditor) end
-if MPGameNetwork then AddEventHandler("setSumoLayout", setSumoLayout) end
--- if MPGameNetwork then AddEventHandler("onSumoVehicleDeleted", onSumoVehicleDeleted) end
-
--- if MPGameNetwork then AddEventHandler("onSumoFlagTrigger", onSumoFlagTrigger) end
 -- if MPGameNetwork then AddEventHandler("onSumoGoalTrigger", onSumoGoalTrigger) end
 
 M.requestSumoGameState = requestSumoGameState
@@ -1406,6 +1441,8 @@ M.onWorldReadyState = onWorldReadyState
 M.onToggleSumoMenu = onToggleSumoMenu
 M.setAutoSpectate = setAutoSpectate
 M.setJoinNextRound = setJoinNextRound
+M.setSumoMenuSettings = setSumoMenuSettings
+M.getSumoMenuState = getSumoMenuState
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M

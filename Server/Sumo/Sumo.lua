@@ -28,9 +28,11 @@ gameState.gameEnding = false
 gameState.goalCount = 1
 gameState.goalScale = 1
 gameState.safezoneEndAlarm = true
+gameState.randomVehicleCountdown = 0
 -- gameState.goalScaleResize = 0
 
 local roundLength = 5*60 -- length of the game in seconds
+local safezoneLength = 30
 local goalTime = 30 --TODO make it work with a higher goalTime than 30s
 local goalEndTime = -10000
 local defaultRedFadeDistance = 100 -- the distance between a flag carrier and someone that doesn't have the flag, where the screen of the flag carrier will turn red
@@ -365,6 +367,7 @@ function sumoGameSetup()
 			if randomVehicles then		
 				print("Chosen class: " .. class)
 				gameState.players[Name].chosenConfig = allowedConfigs[class][rand(1,#allowedConfigs[class])]
+				print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
 			end
 			if MP.GetPlayerVehicles(ID) then
 				gameState.players[Name].ID = ID
@@ -383,12 +386,14 @@ function sumoGameSetup()
 
 	gameState.playerCount = playerCount
 	gameState.randomVehicles = randomVehicles
+	gameState.randomVehicleStartWaitTime = -45 --should be equal or less than -30
 	if randomVehicles then
-		gameState.time = -29
+		gameState.time = gameState.randomVehicleStartWaitTime + 1
 	else
 		gameState.time = -9
 	end
 	gameState.roundLength = roundLength
+	gameState.safezoneLength = safezoneLength
 	gameState.endtime = -1
 	gameState.gameRunning = true
 	gameState.gameEnding = false
@@ -419,9 +424,9 @@ function sumoGameEnd(reason)
 					MP.SendChatMessage(-1, alivePlayers[i])
 					if scoringSystem then
 						if gameState.players[alivePlayers[i]].score then
-							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 1
+							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 10
 						else
-							gameState.players[alivePlayers[i]].score = 1
+							gameState.players[alivePlayers[i]].score = 10
 						end
 						gameState.players[alivePlayers[i]].isRoundWinner = true
 					end
@@ -437,9 +442,9 @@ function sumoGameEnd(reason)
 				MP.SendChatMessage(-1,"Game over, " .. alivePlayers[1] .. " wins!") --FIXME: if MAX_ALIVE is more than 1 this is fucked, don't think you should set it to more though
 				if scoringSystem then
 					if gameState.players[alivePlayers[1]].score then
-						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + 1
+						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + 10
 					else
-						gameState.players[alivePlayers[1]].score = 1
+						gameState.players[alivePlayers[1]].score = 10
 					end
 					gameState.players[alivePlayers[1]].isRoundWinner = true
 				end
@@ -472,8 +477,9 @@ function sumoGameEnd(reason)
 	end
 end
 
-function showSumoPrefabs(player) --shows the prefabs belonging to this map and this arena
+function showSumoPrefabs(player, goals) --shows the prefabs belonging to this map and this arena
 	MP.TriggerClientEvent(player.playerID, "spawnSumoObstacles", "art/" .. arena .. "/")
+	if not goals then return end
 	for goalID=1,goalPrefabCount do
 		MP.TriggerClientEvent(player.playerID, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 	end
@@ -486,15 +492,19 @@ function sumo(player, argument)
 		MP.SendChatMessage(player.playerID, "\"/sumo stop\" to stop a sumo game.")
 		MP.SendChatMessage(player.playerID, "\"/sumo arena \'chosenArena\' \" to choose an arena to play sumo on.")
 		MP.SendChatMessage(player.playerID, "\"/sumo list \'arenas\' \" to list the possible arenas to play sumo on.")
-		MP.SendChatMessage(player.playerID, "\"/sumo show\" to show all goals and obstacles in the current arena.")
+		MP.SendChatMessage(player.playerID, "\"/sumo show all\" to show all goals and obstacles in the current arena.")
+		MP.SendChatMessage(player.playerID, "\"/sumo show arena\" to show the current arena.")
 		MP.SendChatMessage(player.playerID, "\"/sumo hide\" to hide all goals and obstacles in the current arena.")
 		MP.SendChatMessage(player.playerID, "\"/sumo start \'minutes\' \" to start a sumo game with a duration of the specified minutes.")
 		MP.SendChatMessage(player.playerID, "\"/sumo time limit \'minutes\' \" to set the duration of a sumo game to the specified minutes.")
 		MP.SendChatMessage(player.playerID, "\"/sumo teams \'true/false\' \" to specify if the sumo games uses teams.")
 		MP.SendChatMessage(player.playerID, "\"/sumo create \'goal\' \" to create a goal, so you can make your own arenas! \n Consult the tutorial on GitHub to learn how to do this.")
-	elseif argument == "show" then
+	elseif argument == "show all" then
 		onSumoArenaChange()
-		showSumoPrefabs(player)
+		showSumoPrefabs(player, true)
+	elseif argument == "show arena" then
+		onSumoArenaChange()
+		showSumoPrefabs(player, false)
 	elseif argument == "hide" then
 		MP.TriggerClientEvent(player.playerID, "removeSumoPrefabs", "all")
 	elseif argument == "start" or string.find(argument, "start %d") then
@@ -656,6 +666,17 @@ function sumoGameRunningLoop()
 				end
 			end
 			MP.TriggerClientEvent(-1, "removeSumoPrefabs", "goal")
+			if #alivePlayers > 0 then
+				for i=1,#alivePlayers do
+					if scoringSystem then
+						if gameState.players[alivePlayers[i]].score then
+							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 1
+						else
+							gameState.players[alivePlayers[i]].score = 1
+						end
+					end
+				end
+			end
 			spawnSumoGoal()
 			goalEndTime = gameState.time + goalTime
 			print("It's time to blow some stuff up " .. dump(vehiclesToExplode))

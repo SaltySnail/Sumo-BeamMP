@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"8YTJ928",
+  "licenseName":"SUMO",
   "mainPartName":"moonhawk",
   "mainPartPath":"/moonhawk",
   "model":"moonhawk",

@@ -208,3 +208,7 @@ angular.module('beamng.apps')
         }
     };
 }]);
+
+
+// 
+// FIXME: Date.now()       --same format as in lua and in ms

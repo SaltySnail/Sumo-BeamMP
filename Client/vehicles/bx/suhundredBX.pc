@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"Adaptable1",
+  "licenseName":"SUMO",
   "mainPartName":"bx",
   "mainPartPath":"/bx",
   "model":"bx",

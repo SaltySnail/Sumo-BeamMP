@@ -5,21 +5,26 @@
     "vehicles/autobello/EVENTS_Piccolina_Sumo.pc"
   ],
   "Old School Americans": [
-    "vehicles/landsdale/Old School Americans Sumo Spec Landsdale.pc",
-    "vehicles/bluebuck/Old School Americans Sumo Spec Bluebuck.pc",
-    "vehicles/barstow/Old School Americans Sumo Spec Barstow.pc",
-    "vehicles/burnside/Old School Americans Sumo Spec Burnside Special.pc",
-    "vehicles/moonhawk/Old School Americans Sumo Spec Moonhawk.pc",
-    "vehicles/fullsize/Old School Americans Sumo Spec Marshal.pc",
-    "vehicles/nine/Old School Americans Sumo Spec Nine.pc",
-    "vehicles/legran/Old School Americans Sumo Spec Legran.pc",
-    "vehicles/pessima/Old School Americans Sumo Spec Wendover.pc"
+    "vehicles/lansdale/OldSchoolAmericansSumoSpecLandsdale.pc",
+    "vehicles/bluebuck/OldSchoolAmericansSumoSpecBluebuck.pc",
+    "vehicles/barstow/OldSchoolAmericansSumoSpecBarstow.pc",
+    "vehicles/burnside/OldSchoolAmericansSumoSpecBurnsideSpecial.pc",
+    "vehicles/moonhawk/OldSchoolAmericansSumoSpecMoonhawk.pc",
+    "vehicles/fullsize/OldSchoolAmericansSumoSpecMarshal.pc",
+    "vehicles/nine/OldSchoolAmericansSumoSpecNine.pc",
+    "vehicles/legran/OldSchoolAmericansSumoSpecLegran.pc",
+    "vehicles/pessima/OldSchoolAmericansSumoSpecWendover.pc"
   ],
   "Sedan Bangers": [
     "vehicles/pessima/pessumo.pc",
     "vehicles/sunburst2/sumoburst.pc",
     "vehicles/bx/suhundredBX.pc",
     "vehicles/fullsize/sumarshall.pc",
-    "vehicles/scintilla/Sumotilla.pc"
+    "vehicles/scintilla/sumotilla.pc",
+    "vehicles/bastion/bassumo.pc",
+    "vehicles/hopper/sumopper.pc",
+    "vehicles/legran/sumogran.pc",
+    "vehicles/lansdale/sumodale.pc",
+    "vehicles/pigeon/sumigeon.pc"
   ]
 }

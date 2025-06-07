@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"364-ZCE",
+  "licenseName":"SUMO",
   "mainPartName":"fullsize",
   "mainPartPath":"/fullsize",
   "model":"fullsize",

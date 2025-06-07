@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"7QOE163",
+  "licenseName":"SUMO",
   "mainPartName":"burnside",
   "mainPartPath":"/burnside",
   "model":"burnside",

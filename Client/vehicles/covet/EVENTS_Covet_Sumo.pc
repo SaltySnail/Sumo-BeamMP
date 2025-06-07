@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"4CJQ874",
+  "licenseName":"SUMO",
   "mainPartName":"covet",
   "mainPartPath":"/covet",
   "model":"covet",

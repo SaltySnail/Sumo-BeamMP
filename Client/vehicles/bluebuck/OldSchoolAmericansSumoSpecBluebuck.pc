@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"4RGE386",
+  "licenseName":"SUMO",
   "mainPartName":"bluebuck",
   "mainPartPath":"/bluebuck",
   "model":"bluebuck",

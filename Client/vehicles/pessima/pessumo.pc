@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"952-TZS",
+  "licenseName":"SUMO",
   "mainPartName":"midsize",
   "mainPartPath":"/midsize",
   "model":"midsize",

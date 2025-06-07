@@ -59,7 +59,7 @@
         {}
         ],
         "castShadows": false,
-        "groundType": "ASPHALT_OLD",
+        "groundType": "ASPHALT",
         "materialTag0": "beamng",
         "materialTag1": "Industrial",
         "translucent": true,

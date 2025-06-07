@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"FATT-10K",
+  "licenseName":"SUMO",
   "model":"wendover",
   "parts":{
     "brakepad_F":"brakepad_F_semi_race",

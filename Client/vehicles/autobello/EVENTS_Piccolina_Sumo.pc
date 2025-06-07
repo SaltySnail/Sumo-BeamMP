@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"7WWN849",
+  "licenseName":"SUMO",
   "mainPartName":"autobello",
   "mainPartPath":"/autobello",
   "model":"autobello",
@@ -62,7 +62,7 @@
     "autobello_doorglass_R":"autobello_doorglass_R",
     "autobello_engine":"autobello_engine_1500",
     "autobello_engine_ecu":"",
-    "autobello_engine_internals":"autobello_engine_internals_stage1",
+    "autobello_engine_internals":"autobello_engine_internals_stage3",
     "autobello_exhaust":"autobello_exhaust_stinger_b",
     "autobello_fender_FL":"autobello_fender_FL_d",
     "autobello_fender_FR":"autobello_fender_FR_d",

@@ -26,9 +26,10 @@ angular.module('beamng.stuff')
               cursor:pointer;
               transition:background 0.2s;
             "
-            ng-mouseenter="hoverBtn=true"
-            ng-mouseleave="hoverBtn=false"
-            ng-style="hoverBtn && {'background':'#555'}">
+            ng-init="pressBtn=false"
+            ng-mousedown="pressBtn=true"
+            ng-mouseup="pressBtn=false"
+            ng-style="{'background': pressBtn ? '#555' : '#444'}">
             Spectate Alive Player
           </button>
         </div>
@@ -38,8 +39,8 @@ angular.module('beamng.stuff')
           <label style="display:flex; align-items:center; font-size:14px; cursor:pointer;">
             <input
               type="checkbox"
-              ng-model="joinNextRound"
-              ng-change="setJoinNextRound(joinNextRound)"
+              ng-model="settings.joinNextRound"
+              ng-change="setJoinNextRound(settings.joinNextRound)"
               style="margin-right:8px; width:16px; height:16px; cursor:pointer;" />
             Join Next Round
           </label>
@@ -50,8 +51,8 @@ angular.module('beamng.stuff')
           <label style="display:flex; align-items:center; font-size:14px; cursor:pointer;">
             <input
               type="checkbox"
-              ng-model="autoSpectate"
-              ng-change="setAutoSpectate(autoSpectate)"
+              ng-model="settings.autoSpectate"
+              ng-change="setAutoSpectate(settings.autoSpectate)"
               style="margin-right:8px; width:16px; height:16px; cursor:pointer;" />
             Auto Spectate
           </label>
@@ -61,29 +62,49 @@ angular.module('beamng.stuff')
     `,
     restrict: 'E',
     link: function(scope) {
-      scope.optionA = false;
-      scope.optionB = false;
+      // Initialize settings object
+      scope.settings = {
+        joinNextRound: false,
+        autoSpectate: true
+      };
+
+      scope.$on('setSumoMenuSettings', function(_, settings) {
+        scope.settings = settings;
+        scope.$apply();
+      });
+
+      //scope.$on('setSumoMenuSettingsAutoSpectate', function(autoSpectate)) {
+      //  scope.settings.autoSpectate = autoSpectate;
+       // scope.$apply();
+      //};
+
+     // scope.$on('setSumoMenuSettingsJoinNextRound', function(joinNextRound)) {
+      //  scope.settings.joinNextRound = joinNextRound;
+      //  scope.$apply();
+      //};
 
       scope.spectateAlivePlayer = function() {
         bngApi.engineLua(
-          'Sumo.sumoSpectateAlivePlayer()',
+          'extensions.Sumo.sumoSpectateAlivePlayer()',
           (res) => { console.log('spectateAlive OK', res); }
         );
       };
 
       scope.setJoinNextRound = function(state) {
         bngApi.engineLua(
-          `Sumo.setJoinNextRound(${state})`,
+          `extensions.Sumo.setJoinNextRound(${state})`,
           (res) => { console.log('setJoinNextRound OK', res); }
         );
       };
 
       scope.setAutoSpectate = function(state) {
         bngApi.engineLua(
-          `Sumo.setAutoSpectate(${state})`,
+          `extensions.Sumo.setAutoSpectate(${state})`,
           (res) => { console.log('setAutoSpectate OK', res); }
         );
       };
+
+      bngApi.engineLua('extensions.Sumo.getSumoMenuState()');
     }
   };
 }]);

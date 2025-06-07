@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"454-TWV",
+  "licenseName":"SUMO",
   "mainPartName":"sunburst2",
   "mainPartPath":"/sunburst2",
   "model":"sunburst2",

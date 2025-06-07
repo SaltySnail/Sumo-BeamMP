@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"6DXC702",
+  "licenseName":"SUMO",
   "mainPartName":"nine",
   "mainPartPath":"/nine",
   "model":"nine",
