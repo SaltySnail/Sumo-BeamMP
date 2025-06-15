@@ -471,7 +471,8 @@ function sumoGameEnd(reason)
 			MP.SendChatMessage(-1, "" .. playername .. " : " .. player.score)
 			table.insert(data.players, {
 				name  = playername,
-				score = player.score,
+				totalScore = player.score,
+				roundScore = player.score - prevScore[playername],
 				isRoundWinner = player.isRoundWinner
 			})
 		end

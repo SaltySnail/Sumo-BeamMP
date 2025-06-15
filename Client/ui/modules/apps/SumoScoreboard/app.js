@@ -17,7 +17,8 @@ angular.module('beamng.apps')
                     <thead>
                         <tr>
                             <th style="text-align:left; padding:8px;">Player</th>
-                            <th style="text-align:right; padding:8px;">Score</th>
+                            <th style="text-align:right; padding:8px;">Round</th>
+                            <th style="text-align:right; padding:8px;">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,15 +36,14 @@ angular.module('beamng.apps')
                         <tr ng-repeat-end ng-if="teams.length"></tr>
 
                         <!-- Fallback individual players -->
-                        <tr ng-repeat="player in players | orderBy:'-score'"
+                        <tr ng-repeat="player in players | orderBy:['-totalScore', '-roundScore']"                            
                             ng-class="{'round-winner': player.isRoundWinner}"
                             style="padding: 8px;">
                             <td style="padding: 8px;">
                                 {{player.name}} <span ng-if="player.isRoundWinner">👑</span>
                             </td>
-                            <td style="padding: 8px;">
-                                {{player.score}}
-                            </td>
+                            <td style="padding: 8px; text-align:right;">{{player.roundScore}}</td>
+                            <td style="padding: 8px; text-align:right;">{{player.totalScore}}</td>
                         </tr>
                     </tbody>
                 </table>
