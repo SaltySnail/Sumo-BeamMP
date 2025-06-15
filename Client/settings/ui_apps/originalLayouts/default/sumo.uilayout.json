@@ -144,19 +144,32 @@
     {
       "appName":"sumoresetrules",
       "placement":{
-      "bottom":"",
-      "height":"600px",
-      "left":"",
-      "margin":"auto",
-      "position":"absolute",
-      "right":"0px",
-      "top":"50%",
-      "transform":"translateY(-50%)",
-      "width":"150px"
+        "bottom":"",
+        "height":"600px",
+        "left":"",
+        "margin":"auto",
+        "position":"absolute",
+        "right":"0px",
+        "top":"50%",
+        "transform":"translateY(-50%)",
+        "width":"150px"
+      }
+    },
+    {
+      "appName":"sumoresetbar",
+      "placement":{
+        "bottom":"0px",
+        "height":"500px",
+        "left":0,
+        "margin":"auto",
+        "position":"absolute",
+        "right":0,
+        "top":"",
+        "width":"500px"
       }
     }
   ],
   "title":"Sumo",
   "type":"sumo",
-  "version":0.3
+  "version":0.4
 }
