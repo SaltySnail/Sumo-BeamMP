@@ -886,6 +886,7 @@ function updateSumoGameState(data)
 		local timeLeft = gamestate.endtime - time
 		txt = "Arena will be removed in "..math.abs(timeLeft-1).." seconds" --game ended
 		guihooks.trigger('sumoRemoveTimer', 0)
+		sumoStartTime = nil
 	end
 	if txt ~= "" then
 		guihooks.message({txt = txt}, 1, "Sumo.time")
