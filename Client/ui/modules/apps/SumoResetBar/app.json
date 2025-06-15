@@ -1,0 +1,15 @@
+{
+  "name": "Sumo Reset Bar",
+  "author": "Julianstap",
+  "version": "0.1",
+  "description": "The reset bar that shows how long you need to hold reset to actually reset in sumo",
+  "directive": "sumoresetbar",
+  "domElement": "<sumoresetbar></sumoresetbar>",
+  "css": {
+    "width": "500px",
+    "height": "200px",
+    "top": "0px",
+    "left": "0px"
+  },
+  "preserveAspectRatio": true
+}

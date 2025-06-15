@@ -21,6 +21,9 @@ local isPlayerInCircle = false
 local isPlayerBelowSpeedLimit = false
 local isPlayerDead = false
 local playerDiedAtTime = 0
+local playerIsResetting = false
+local startResettingTime = 0
+local resetDelay = 1.5 --s
 local isPlayerInReverseGravity = false
 local reverseGravitySubjectId = 0 -- may be unnecessary
 local spectatingPlayer = "" -- player that is being spectated
@@ -506,8 +509,7 @@ function teleportToSumoArena(spawnPointID)
 			veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
 			teleported = true
 		end
-		veh:queueLuaCommand("recovery.startRecovering()")
-		veh:queueLuaCommand("recovery.stopRecovering()")
+		veh:queueLuaCommand("recovery.recoverInPlace()")
 	end
 end
 
@@ -596,8 +598,7 @@ function onSumoGameEnd()
 		local spawnPos = spawnPoint:getPosition()
 		local spawnQuat = quat(spawnPoint:getRotation()) * quat(0,0,1,0)
 		veh:setPositionRotation(spawnPos.x + rand(-10,10), spawnPos.y + rand(-10,10), spawnPos.z + rand(1,10), spawnQuat.x, spawnQuat.y, spawnQuat.z, spawnQuat.w) -- random offset to make it less likely to spawn inside of each other
-		veh:queueLuaCommand("recovery.startRecovering()")
-		veh:queueLuaCommand("recovery.stopRecovering()")
+		veh:queueLuaCommand("recovery.recoverInPlace()")
 	end
 	teleported = false
 end
@@ -825,6 +826,7 @@ function updateSumoGameState(data)
 	end
 	if gamestate.gameRunning and time and time < 0 then
 		be:queueAllObjectLua("controller.setFreeze(1)")
+		be:queueAllObjectLua("Sumo.setResetDelay(" .. resetDelay .. ")")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		-- 	local veh = be:getObjectByID(vehID)
 		-- 	veh:queueLuaCommand('controller.setFreeze(1)')
@@ -980,12 +982,25 @@ function onPreRender(dt)
 		-- print("Sumo sync timer: " .. sock.gettime() .. " start time: " .. sumoStartTime .. " safezoneLength: " .. gamestate.safezoneLength)
 		guihooks.trigger('sumoSyncTimer', ((sock.gettime() - sumoStartTime) % (gamestate.safezoneLength))/(gamestate.safezoneLength)) -- all in s, but sock.gettime() is with ms precision 
 	end
+	if not isPlayerDead and playerIsResetting then
+		local timeNow = sock.gettime()
+		if startResettingTime and timeNow then 
+			for vehID, _ in pairs(MPVehicleGE.getOwnMap()) do
+				local veh = be:getObjectByID(vehID)
+				veh:queueLuaCommand("Sumo.setTryResettingTime(" .. tostring(timeNow - startResettingTime) .. ")")
+			end
+			guihooks.trigger('resetSyncProgress', (timeNow - startResettingTime) / resetDelay)
+		end
+	else
+		startResettingTime = 0
+		guihooks.trigger('resetSyncProgress', 0)
+	end
 	if simTimeAuthority.get ~= 1 then
 		simTimeAuthority.setInstant(1)
 	end
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 		local veh = be:getObjectByID(vehID)
-		veh:queueLuaCommand("requestSumoAirSpeedKmh()")
+		veh:queueLuaCommand("Sumo.requestSumoAirSpeedKmh()")
 	end
 	if goalLocation and goalPrefabActive then
 		debugDrawer:drawTextAdvanced(goalLocation, "Safezone", ColorF(1,1,1,1), true, false, ColorI(20,20,255,255))
@@ -1446,6 +1461,16 @@ end
 local function getSumoMenuState()
 	setSumoMenuSettings()
 end
+	
+local function onSumoStartResetting()
+	playerIsResetting = true
+	startResettingTime = sock.gettime()
+end
+
+local function onSumoStopResetting()
+	playerIsResetting = false
+	startResettingTime = 0
+end
 
 local ogRemoveCurrent = core_vehicles.removeCurrent
 core_vehicles.removeCurrent = function() -- overwrite in-game function to not remove other players vehicles
@@ -1597,6 +1622,8 @@ M.getSumoMenuState = getSumoMenuState
 M.updateAlivePlayers = updateAlivePlayers
 M.getPlayerList = getPlayerList
 M.spectatePlayer = spectatePlayer
+M.onSumoStopResetting = onSumoStopResetting
+M.onSumoStartResetting = onSumoStartResetting
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
