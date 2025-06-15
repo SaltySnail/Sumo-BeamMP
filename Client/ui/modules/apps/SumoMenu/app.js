@@ -77,6 +77,11 @@ angular.module('beamng.stuff')
       scope.currentPlayerIndex = 0;
       scope.currentSpectatingPlayer = '';
 
+      scope.$on('setSumoMenuSettings', function(_, settings) {
+        scope.settings = settings;
+        scope.$apply();
+      });
+
       // Receive player list from Lua
       scope.$on('setSumoPlayerList', function(_, players) {
         scope.players = players || [];
@@ -90,6 +95,22 @@ angular.module('beamng.stuff')
           if (index !== -1) {
             scope.currentPlayerIndex = index;
             scope.updateSpectatingDisplay();
+            bngApi.engineLua(`extensions.Sumo.spectatePlayer("${scope.currentSpectatingPlayer}")`);
+            console.log('Spectating player:', playerName);
+          } else {
+            console.warn('Player not found in alive list:', playerName);
+          }
+        } else {
+          console.error('Player list is not an array:', scope.players);
+        }
+        scope.$apply();
+      });
+
+      scope.$on('setSpectatingPlayer', function(_, playerName) {
+        if (Array.isArray(scope.players)) {
+          const index = scope.players.findIndex(p => p === playerName);
+          if (index !== -1) {
+            scope.currentPlayerIndex = index;
             console.log('Spectating player:', playerName);
           } else {
             console.warn('Player not found in alive list:', playerName);
@@ -114,7 +135,7 @@ angular.module('beamng.stuff')
 
       scope.updateSpectatingDisplay = function() {
         scope.currentSpectatingPlayer = scope.players[scope.currentPlayerIndex] || '';
-        bngApi.engineLua(`extensions.Sumo.spectatePlayer("${scope.currentSpectatingPlayer}")`);
+        //bngApi.engineLua(`extensions.Sumo.spectatePlayer("${scope.currentSpectatingPlayer}")`);
       };
 
       scope.stopSpectating = function() {

@@ -137,27 +137,35 @@ end
 local function updateAlivePlayers()
 	alivePlayers = {}
 	for playername, player in pairs(gamestate.players) do
-  	if not player.dead then
+  	if not player.dead and playername ~= MPConfig.getNickname then
     	table.insert(alivePlayers, playername)
   	end
 	end
-	guihooks.trigger('setSumoPlayerList', alivePlayers)
+	--guihooks.trigger('setSumoPlayerList', alivePlayers)
 end
 
 local function getPlayerList()
 	updateAlivePlayers()
+	guihooks.trigger('setSumoPlayerList', alivePlayers)
+	if spectatingPlayer ~= "" then
+		guihooks.trigger('setSpectatingPlayer', spectatingPlayer)
+	end
 end
 
 local function spectatePlayer(playername)
-	updateAlivePlayers()
-	--if not alivePlayers[playername] then return end
-	spectatingPlayer = playername
-	guihooks.trigger('spectatePlayerByName', playername)
+	--updateAlivePlayers()
+	--if not alivePlayers[playername] then return end  
 	ogCamBeforeSpectating = core_camera.getActiveCamName(0)
 	if HeliCam then
 		local gameVehID = 0
-		if not MPVehicleGE.getPlayerByName(playername) then print("No player by the name of " .. playername .. " the player list is: " .. dump(MPVehicleGE.getPlayers)) end 
+		if not MPVehicleGE.getPlayerByName(playername) then 
+			print("No player by the name of " .. playername .. " the player list is: " .. dump(MPVehicleGE.getPlayers))
+			return
+		end 
 		for _, vehicleData in pairs(MPVehicleGE.getPlayerByName(playername).vehicles) do gameVehID = vehicleData.gameVehicleID break end
+		if spectatingPlayer ~= "" then
+			HeliCam.despawnHeli()
+		end
 		HeliCam.setAllInOne(gameVehID, 3, 25, 25, false)
 		HeliCam.toggleUiRender(false) --somehow need to call this twice to not make the UI spawn
 		HeliCam.toggleUiRender(false)
@@ -166,14 +174,17 @@ local function spectatePlayer(playername)
 		core_camera.setByName(0,"external")
 		core_camera.resetCamera(0)
 	end
+	spectatingPlayer = playername
+	guihooks.trigger('setSpectatingPlayer', spectatingPlayer)
 end
 
 function sumoSpectateAlivePlayer()
 	updateAlivePlayers()
-	--guihooks.trigger('setSumoPlayerList', alivePlayers) 
-	for playername ,_ in pairs(alivePlayers) do
+	guihooks.trigger('setSumoPlayerList', alivePlayers) 
+	for _, playername in pairs(alivePlayers) do
 		if playername ~= MPConfig.getNickname() then
 			spectatePlayer(playername)
+			--guihooks.trigger('spectatePlayerByName', playername)
 			break
 		end
 	end

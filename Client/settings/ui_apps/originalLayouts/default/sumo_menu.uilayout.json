@@ -106,13 +106,13 @@
       "appName":"sumomenu",
       "placement":{
         "bottom":0,
-        "height":"540px",
+        "height":"230px",
         "left":0,
         "margin":"auto",
         "position":"absolute",
         "right":0,
         "top":0,
-        "width":"540px"
+        "width":"230px"
       }
     }
   ],
