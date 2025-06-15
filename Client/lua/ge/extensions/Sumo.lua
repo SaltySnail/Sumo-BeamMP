@@ -833,7 +833,7 @@ function updateSumoGameState(data)
 		isPlayerDead = false
 	end
 	if gamestate.gameRunning and time and time == 0 then 
-		guihooks.trigger('sumoStartTimer', gamestate.safezoneLength)
+		--guihooks.trigger('sumoStartTimer', gamestate.safezoneLength)
 		sumoStartTime = sock.gettime()
 		be:queueAllObjectLua("controller.setFreeze(0)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -855,7 +855,6 @@ function updateSumoGameState(data)
 		guihooks.trigger('sumoClearCountdown', 0)
 	end
 
-
 	if gamestate.gameRunning and time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -866,10 +865,7 @@ function updateSumoGameState(data)
 			local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
 			txt = "Sumo Time Left: ".. timeLeft --game is still going
 		end
-		
-		if time % gamestate.safezoneLength == 0 then
-			guihooks.trigger('sumoSyncTimer', gamestate.safezoneLength);
-		end
+
 		if time and time > 0 and time % gamestate.safezoneLength >= gamestate.safezoneLength - 6 and time % gamestate.safezoneLength <= gamestate.safezoneLength - 1 then
 			guihooks.trigger('sumoAnimateCircleSize', gamestate.safezoneLength)
 			if gamestate.safezoneEndAlarm then
@@ -978,6 +974,11 @@ end
 function onPreRender(dt)
 	-- onDrawSumoMenu()
 	if not gamestate.gameRunning then return end
+	--normalize to fit safezoneLength and give a value between 0 and 1 that indicates how far the time is before exploding:
+	if sumoStartTime and gamestate and gamestate.safezoneLength then
+		-- print("Sumo sync timer: " .. sock.gettime() .. " start time: " .. sumoStartTime .. " safezoneLength: " .. gamestate.safezoneLength)
+		guihooks.trigger('sumoSyncTimer', ((sock.gettime() - sumoStartTime) % (gamestate.safezoneLength))/(gamestate.safezoneLength)) -- all in s, but sock.gettime() is with ms precision 
+	end
 	if simTimeAuthority.get ~= 1 then
 		simTimeAuthority.setInstant(1)
 	end
@@ -993,9 +994,6 @@ function onPreRender(dt)
 	local playerVehicle = be:getPlayerVehicle(0)
 	local bb1 = playerVehicle:getSpawnWorldOOBB()
 	local isInsideSafezone = overlapsOBB_OBB(bb1:getCenter(), bb1:getAxis(0) * bb1:getHalfExtents().x, bb1:getAxis(1) * bb1:getHalfExtents().y, bb1:getAxis(2) * bb1:getHalfExtents().z, goalPos, goalVecX, goalVecY, goalVecZ)
-
-
-	sock.gettime() -- FIXME: make this control the sumo UI timer in ms
 
 	-- this checks if player has transistioned from inside to outside the safezone or vice versa or it is the first time checking
 	if not playerVehicle.isInsideSafezone 

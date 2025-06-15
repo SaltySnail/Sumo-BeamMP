@@ -12,8 +12,7 @@ angular.module('beamng.apps')
         restrict: 'EA',
         link: function (scope, element, attrs) {
             var streamsList = ['Sumo'];
-            var endTime = '30';
-            let timers = [];
+            var normalizedValue = 0;
             StreamsManager.add(streamsList);
             scope.$on('$destroy', function () {
                 StreamsManager.remove(streamsList);
@@ -24,57 +23,18 @@ angular.module('beamng.apps')
                     canvas = document.getElementById('circleCanvas');
                     ctx = canvas ? canvas.getContext('2d') : null;
                 }
-            }
+            } 
 
-            function saveScopeDataToLocalStorage() {
-                localStorage.setItem('endTime', scope.endTime);
-            }
-            
-            function updateTime() {
-                time += 0.01;
+            function syncNormalizedValue(value) {
+                normalizedValue = Math.min(Math.max(value, 0), 1); // Clamp between 0–1
                 updateSector();
-                if (time > endTime) {
-                    resetTime();
-                }
-            }
-
-            function resetTime() {
-                time = 0;
-                fillColor = 'white';
-                endAngle = 1.5001 * Math.PI;
-            }
-
-            function syncTime(luatime) {
-                time = luatime;
-                if (time > 0.75 * endTime) {
-                    fillColor = 'red';
-                } else {
-                    fillColor = 'white';
-                }
-                time -= 0.01; // Adjust time to account for the 0.01 increment in updateTime
-                updateTime();
-            }
-
-            function startTimer() {
-                if (timers.length > 0) {
-                    return;
-                }
-                removeTimer(); 
-                timerID = setInterval(updateTime, 10);
-                timers.push(timerID);
             }
 
             function removeTimer() {
-                for (let timer of timers) {
-                    clearInterval(timer);
-                }
-                // clearInterval(timerID);
                 ensureCanvas();
                 if (ctx) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                 }
-                resetTime();
-                updateTime();
             }
 
             function animateCircleSize() {
@@ -137,23 +97,20 @@ angular.module('beamng.apps')
                     ctx.fill();
                 }
 
-                let endAngle = startAngle + (2 * Math.PI * (time/endTime));
+                let endAngle = startAngle + (2 * Math.PI * normalizedValue);
                 let radius = 200;
                 let counterClockwise = false;
-                if (time > 0.75 * endTime) {
+                if (normalizedValue > 0.75) {
                     fillColor = 'red';
+                } else {
+                    fillColor = 'white';
                 }
                 drawCircle();
                 drawSector();
-                // startTimer
-                // if (endAngle > startAngle && endAngle < startAngle + 2 * Math.PI) {
-                //     requestAnimationFrame(updateTime);
-                // }
+
             }
             
-            var time = 0;
             var startAngle = 1.5 * Math.PI;
-            var timerID;
             var fillColor = 'white';
             var canvas;
             var ctx;
@@ -166,8 +123,6 @@ angular.module('beamng.apps')
                     console.error("Canvas element not found.");
                     return;
                 }
-
-                updateTime();
             });
 
             scope.$on('VehicleChange', function (event, data) {
@@ -177,34 +132,15 @@ angular.module('beamng.apps')
                 animateCircleSize();
                 console.log("Animating circle size", data);
             });
-            
-            scope.$on('sumoStartTimer', function (event, data) {
-                console.log(data);
-                endTime = data;
-                saveScopeDataToLocalStorage();
-                startTimer();
-                scope.$apply();
-            });   
 
             scope.$on('sumoRemoveTimer', function (event, data) {
                 removeTimer(); //extra for if the time is still ticking
-                removeTimer();
-                removeTimer();
-                removeTimer();
-                // startTimer();
-                // scope.$apply();
             });
 
             scope.$on('sumoSyncTimer', function (event, data) {
-                syncTime(data);
-                // startTimer();
-                // scope.$apply();
+                syncNormalizedValue(data); // data is the 0-1 value from Lua
             });
 
-            scope.$on('app:resized', function (event, data) {
-                // c.width = data.width;
-                // c.height = data.height;
-            });
         }
     };
 }]);
