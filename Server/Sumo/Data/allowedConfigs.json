@@ -2,7 +2,8 @@
   "Mini Class": [
     "vehicles/miramar/EVENTS_Mirmar_Sumo.pc",
     "vehicles/covet/EVENTS_Covet_Sumo.pc",
-    "vehicles/autobello/EVENTS_Piccolina_Sumo.pc"
+    "vehicles/autobello/EVENTS_Piccolina_Sumo.pc",
+    "vehicles/hopper/Ibishu_Hopper_SumoSpec.pc"
   ],
   "Old School Americans": [
     "vehicles/lansdale/OldSchoolAmericansSumoSpecLandsdale.pc",
@@ -16,7 +17,7 @@
     "vehicles/pessima/OldSchoolAmericansSumoSpecWendover.pc"
   ],
   "Sedan Bangers": [
-    "vehicles/pessima/pessumo.pc",
+    "vehicles/midsize/pessumo.pc",
     "vehicles/sunburst2/sumoburst.pc",
     "vehicles/bx/suhundredBX.pc",
     "vehicles/fullsize/sumarshall.pc",

@@ -9,9 +9,10 @@ local mod = math.fmod
 local rand = math.random
 
 local gamestate = {players = {}, settings = {}}
+local alivePlayers = {}
 
 --blocked inputs when dead
-local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					         "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 local allInputActions = 								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
@@ -64,6 +65,9 @@ local debugView = false
 -- local windowOpen = im.BoolPtr(true)
 -- local ffi = require('ffi')
 
+local gameRunning = false -- this is dumb but needed for comparing if gameRunning state has changed
+
+local playerPressedReset = true -- primed because the function isn't called yet when this happens
 local teleported = false
 local joinNextRound = false
 -- local joinNextRoundCheckboxState = im.BoolPtr(joinNextRound)
@@ -72,23 +76,16 @@ local autoSpectate = true
 local motd = {}
 motd.title = "This server is running Sumo"
 motd.description = [[
-    [h2]Rules[/h2]
-			[color=#AFAF00]1. Join by Spawning:[/color][br] Spawn a car to participate in the game. Use 'Join next round' to auto spawn in the next round.
-			[color=#AFAF00]2. Automatic Start:[/color][br] The game begins once two or more players are active (configurable).
-			[color=#AFAF00]3. Safezone Mechanics:[/color][br] Every 30 seconds (depending on config), a new safezone spawns at 70% the size of the last one.
-			[color=#AFAF00]4. Explosive Elimination:[/color][br] If you're outside the zone when the timer ends, you'll explode!
-			[color=#AFAF00]5. Reset Rule (Enforced):[/color][br] Resets are only allowed if you're outside the safezone and moving slower than 20 km/h.
-			[color=#AFAF00]6. No Resets After Death:[/color][br] If you're eliminated, all reset functions are locked until the round ends.
-			[color=#AFAF00]7. Victory Conditions:[/color][br] Last player standing wins OR: All players inside the final zone when the last timer ends.
-			[color=#AFAF00]8. Scoring:[/color][br] Survive a safezone rotation to earn 1 point. Win the round to earn 10 points.
-    [br]
-	[h2]Controls[/h2]
-	[list]
-		[*] Press ctrl+s to toggle the Sumo menu.
-		[*] To join an active game, spawn a car in between rounds, or enable the 'Join next round' checkbox in the Sumo menu.
-	[/list]
-    [br][br]
-    [color=#7F7F00][i][right]Brought to you by Julianstap & the BeamMP team![/right][/i][/color]
+  [color=#8D0303]Join by Spawning:[/color][br] Spawn any Car to join the game. [br]If a game is already in progress, press [b]ctrl+S[/b] to open the menu and check [b]Join Next Round[/b] to auto-spawn when the current game ends.
+  [color=#8D0303]Automatic Start:[/color][br] The game starts automatically when five or more players have joined.
+  [color=#8D0303]Safezone Mechanics:[/color][br] Every 30 seconds, a new smaller safezone appears.
+  [color=#8D0303]Explosive Elimination:[/color][br] Still outside the zone when the timer runs out? You’ll explode!
+  [color=#8D0303]Vehicle Reset:[/color][br] Your car resets automatically once you've survived a safezone.
+  [color=#8D0303]No Resets After Death:[/color][br] Once eliminated, all reset functions are disabled until the round ends.
+  [color=#8D0303]Victory Conditions:[/color][br] You win by being the last player standing, or by being among the survivors after 5 minutes.
+  [color=#8D0303]Scoring:[/color][br] You earn 1 point for every safezone you survive. Winners get bonus points equal to zones survived.
+
+  [color=#7F7F00][i][right]Brought to you by Julianstap & the BeamMP team![/right][/i][/color]
 ]]
 motd.type = "htmlOnly" -- htmlOnly: simple (large) motd || selectableVehicle: motd with the ability to select a vehicle
 motd.enabled = true
@@ -137,14 +134,46 @@ function angle2D(vec1, vec2) --in degrees, because I thought it would be less co
 	return angle * (180 / math.pi)
 end
 
-function sumoSpectateAlivePlayer()
+local function updateAlivePlayers()
+	alivePlayers = {}
 	for playername, player in pairs(gamestate.players) do
-		if not player.dead then
-			spectatingPlayer = playername
-			MPVehicleGE.focusCameraOnPlayer(playername)
-			ogCamBeforeSpectating = core_camera.getActiveCamName(0)
-			core_camera.setByName(0,"external")
-			core_camera.resetCamera(0)
+  	if not player.dead then
+    	table.insert(alivePlayers, playername)
+  	end
+	end
+	guihooks.trigger('setSumoPlayerList', alivePlayers)
+end
+
+local function getPlayerList()
+	updateAlivePlayers()
+end
+
+local function spectatePlayer(playername)
+	updateAlivePlayers()
+	--if not alivePlayers[playername] then return end
+	spectatingPlayer = playername
+	guihooks.trigger('spectatePlayerByName', playername)
+	ogCamBeforeSpectating = core_camera.getActiveCamName(0)
+	if HeliCam then
+		local gameVehID = 0
+		if not MPVehicleGE.getPlayerByName(playername) then print("No player by the name of " .. playername .. " the player list is: " .. dump(MPVehicleGE.getPlayers)) end 
+		for _, vehicleData in pairs(MPVehicleGE.getPlayerByName(playername).vehicles) do gameVehID = vehicleData.gameVehicleID break end
+		HeliCam.setAllInOne(gameVehID, 3, 25, 25, false)
+		HeliCam.toggleUiRender(false) --somehow need to call this twice to not make the UI spawn
+		HeliCam.toggleUiRender(false)
+	else
+		MPVehicleGE.focusCameraOnPlayer(playername)
+		core_camera.setByName(0,"external")
+		core_camera.resetCamera(0)
+	end
+end
+
+function sumoSpectateAlivePlayer()
+	updateAlivePlayers()
+	--guihooks.trigger('setSumoPlayerList', alivePlayers) 
+	for playername ,_ in pairs(alivePlayers) do
+		if playername ~= MPConfig.getNickname() then
+			spectatePlayer(playername)
 			break
 		end
 	end
@@ -153,6 +182,17 @@ end
 function sumoStopSpectating()
 	spectatingPlayer = ""
 	MPVehicleGE.focusCameraOnPlayer(MPConfig.getNickname())
+	if HeliCam then
+		HeliCam.despawnHeli()
+	end
+	core_camera.setByName(0,ogCamBeforeSpectating) -- sometimes this doesn't apply, just spam the fucker for now
+	core_camera.resetCamera(0)
+	core_camera.setByName(0,ogCamBeforeSpectating)
+	core_camera.resetCamera(0)
+	core_camera.setByName(0,ogCamBeforeSpectating)
+	core_camera.resetCamera(0)
+	core_camera.setByName(0,ogCamBeforeSpectating)
+	core_camera.resetCamera(0)
 	core_camera.setByName(0,ogCamBeforeSpectating)
 	core_camera.resetCamera(0)
 end
@@ -567,25 +607,26 @@ function handleResetState()
 end
 
 -- Function to explode a car by its vehicle ID
-function explodeSumoCar(vehID) -- FIXME: make this use the players name or multiplayer vehicle ID, this ID is prob different on other's their PC
-	for vid, veh in activeVehiclesIterator() do
-		if vid == tonumber(vehID) then
+function explodeSumoCar(playername)
+	print('explodeSumoCar called: ' .. playername)
+	for vid, vehData in pairs(MPVehicleGE.getVehicles()) do
+		-- local veh = be:getObjectByID(vehData.gameVehicleID)
+		local serverVeh = MPVehicleGE.getVehicleByGameID(vehData.gameVehicleID)
+		print('explodeSumoCar - checking if player ' .. playername .. ' is the same as ' .. serverVeh.ownerName .. ' \n ' .. dump(veh))
+		if serverVeh.ownerName == playername then
+			local veh = be:getObjectByID(vehData.gameVehicleID)
 			veh:queueLuaCommand("fire.explodeVehicle()")
-			-- veh:queueLuaCommand("fire.igniteVehicle()") -- TODO make sure this is not causing the issues and update random about it
-			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-				veh:queueLuaCommand("beamstate.breakAllBreakgroups()")
-				print(vid .. " " .. vehID)
-				if vid == vehID then
-					disallowSumoResets(allInputActions)
-					isPlayerDead = true
-					playerDiedAtTime = gamestate.time 
-					local vehicle = MPVehicleGE.getVehicleByGameID(vid)
-					if vehicle and vehicle.ownerName == spectatingPlayer then
-						sumoSpectateAlivePlayer() -- spectate a new player when the current one dies
-					end
-					if TriggerServerEvent and vehicle and vehicle.ownerName then
-						TriggerServerEvent("onSumoPlayerExplode", vehicle.ownerName) 
-					end
+			veh:queueLuaCommand("beamstate.breakAllBreakgroups()")
+			veh:queueLuaCommand("fire.igniteVehicle()") -- TODO make sure this is not causing the issues and update random about it
+			if MPConfig.getNickname() == serverVeh.ownerName then
+				disallowSumoResets(allInputActions)
+				isPlayerDead = true
+				playerDiedAtTime = gamestate.time 
+				if autoSpectate and serverVeh and serverVeh.ownerName == spectatingPlayer then
+					sumoSpectateAlivePlayer() -- spectate a new player when the current one dies
+				end
+				if TriggerServerEvent and serverVeh and serverVeh.ownerName then
+					TriggerServerEvent("onSumoPlayerExplode", serverVeh.ownerName) 
 				end
 			end
 		end
@@ -612,7 +653,7 @@ function onSumoTrigger(data)
 			if isLocalVehicle then
 				for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 					-- mark player to not explode
-					if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", vehID) end
+					if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", vehData.ownerName) end
 					isPlayerInCircle = true
 				end
 			end
@@ -631,7 +672,7 @@ function onSumoTrigger(data)
 			end
 			if isLocalVehicle then
 				for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-					if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode",  vehID) end
+					if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehData.ownerName) end
 					isPlayerInCircle = false
 				end
 			end
@@ -641,7 +682,7 @@ function onSumoTrigger(data)
 		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 		end
 	elseif string.find(trigger, "outOfBoundTrigger") then
-		if gamestate.time < 0 then return end
+		if gamestate and gamestate.time and gamestate.time < 0 then return end
 		--explode player
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then
@@ -653,8 +694,8 @@ function onSumoTrigger(data)
 		end
 		if isLocalVehicle then
 			for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-				explodeSumoCar(vehID)
-				if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehID) end
+				explodeSumoCar(vehData.ownerName)
+				if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehData.ownerName) end
 			end
 		end
 		-- print( "outOfBoundTrigger was triggered")
@@ -735,7 +776,11 @@ end
 function updateSumoGameState(data)
 	print('updateSumoGameState called: ' .. data)
 	mergeSumoTable(jsonDecode(data),gamestate)
-
+--	if gameRunning ~= gamestate.gameRunning then
+		gameRunning = gamestate.gameRunning
+		be:queueAllObjectLua("Sumo.setSumoGameRunning(".. tostring(gameRunning) ..")")
+--	end
+	
 	local time = 0
 
 	if gamestate.time then time = gamestate.time-1 end
@@ -755,7 +800,7 @@ function updateSumoGameState(data)
 	if gamestate.gameRunning and gamestate.randomVehicles and time and time >= gamestate.randomVehicleStartWaitTime + 12 and time <= gamestate.randomVehicleStartWaitTime + 22 then 
 		MPVehicleGE.applyQueuedEvents()
 	end
-	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == gamestate.randomVehicleStartWaitTime + 22 then 
+	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == -8 then 
 		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)
 	end
@@ -800,7 +845,7 @@ function updateSumoGameState(data)
 	if gamestate.gameRunning and time and time < 0 then
 		txt = "Game starts in "..math.abs(time).." seconds"
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehID) end
+			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehData.ownerName) end
 		end
 	elseif gamestate.gameRunning and not gamestate.gameEnding and time or gamestate.endtime and (gamestate.endtime - time) > 9 then
 		if gamestate.roundLength and time then
@@ -1220,22 +1265,73 @@ function spawnSumoRandomVehicle()
 end
 
 function onVehicleResetted(vehID)
-	-- print( "onVehicleResetted called")
+	print( "onVehicleResetted called")
+  if not playerPressedReset then 
+  	playerPressedReset = true
+  	return
+  end
 	if MPVehicleGE and isPlayerInReverseGravity then -- roll the vehicle so the wheels touch the ground when resetting in the reverse gravity area
 		if MPVehicleGE.isOwn(vehID) then
 			local veh = be:getObjectByID(reverseGravitySubjectId)
-			local upVector = veh:getDirectionVectorUp() * (180/math.pi)
-			--print(dump(upVector))
-			if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
-				local pos = veh:getPosition()
-				local rot = veh:getRotation()
-				rot = rot:toEuler() * (180/math.pi)
-				--print(dump(rot))
-				rot.y = rot.y + 180
-				rot = rot * (math.pi/180)
-				--print("Rot is now: " ..  dump(rot))
-				rot = quatFromEuler(rot.x, rot.y, rot.z)
-				veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+			-- local upVector = veh:getDirectionVectorUp() --* (180/math.pi)
+			-- --print(dump(upVector))
+			-- local worldUpVsVehUp = upVector:dot(vec3(0, 0, 1))
+			--
+			-- -- if worldUpVsVehUp > 0.9 then --reasonably upright
+			-- -- 	
+			-- -- end
+			-- -- if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+			-- -- 	local pos = veh:getPosition()
+			-- -- 	local rot = veh:getRotation()
+			-- -- 	rot = rot:toEuler() * (180/math.pi)
+			-- -- 	--print(dump(rot))
+			-- -- 	rot.y = rot.y + 180
+			-- -- 	rot = rot * (math.pi/180)
+			-- -- 	--print("Rot is now: " ..  dump(rot))
+			-- -- 	rot = quatFromEuler(rot.x, rot.y, rot.z)
+			-- -- 	veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+			-- -- end		
+			-- -- if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
+			-- local pos = veh:getPosition()
+			-- local rot = veh:getRotation()
+			-- rot = rot:toEuler() * (180/math.pi)
+			-- -- 	--print(dump(rot))
+			-- -- 	rot.y = rot.y + 180
+			-- -- 	rot = rot * (math.pi/180)
+			-- -- 	--print("Rot is now: " ..  dump(rot))
+			-- rot = quatFromEuler(rot.x, rot.y, rot.z)
+			-- veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+			-- -- end
+			-- --
+			-- Get current rotation and position
+			local currentRot = quat(veh:getRotation())
+			local currentPos = veh:getPosition()
+
+			-- Get vehicle's up vector
+			-- local vehicleUp = currentRot:xform(vec3(0, 0, 1))
+			local vehicleUp = currentRot * vec3(0, 0, 1)
+			local targetUp = vec3(0, 0, -1) -- world down for upside down flip
+			local dot = vehicleUp:dot(targetUp)
+			print("Dot is: " .. dot)
+			--if dot > 0 then return end
+
+			-- Calculate rotation to align up vector with world down
+			local rotAxis = vehicleUp:cross(targetUp)
+			local angle = math.acos(math.min(math.max(dot, -1), 1)) -- Clamp dot for safety
+
+			local newRot = currentRot 
+			print("Angle is: " .. angle)
+			if angle > 0.001 then
+    		rotAxis = rotAxis:normalized()
+    		local alignQuat = quatFromAxisAngle(rotAxis, angle)
+    		newRot = alignQuat * currentRot
+    		-- newRot = quat(vec3(veh:getRotation().x, 0, 1))
+    		-- newRot = quatFromEuler(veh:getRotation().x, 0, -1)
+    		
+				-- Apply position and new rotation
+				playerPressedReset = false -- make sure we now when this function is called recursively and cancel that
+				veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+				return
 			end
 		end
 	end
@@ -1297,8 +1393,12 @@ local function onWorldReadyState(state) -- FIXME: re-enable this to make the MOT
 end
 
 local function onScenarioUIReady(state)
+	print("        onScenarioUIReady called " .. tostring(state))
 	if state == "start" then
 	 	guihooks.trigger('ScenarioChange', {name = motd.title, description = motd.description, introType = motd.type})
+  end
+  if state == "play" then	
+ 		guihooks.trigger("ChangeState", {state = "play"}) 
   end
 end
 
@@ -1327,12 +1427,14 @@ end
 local function setJoinNextRound(state)
 	print("setJoinNextRound called")
 	joinNextRound = state
+	MP.TriggerServerEvent('setJoinNextRound', state)
 end
 
 local function getSumoMenuState()
 	setSumoMenuSettings()
 end
 
+local ogRemoveCurrent = core_vehicles.removeCurrent
 core_vehicles.removeCurrent = function() -- overwrite in-game function to not remove other players vehicles
 	local isLocalVehicle = false
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -1342,13 +1444,49 @@ core_vehicles.removeCurrent = function() -- overwrite in-game function to not re
 		end
 	end
 	if not isLocalVehicle then return end
-	local vehicle = getPlayerVehicle(0)
-	if vehicle then
-	  vehicle:delete()
-	  if be:getEnterableObjectCount() == 0 then
-		commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicle
-	  end
+	ogRemoveCurrent()
+end
+
+core_vehicles.removeAll = function()
+  if MPGameNetwork then
+		for vehID, serverVeh in pairs(MPVehicleGE.getOwnMap()) do
+			local veh = be:getObjectByID(vehID)
+    	if veh then
+    		commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
+				veh:delete()
+			end
+		end
+		return
+  end
+  local vehicle = getPlayerVehicle(0)
+  if vehicle then
+    commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
+  end
+  for i = be:getObjectCount()-1, 0, -1 do
+    be:getObject(i):delete()
+  end
+end
+
+core_vehicles.removeAllExceptCurrent = function()
+	local vid = be:getPlayerVehicleID(0)
+	if MPGameNetwork then
+		for vehID, serverVeh in pairs(MPVehicleGE.getOwnMap()) do
+			if vehID ~= vid then
+				local veh = be:getObjectByID(vehID)
+    		if veh then
+    			commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
+					veh:delete()
+				end
+			end
+		end
+		return
 	end
+  for i = be:getObjectCount()-1, 0, -1 do
+    local veh = be:getObject(i)
+    if veh:getId() ~= vid then
+      veh:delete()
+    end
+  end
 end
 
 extensions.load("core_quickAccess") -- ensure this is loaded as it is normally only loaded when switching to a mode (like freeroam)
@@ -1443,6 +1581,61 @@ M.setAutoSpectate = setAutoSpectate
 M.setJoinNextRound = setJoinNextRound
 M.setSumoMenuSettings = setSumoMenuSettings
 M.getSumoMenuState = getSumoMenuState
+M.updateAlivePlayers = updateAlivePlayers
+M.getPlayerList = getPlayerList
+M.spectatePlayer = spectatePlayer
 -- M.onSumoVehicleSpawned = onSumoVehicleSpawned
 -- M.onSumoVehicleDeleted = onSumoVehicleDeleted
 return M
+--
+-- local veh = be:getObjectByID(be:getPlayerVehicleID(0));
+-- local eulerRot = quat(veh:getRotation()):toEulerYXZ();
+-- local newRot = quatFromEuler(eulerRot.x, 3.1415,eulerRot.z);
+-- local currentPos = veh:getPosition();
+-- veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+--
+-- local veh = be:getObjectByID(be:getPlayerVehicleID(0));
+-- local eulerRot = quat(veh:getRotation()):toEulerYXZ();
+-- local newRot = quatFromEuler(eulerRot.x, eulerRot.y + math.pi, eulerRot.z);
+-- local currentPos = veh:getPosition();
+-- veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+--
+--
+-- local veh = be:getObjectByID(be:getPlayerVehicleID(0));
+-- local currentRot = quat(veh:getRotation());
+-- local currentPos = veh:getPosition();
+-- local vehicleUp = currentRot * vec3(0, 0, 1);
+-- local targetUp = vec3(0, 0, -1);
+-- local dot = vehicleUp:dot(targetUp);
+-- local rotAxis = vehicleUp:cross(targetUp);
+-- local angle = math.acos(math.min(math.max(dot, -1), 1));
+-- if angle > 0.001 then
+--     local alignQuat = quatFromAxisAngle(rotAxis:normalized(), angle);
+--     local newRot = alignQuat * currentRot;
+--     veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+-- end
+--
+-- local veh = be:getObjectByID(be:getPlayerVehicleID(0));
+-- local eulerRot = quat(veh:getRotation()):toEulerYXZ();
+-- local newRot = quatFromEuler(eulerRot.x, eulerRot.y,eulerRot.z);
+-- local currentPos = veh:getPosition();
+-- veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+--
+--
+-- local veh=be:getObjectByID(be:getPlayerVehicleID(0));
+-- local pos=veh:getPosition();
+-- local rot=quat(veh:getRotation());
+-- local forward=(rot*vec3(0,1,0)):normalized();
+-- local up=vec3(0,0,1);
+-- local right=forward:cross(up):normalized();
+-- forward=up:cross(right):normalized();
+-- local newRot=quatFromAxes(right,forward,up);
+-- veh:setPositionRotation(pos.x,pos.y,pos.z,newRot.x,newRot.y,newRot.z,newRot.w)
+--
+-- local veh=be:getObjectByID(be:getPlayerVehicleID(0));
+-- local pos=veh:getPosition();
+-- local rot=quat(veh:getRotation());
+-- local forward=(rot*vec3(0,1,0)):normalized();
+-- local up=vec3(0,0,1);
+-- local newRot=quatFromDir(forward,up);
+-- veh:setPositionRotation(pos.x,pos.y,pos.z,newRot.x,newRot.y,newRot.z,newRot.w)

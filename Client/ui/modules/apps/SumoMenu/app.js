@@ -11,30 +11,8 @@ angular.module('beamng.stuff')
           color: #fff;
           font-family: sans-serif;
         ">
-        
-        <!-- Button Row -->
-        <div style="margin-bottom:12px; width:100%;">
-          <button
-            ng-click="spectateAlivePlayer()"
-            style="
-              width:100%;
-              padding:8px;
-              border:none;
-              border-radius:4px;
-              background:#444;
-              color:#fff;
-              cursor:pointer;
-              transition:background 0.2s;
-            "
-            ng-init="pressBtn=false"
-            ng-mousedown="pressBtn=true"
-            ng-mouseup="pressBtn=false"
-            ng-style="{'background': pressBtn ? '#555' : '#444'}">
-            Spectate Alive Player
-          </button>
-        </div>
-        
-        <!-- Checkbox Row 1 -->
+
+        <!-- Join Next Round -->
         <div style="margin-bottom:12px;">
           <label style="display:flex; align-items:center; font-size:14px; cursor:pointer;">
             <input
@@ -45,8 +23,36 @@ angular.module('beamng.stuff')
             Join Next Round
           </label>
         </div>
-        
-        <!-- Checkbox Row 2 -->
+
+        <!-- Spectating Player -->
+        <div style="margin-bottom:12px;">
+          <div style="font-size:14px; margin-bottom:6px;">Spectating:</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button ng-click="prevPlayer()" style="background:none; border:none; color:white; font-size:20px;">&#x276E;</button>
+            <div style="flex-grow:1; text-align:center;">{{ currentSpectatingPlayer || 'Select player' }}</div>
+            <button ng-click="nextPlayer()" style="background:none; border:none; color:white; font-size:20px;">&#x276F;</button>
+          </div>
+        </div>
+
+        <!-- Stop Spectating Button -->
+        <div style="margin-bottom:12px;">
+          <button
+            ng-click="stopSpectating()"
+            style="
+              width:100%;
+              padding:8px;
+              border:none;
+              border-radius:4px;
+              background:#444;
+              color:#fff;
+              cursor:pointer;
+              transition:background 0.2s;
+            ">
+            Stop spectating
+          </button>
+        </div>
+
+        <!-- Auto Spectate -->
         <div>
           <label style="display:flex; align-items:center; font-size:14px; cursor:pointer;">
             <input
@@ -57,54 +63,76 @@ angular.module('beamng.stuff')
             Auto Spectate
           </label>
         </div>
-        
+
       </div>
     `,
     restrict: 'E',
     link: function(scope) {
-      // Initialize settings object
       scope.settings = {
         joinNextRound: false,
         autoSpectate: true
       };
 
-      scope.$on('setSumoMenuSettings', function(_, settings) {
-        scope.settings = settings;
+      scope.players = [];
+      scope.currentPlayerIndex = 0;
+      scope.currentSpectatingPlayer = '';
+
+      // Receive player list from Lua
+      scope.$on('setSumoPlayerList', function(_, players) {
+        scope.players = players || [];
+        scope.updateSpectatingDisplay();
         scope.$apply();
       });
 
-      //scope.$on('setSumoMenuSettingsAutoSpectate', function(autoSpectate)) {
-      //  scope.settings.autoSpectate = autoSpectate;
-       // scope.$apply();
-      //};
+      scope.$on('spectatePlayerByName', function(_, playerName) {
+        if (Array.isArray(scope.players)) {
+          const index = scope.players.findIndex(p => p === playerName);
+          if (index !== -1) {
+            scope.currentPlayerIndex = index;
+            scope.updateSpectatingDisplay();
+            console.log('Spectating player:', playerName);
+          } else {
+            console.warn('Player not found in alive list:', playerName);
+          }
+        } else {
+          console.error('Player list is not an array:', scope.players);
+        }
+        scope.$apply();
+      });
 
-     // scope.$on('setSumoMenuSettingsJoinNextRound', function(joinNextRound)) {
-      //  scope.settings.joinNextRound = joinNextRound;
-      //  scope.$apply();
-      //};
+      scope.prevPlayer = function() {
+        if (scope.players.length === 0) return;
+        scope.currentPlayerIndex = (scope.currentPlayerIndex - 1 + scope.players.length) % scope.players.length;
+        scope.updateSpectatingDisplay();
+      };
 
-      scope.spectateAlivePlayer = function() {
-        bngApi.engineLua(
-          'extensions.Sumo.sumoSpectateAlivePlayer()',
-          (res) => { console.log('spectateAlive OK', res); }
-        );
+      scope.nextPlayer = function() {
+        if (scope.players.length === 0) return;
+        scope.currentPlayerIndex = (scope.currentPlayerIndex + 1) % scope.players.length;
+        scope.updateSpectatingDisplay();
+      };
+
+      scope.updateSpectatingDisplay = function() {
+        scope.currentSpectatingPlayer = scope.players[scope.currentPlayerIndex] || '';
+        bngApi.engineLua(`extensions.Sumo.spectatePlayer("${scope.currentSpectatingPlayer}")`);
+      };
+
+      scope.stopSpectating = function() {
+        scope.currentSpectatingPlayer = '';
+        bngApi.engineLua(`extensions.Sumo.sumoStopSpectating()`);
       };
 
       scope.setJoinNextRound = function(state) {
-        bngApi.engineLua(
-          `extensions.Sumo.setJoinNextRound(${state})`,
-          (res) => { console.log('setJoinNextRound OK', res); }
-        );
+        bngApi.engineLua(`extensions.Sumo.setJoinNextRound(${state})`);
       };
 
       scope.setAutoSpectate = function(state) {
-        bngApi.engineLua(
-          `extensions.Sumo.setAutoSpectate(${state})`,
-          (res) => { console.log('setAutoSpectate OK', res); }
-        );
+        bngApi.engineLua(`extensions.Sumo.setAutoSpectate(${state})`);
       };
 
       bngApi.engineLua('extensions.Sumo.getSumoMenuState()');
+      bngApi.engineLua('extensions.Sumo.getPlayerList()'); // Trigger Lua to send the list
     }
   };
 }]);
+

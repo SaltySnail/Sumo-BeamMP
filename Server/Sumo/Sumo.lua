@@ -119,7 +119,7 @@ function onInit()
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
-
+	MP.RegisterEvent("setJoinNextRound", "setJoinNextRound")
 
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
@@ -312,6 +312,7 @@ end
 function sumoGameSetup()
 	math.randomseed(os.time())
 	onSumoArenaChange()
+	alivePlayers = {}
 	if teams then
 		for k,v in pairs(possibleTeams) do
 			chosenTeams[v] = {}
@@ -364,7 +365,8 @@ function sumoGameSetup()
 		if MP.IsPlayerConnected(ID) then
 			local player = {}
 			if not gameState.players[Name] then gameState.players[Name] = {} end
-			if randomVehicles then		
+			if not (gameState.players[Name].joinNextRound or MP.GetPlayerVehicles(ID)) then gameState.players[Name] = nil end -- clear table as the player doesn't have vehicles or joinNextRound selected
+			if randomVehicles and (MP.GetPlayerVehicles(ID) or gameState.players[Name].joinNextRound) then		
 				print("Chosen class: " .. class)
 				gameState.players[Name].chosenConfig = allowedConfigs[class][rand(1,#allowedConfigs[class])]
 				print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
@@ -423,10 +425,11 @@ function sumoGameEnd(reason)
 				for i=1,#alivePlayers do
 					MP.SendChatMessage(-1, alivePlayers[i])
 					if scoringSystem then
+						if not gameState.players[alivePlayers[i]].survivedSafezones then gameState.players[alivePlayers[i]].survivedSafezones = 0 end 
 						if gameState.players[alivePlayers[i]].score then
-							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 10
+							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + gameState.players[alivePlayers[i]].survivedSafezones
 						else
-							gameState.players[alivePlayers[i]].score = 10
+							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].survivedSafezones
 						end
 						gameState.players[alivePlayers[i]].isRoundWinner = true
 					end
@@ -475,6 +478,7 @@ function sumoGameEnd(reason)
 		MP.TriggerClientEvent(-1, "onSumoShowScoreboard", Util.JsonEncode(data))
 		saveAddedScores()
 	end
+	alivePlayers = {}
 end
 
 function showSumoPrefabs(player, goals) --shows the prefabs belonging to this map and this arena
@@ -659,16 +663,21 @@ function sumoGameRunningLoop()
 	end
 	if gameState.gameRunning then
 		if gameState.time == goalEndTime then
-			for vehID, explode in pairs(vehiclesToExplode) do
+			for playername, explode in pairs(vehiclesToExplode) do
 				if explode then
-					MP.TriggerClientEvent(-1, "explodeSumoCar", vehID)
-					vehiclesToExplode[vehID] = false
+					MP.TriggerClientEvent(-1, "explodeSumoCar", playername)
+					vehiclesToExplode[playername] = false
 				end
 			end
 			MP.TriggerClientEvent(-1, "removeSumoPrefabs", "goal")
 			if #alivePlayers > 0 then
 				for i=1,#alivePlayers do
 					if scoringSystem then
+						if gameState.players[alivePlayers[i]].survivedSafezones then
+							gameState.players[alivePlayers[i]].survivedSafezones = gameState.players[alivePlayers[i]].survivedSafezones + 1
+						else
+							gameState.players[alivePlayers[i]].survivedSafezones = 1
+						end					
 						if gameState.players[alivePlayers[i]].score then
 							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 1
 						else
@@ -716,7 +725,7 @@ function sumoTimer()
 			return
 		end
 		autoStartTimer = autoStartTimer + 1
-		MP.SendChatMessage(-1, "New round starts in: " .. 30 - autoStartTimer .. "s")
+		MP.SendChatMessage(-1, "Waiting to start next round for: " .. 30 - autoStartTimer .. "s \n Spawn a car or press ctrl+s and check 'Join Next Round' to join")
 		if autoStartTimer >= 30 then
 			autoStartTimer = 0
 			selectRandomArena()
@@ -780,6 +789,7 @@ end
 --called whenever a player disconnects from the server
 function onPlayerDisconnect(playerID)
 	gameState.players[MP.GetPlayerName(playerID)] = nil
+	players[MP.GetPlayerName(playerID)] = nil
 end
 
 --called whenever a player sends a chat message
@@ -881,7 +891,7 @@ end
 -- 	end
 -- end
 function onSumoPlayerExplode(playerID, playerName)
-	-- print(playerName .. "   " .. dump(gameState))
+	print(playerName .. "   " .. dump(gameState))
 	gameState.players[playerName].dead = true
 end
 
@@ -889,14 +899,14 @@ function setSumoGoalCount(playerID, data)
 	goalPrefabCount = tonumber(data)
 end
 
-function markSumoVehicleToExplode(playerID, vehID)
-	vehiclesToExplode["" .. vehID] = true
-	-- print("Veh marked for exploding: " .. vehID)
+function markSumoVehicleToExplode(playerID, playername)
+	vehiclesToExplode["" .. playername] = true
+  --print("Veh marked for exploding: " .. playername)
 end
 
-function unmarkSumoVehicleToExplode(playerID, vehID)
-	vehiclesToExplode["" .. vehID] = false
-	-- print("Veh unmarked for exploding: " .. vehID)
+function unmarkSumoVehicleToExplode(playerID, playername)
+	vehiclesToExplode["" .. playername] = false
+  --print("Veh unmarked for exploding: " .. playername)
 end
 
 function selectRandomArena()
@@ -985,6 +995,10 @@ function sumoSaveArena(playerID, data)
 	file:close()
 end
 
+local function setJoinNextRound(playerID, state)
+	gameState.players[MP.GetPlayerName(playerID)].joinNextRound = state
+end
+
 M.onInit = onInit
 M.onUnload = onUnload
 
@@ -1028,5 +1042,6 @@ M.SUMO = SUMO
 M.sumoSaveArena = sumoSaveArena
 M.loadScores = loadScores
 M.saveAddedScores = saveAddedScores
+M.setJoinNextRound = setJoinNextRound
 
 return M

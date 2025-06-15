@@ -5,5 +5,5 @@
     "blockEditor":false,
     "safezoneEndAlarm":true,
     "randomVehicles":true,
-    "playersNeededForGame":2
+    "playersNeededForGame": 2
 }
