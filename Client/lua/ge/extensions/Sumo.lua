@@ -1,5 +1,4 @@
 local M = {}
--- TODO: FIXME: PLS: uncomment blockEditor & console and uncomment reset stuff & uncomment closeAllMenus() stuff
 
 local sock = require('socket')
 local sumoStartTime
@@ -79,14 +78,14 @@ local autoSpectate = true
 local motd = {}
 motd.title = "This server is running Sumo"
 motd.description = [[
-  [color=#8D0303]Join by Spawning:[/color][br] Spawn any Car to join the game. [br]If a game is already in progress, press [b]ctrl+S[/b] to open the menu and check [b]Join Next Round[/b] to auto-spawn when the current game ends.
-  [color=#8D0303]Automatic Start:[/color][br] The game starts automatically when five or more players have joined.
-  [color=#8D0303]Safezone Mechanics:[/color][br] Every 30 seconds, a new smaller safezone appears.
-  [color=#8D0303]Explosive Elimination:[/color][br] Still outside the zone when the timer runs out? You’ll explode!
-  [color=#8D0303]Vehicle Reset:[/color][br] Your car resets automatically once you've survived a safezone.
-  [color=#8D0303]No Resets After Death:[/color][br] Once eliminated, all reset functions are disabled until the round ends.
-  [color=#8D0303]Victory Conditions:[/color][br] You win by being the last player standing, or by being among the survivors after 5 minutes.
-  [color=#8D0303]Scoring:[/color][br] You earn 1 point for every safezone you survive. Winners get bonus points equal to zones survived.
+  [color=#8D8300]Join by Spawning:[/color][br] Spawn any Car to join the game. [br]If a game is already in progress, press [b]ctrl+S[/b] to open the menu and check [b]Join Next Round[/b] to auto-spawn when the current game ends.
+  [color=#8D8300]Automatic Start:[/color][br] The game starts automatically when five or more players have joined.
+  [color=#8D8300]Safezone Mechanics:[/color][br] Every 30 seconds, a new smaller safezone appears.
+  [color=#8D8300]Explosive Elimination:[/color][br] Still outside the zone when the timer runs out? You’ll explode!
+  [color=#8D8300]Vehicle Reset:[/color][br] To reset after surviving a safezone, [b]hold the reset in place button[/b] until the progress bar fills—your car will then reset automatically.
+  [color=#8D8300]No Resets After Death:[/color][br] Once eliminated, all reset functions are disabled until the round ends.
+  [color=#8D8300]Victory Conditions:[/color][br] You win by being the last player standing, or by being among the survivors after 5 minutes.
+  [color=#8D8300]Scoring:[/color][br] You earn 1 point for every safezone you survive. Winners get bonus points equal to zones survived.
 
   [color=#7F7F00][i][right]Brought to you by Julianstap & the BeamMP team![/right][/i][/color]
 ]]
@@ -202,15 +201,7 @@ function sumoStopSpectating()
 		HeliCam.despawnHeli()
 	end
 	print(ogCamBeforeSpectating)
-	core_camera.setByName(0,ogCamBeforeSpectating) -- sometimes this doesn't apply, just spam the fucker for now
-	core_camera.resetCamera(0)
-	core_camera.setByName(0,ogCamBeforeSpectating)
-	core_camera.resetCamera(0)
-	core_camera.setByName(0,ogCamBeforeSpectating)
-	core_camera.resetCamera(0)
-	core_camera.setByName(0,ogCamBeforeSpectating)
-	core_camera.resetCamera(0)
-	core_camera.setByName(0,ogCamBeforeSpectating)
+	core_camera.setByName(0,ogCamBeforeSpectating) 
 	core_camera.resetCamera(0)
 end
 
@@ -298,6 +289,9 @@ function disallowSumoResets(data)
 end
 
 function spawnSumoGoal(filepath, offset, rotation) 
+	if sumoStartTime then
+		sumoStartTime = sock.gettime() -- if sumo already started, sync on every safezone length
+	end
 	goalPrefabActive = true
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
@@ -1455,7 +1449,7 @@ end
 local function setJoinNextRound(state)
 	print("setJoinNextRound called")
 	joinNextRound = state
-	MP.TriggerServerEvent('setJoinNextRound', state)
+	MP.TriggerServerEvent('Sumo.setJoinNextRound', state) --FIXE: fix later
 end
 
 local function getSumoMenuState()

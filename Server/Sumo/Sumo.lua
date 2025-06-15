@@ -347,10 +347,12 @@ function sumoGameSetup()
 	if randomVehicles then
 		local keys = {}
 		for k,_ in pairs(allowedConfigs) do
-			table.insert(keys, k)
+			if not k == class then
+				table.insert(keys, k)
+			end
 		end
 		class = keys[rand(1,#keys)]
-	end
+		end
 	for ID,Name in pairs(MP.GetPlayers()) do
 		if teams then
 			if teamCount == teamSize then
@@ -727,7 +729,8 @@ function sumoTimer()
 			return
 		end
 		autoStartTimer = autoStartTimer + 1
-		MP.SendChatMessage(-1, "Waiting to start next round for: " .. 30 - autoStartTimer .. "s \n Spawn a car or press ctrl+s and check 'Join Next Round' to join")
+		MP.SendChatMessage(-1, "Waiting to start next round for: " .. 30 - autoStartTimer .. "s")
+		MP.SendChatMessage(-1, "Spawn a car or press ctrl+s and check \'Join Next Round\' to join")
 		if autoStartTimer >= 30 then
 			autoStartTimer = 0
 			selectRandomArena()

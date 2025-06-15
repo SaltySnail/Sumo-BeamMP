@@ -69,7 +69,7 @@ angular.module('beamng.stuff')
     restrict: 'E',
     link: function(scope) {
       scope.settings = {
-        joinNextRound: false,
+        joinNextRound: true,
         autoSpectate: true
       };
 
