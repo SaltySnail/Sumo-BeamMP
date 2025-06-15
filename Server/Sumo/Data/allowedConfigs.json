@@ -16,16 +16,21 @@
     "vehicles/legran/OldSchoolAmericansSumoSpecLegran.pc",
     "vehicles/pessima/OldSchoolAmericansSumoSpecWendover.pc"
   ],
-  "Sedan Bangers": [
+  "Bangers Light": [
     "vehicles/midsize/pessumo.pc",
     "vehicles/sunburst2/sumoburst.pc",
     "vehicles/bx/suhundredBX.pc",
     "vehicles/fullsize/sumarshall.pc",
-    "vehicles/scintilla/sumotilla.pc",
-    "vehicles/bastion/bassumo.pc",
     "vehicles/hopper/sumopper.pc",
     "vehicles/legran/sumogran.pc",
     "vehicles/lansdale/sumodale.pc",
     "vehicles/pigeon/sumigeon.pc"
+  ],
+  "Bangers Heavy": [
+    "vehicles/scintilla/sumotilla.pc",
+    "vehicles/bastion/bassumo.pc",
+    "vehicles/roamer/sumoamer.pc",
+    "vehicles/pickup/D-Sumo.pc",
+    "vehicles/van/H-Sumo.pc"
   ]
 }

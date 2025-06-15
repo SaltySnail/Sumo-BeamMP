@@ -125,12 +125,14 @@ angular.module('beamng.stuff')
         if (scope.players.length === 0) return;
         scope.currentPlayerIndex = (scope.currentPlayerIndex - 1 + scope.players.length) % scope.players.length;
         scope.updateSpectatingDisplay();
+        bngApi.engineLua(`extensions.Sumo.spectatePlayer("${scope.currentSpectatingPlayer}")`);
       };
 
       scope.nextPlayer = function() {
         if (scope.players.length === 0) return;
         scope.currentPlayerIndex = (scope.currentPlayerIndex + 1) % scope.players.length;
         scope.updateSpectatingDisplay();
+        bngApi.engineLua(`extensions.Sumo.spectatePlayer("${scope.currentSpectatingPlayer}")`);
       };
 
       scope.updateSpectatingDisplay = function() {

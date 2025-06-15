@@ -8,7 +8,7 @@ M = {}
 -- end
 local gameRunning = false
 local function setSumoGameRunning(isGameRunning)
-    print('setSumoGameRunning called')
+    print('setSumoGameRunning called ' .. tostring(gameRunning))
     gameRunning = isGameRunning
 end
 

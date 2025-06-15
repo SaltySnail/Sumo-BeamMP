@@ -154,8 +154,10 @@ end
 
 local function spectatePlayer(playername)
 	--updateAlivePlayers()
-	--if not alivePlayers[playername] then return end  
-	ogCamBeforeSpectating = core_camera.getActiveCamName(0)
+	local activeCam = core_camera.getActiveCamName(0)
+	if activeCam ~= "external" and activeCam ~= "helicam" then
+		ogCamBeforeSpectating = core_camera.getActiveCamName(0)
+	end
 	if HeliCam then
 		local gameVehID = 0
 		if not MPVehicleGE.getPlayerByName(playername) then 
@@ -196,6 +198,7 @@ function sumoStopSpectating()
 	if HeliCam then
 		HeliCam.despawnHeli()
 	end
+	print(ogCamBeforeSpectating)
 	core_camera.setByName(0,ogCamBeforeSpectating) -- sometimes this doesn't apply, just spam the fucker for now
 	core_camera.resetCamera(0)
 	core_camera.setByName(0,ogCamBeforeSpectating)
