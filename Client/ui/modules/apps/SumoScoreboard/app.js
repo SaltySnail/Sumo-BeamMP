@@ -17,7 +17,7 @@ angular.module('beamng.apps')
                     <thead>
                         <tr>
                             <th style="text-align:left; padding:8px;">Player</th>
-                            <th style="text-align:right; padding:8px;">Round</th>
+                            <th style="text-align:right; padding:8px;">Round Score</th>
                             <th style="text-align:right; padding:8px;">Total</th>
                         </tr>
                     </thead>

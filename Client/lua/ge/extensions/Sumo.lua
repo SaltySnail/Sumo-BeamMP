@@ -696,7 +696,7 @@ function onSumoTrigger(data)
 		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 		end
 	elseif string.find(trigger, "outOfBoundTrigger") then
-		if gamestate and gamestate.time and gamestate.time < 0 then return end
+		if gamestate and (gamestate.time and gamestate.time < 0) or not gamestate.gameRunning then return end
 		--explode player
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then

@@ -364,8 +364,9 @@ function sumoGameSetup()
 		end
 		if MP.IsPlayerConnected(ID) then
 			local player = {}
+			if not gameState.players then gameState.players = {} end
 			if not gameState.players[Name] then gameState.players[Name] = {} end
-			if not (gameState.players[Name].joinNextRound or MP.GetPlayerVehicles(ID)) then gameState.players[Name] = nil end -- clear table as the player doesn't have vehicles or joinNextRound selected
+			if not (gameState.players[Name].joinNextRound or MP.GetPlayerVehicles(ID)) then gameState.players[Name].joinNextRound = false end -- clear table as the player doesn't have vehicles or joinNextRound selected
 			if randomVehicles and (MP.GetPlayerVehicles(ID) or gameState.players[Name].joinNextRound) then		
 				print("Chosen class: " .. class)
 				gameState.players[Name].chosenConfig = allowedConfigs[class][rand(1,#allowedConfigs[class])]
@@ -529,7 +530,7 @@ function sumo(player, argument)
 			MP.SendChatMessage(player.playerID, "Can't start the game with less than " .. playersNeededForGame .. ".")
 			return 1
 		end
-		if not gameState.gameRunning then
+		if not gameState or not gameState.gameRunning then
 			sumoGameSetup()
 			MP.SendChatMessage(-1, "Sumo started, GO GO GO!")
 		else
