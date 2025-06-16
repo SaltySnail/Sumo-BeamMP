@@ -598,7 +598,7 @@ function onSumoGameEnd()
 end
 
 function handleResetState()
-	print("handleResetState called player in circle: " .. tostring(isPlayerInCircle) .. " below speed limit: " .. tostring(isPlayerBelowSpeedLimit) .. " dead: " .. tostring(isPlayerDead))
+	-- print("handleResetState called player in circle: " .. tostring(isPlayerInCircle) .. " below speed limit: " .. tostring(isPlayerBelowSpeedLimit) .. " dead: " .. tostring(isPlayerDead))
 	guihooks.trigger('sumoSetRuleStatus', {rule='Safe Zone', status=isPlayerInCircle})
 	guihooks.trigger('sumoSetRuleStatus', {rule='Speed Limit', status=(isPlayerBelowSpeedLimit==false)}) --somehow this is inverted
 	if not isPlayerInCircle and isPlayerBelowSpeedLimit and not isPlayerDead then
@@ -868,7 +868,6 @@ function updateSumoGameState(data)
 				Engine.Audio.playOnce('AudioGui', "/art/sound/timerTick", {volume = 3})
 			end
 		end
-		handleResetState() 	
 		if isPlayerDead and gamestate.time == playerDiedAtTime + 3 then -- 3 seconds after player died		
 			playerDiedAtTime = 0
 			if autoSpectate then 
@@ -971,6 +970,7 @@ end
 function onPreRender(dt)
 	-- onDrawSumoMenu()
 	if not gamestate.gameRunning then return end
+	handleResetState() 	
 	--normalize to fit safezoneLength and give a value between 0 and 1 that indicates how far the time is before exploding:
 	if sumoStartTime and gamestate and gamestate.safezoneLength then
 		-- print("Sumo sync timer: " .. sock.gettime() .. " start time: " .. sumoStartTime .. " safezoneLength: " .. gamestate.safezoneLength)
@@ -986,7 +986,7 @@ function onPreRender(dt)
 			guihooks.trigger('resetSyncProgress', (timeNow - startResettingTime) / resetDelay)
 		end
 	else
-		startResettingTime = 0
+		startResettingTime =0
 		guihooks.trigger('resetSyncProgress', 0)
 	end
 	if simTimeAuthority.get ~= 1 then
