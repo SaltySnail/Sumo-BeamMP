@@ -1,2 +1,0 @@
-{"name":"SimGroup_","class":"SimGroup","groupPosition":"0 0 0"}
-{"class":"TSStatic","__parent":"SimGroup_","position":[-110.99514,238.434616,381.151825],"collisionType":"Visible Mesh Final","decalType":"Visible Mesh Final","isRenderEnabled":false,"meshCulling":true,"originSort":true,"prebuildCollisionData":true,"shapeName":"/levels/snowisland/art/base/landscape.dae","useInstanceRenderData":true}

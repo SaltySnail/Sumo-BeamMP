@@ -347,12 +347,14 @@ function sumoGameSetup()
 	if randomVehicles then
 		local keys = {}
 		for k,_ in pairs(allowedConfigs) do
-			if not k == class then
+			if k ~= class then
 				table.insert(keys, k)
 			end
 		end
-		class = keys[rand(1,#keys)]
+		if #keys > 0 then
+			class = keys[rand(1,#keys)]
 		end
+	end
 	for ID,Name in pairs(MP.GetPlayers()) do
 		if teams then
 			if teamCount == teamSize then

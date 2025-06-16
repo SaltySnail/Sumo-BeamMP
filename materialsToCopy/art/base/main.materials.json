@@ -56,5 +56,371 @@
     "doubleSided": true,
     "groundType": "LEAVES_STRONG",
     "translucentBlendOp": "None"
+  },
+  "landscape": {
+    "name": "landscape",
+    "mapTo": "landscape",
+    "class": "Material",
+    "Stages": [
+      {
+        "colorMap": "/REPLACE_ME/Landscape.003 Base Color"
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "GRASS",
+    "translucentBlendOp": "None"
+  },
+  "water": {
+    "name": "water",
+    "mapTo": "water",
+    "class": "Material",
+    "Stages": [
+      {
+        "diffuseColor": [
+          0.0263010003,
+          0.976442993,
+          1,
+          1
+        ]
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
+    ],
+    "groundType": "ASPHALT_WET",
+    "translucentBlendOp": "None"
+  },  
+  "glass": {
+    "name": "glass",
+    "mapTo": "glass",
+    "class": "Material",
+    "Stages": [
+      {
+        "colorMap": "/REPLACE_ME/glass_01_d.dds",
+        "diffuseColor": [
+          0.603011012,
+          0.788076997,
+          0.767114997,
+          0.278317004
+        ]
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
+    ],
+    "alphaRef": 0,
+    "alphaTest": true,
+    "dynamicCubemap": true,
+    "groundType": "ASPHALT_PREPPED",
+    "translucent": true,
+    "translucentBlendOp": "Sub"
+  },
+  "grid": {
+    "name": "grid",
+    "mapTo": "grid",
+    "class": "Material",
+    "Stages": [
+      {
+        "colorMap": "/REPLACE_ME/solarpanel_d.dds",
+        "emissive": true,
+        "glow": true,
+        "glowFactor": [
+          0,
+          0.907074988,
+          1
+        ]
+      },
+      {
+        "emissive": null,
+        "glow": null,
+        "glowFactor": null
+      },
+      {
+        "emissive": null,
+        "glow": null,
+        "glowFactor": null
+      },
+      {
+        "emissive": null,
+        "glow": null,
+        "glowFactor": null
+      }
+    ],
+    "translucentBlendOp": "None"
+  },
+  "target_001": {
+    "name": "target_001",
+    "mapTo": "target.001",
+    "class": "Material",
+    "Stages": [
+      {
+        "colorMap": "/REPLACE_ME/target.dds",
+        "emissive": true
+      },
+      {
+        "emissive": null
+      },
+      {
+        "emissive": null
+      },
+      {
+        "emissive": null
+      }
+    ],
+    "translucentBlendOp": "None"
+  },
+  "wood_blue": {
+    "name": "wood_blue",
+    "mapTo": "wood_blue",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0,
+          0.00200599991,
+          1,
+          1
+        ],
+        "detailMap": "/REPLACE_ME/wood_d.dds",
+        "detailScale": [
+          0.5,
+          0.5
+        ],
+        "normalMap": "/REPLACE_ME/wood_n.dds",
+        "normalMapStrength": 0.200000003
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      }
+    ],
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "wood_green": {
+    "name": "wood_green",
+    "mapTo": "wood_green",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.0193709992,
+          0.604793012,
+          0.0224380009,
+          1
+        ],
+        "detailMap": "/REPLACE_ME/wood_d.dds",
+        "detailScale": [
+          0.5,
+          0.5
+        ],
+        "normalMap": "/REPLACE_ME/wood_n.dds",
+        "normalMapStrength": 0.200000003
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      }
+    ],
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "wood_orange": {
+    "name": "wood_orange",
+    "mapTo": "wood_orange",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.800101995,
+          0.439938992,
+          0,
+          1
+        ],
+        "detailMap": "/REPLACE_ME/wood_d.dds",
+        "detailScale": [
+          0.5,
+          0.5
+        ],
+        "normalMap": "/REPLACE_ME/wood_n.dds",
+        "normalMapStrength": 0.200000003
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      }
+    ],
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "wood_red": {
+    "name": "wood_red",
+    "mapTo": "wood_red",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.627703011,
+          0.0344859995,
+          0.0368050002,
+          1
+        ],
+        "detailMap": "/REPLACE_ME/wood_d.dds",
+        "detailScale": [
+          0.5,
+          0.5
+        ],
+        "normalMap": "/REPLACE_ME/wood_n.dds",
+        "normalMapStrength": 0.200000003
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      }
+    ],
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "wood_white": {
+    "name": "wood_white",
+    "mapTo": "wood_white",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.862537026,
+          0.862537026,
+          0.862537026,
+          1
+        ],
+        "detailMap": "/REPLACE_ME/wood_d.dds",
+        "detailScale": [
+          0.5,
+          0.5
+        ],
+        "normalMap": "/REPLACE_ME/wood_n.dds",
+        "normalMapStrength": 2
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      }
+    ],
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "wood_yellow": {
+    "name": "wood_yellow",
+    "mapTo": "wood_yellow",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.800552726,
+          0.667988598,
+          0,
+          1
+        ],
+        "detailMap": "/REPLACE_ME/wood_d.dds",
+        "detailScale": [
+          0.5,
+          0.5
+        ],
+        "normalMap": "/REPLACE_ME/wood_n.dds",
+        "normalMapStrength": 0.200000003
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailScale": null,
+        "normalMapStrength": null
+      }
+    ],
+    "groundType": "ASPHALT",
+    "translucentBlendOp": "None",
+    "version": 1.5
   }
 }
