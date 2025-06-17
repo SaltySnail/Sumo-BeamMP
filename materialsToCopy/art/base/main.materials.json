@@ -361,7 +361,7 @@
           0.5
         ],
         "normalMap": "/REPLACE_ME/wood_n.dds",
-        "normalMapStrength": 2
+        "normalMapStrength": 0.200000003
       },
       {
         "baseColorFactor": null,

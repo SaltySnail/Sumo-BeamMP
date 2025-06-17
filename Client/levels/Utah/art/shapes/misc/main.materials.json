@@ -115,14 +115,14 @@
     "persistentId": "c6e10580-1553-4a1a-a45c-e65a18a55390",
     "Stages": [
       {
-        "colorMap": "concrete_bridge_01a_d.dds",
+        "colorMap": "/levels/utah/art/shapes/misc/concrete_bridge_01a_d.dds",
         "diffuseColor": [
           0.800000012,
           0.800000012,
           0.800000012,
           1
         ],
-        "normalMap": "concrete_bridge_01a_n.dds",
+        "normalMap": "/levels/utah/art/shapes/misc/concrete_bridge_01a_n.dds",
         "pixelSpecular": true,
         "specular": [
           0.400000006,
@@ -130,13 +130,27 @@
           0.400000006,
           1
         ],
-        "specularMap": "concrete_bridge_01a_s.dds",
-        "specularPower": 4,
+        "specularMap": "/levels/utah/art/shapes/misc/concrete_bridge_01a_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "ASPHALT_OLD",
     "materialTag0": "beamng",
@@ -220,15 +234,24 @@
     "persistentId": "043470a1-7623-4d6b-bcad-0dca6abd5aa1",
     "Stages": [
       {
-        "colorMap": "metal_canyonbridge_01a_d.dds",
-        "normalMap": "metal_canyonbridge_01a_n.dds",
+        "colorMap": "/levels/utah/art/shapes/misc/metal_canyonbridge_01a_d.dds",
+        "normalMap": "/levels/utah/art/shapes/misc/metal_canyonbridge_01a_n.dds",
         "pixelSpecular": true,
-        "specularMap": "metal_canyonbridge_01a_s.dds",
+        "specularMap": "/levels/utah/art/shapes/misc/metal_canyonbridge_01a_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "materialTag0": "beamng",
     "materialTag1": "Utah"
@@ -240,8 +263,8 @@
     "persistentId": "03dd1f53-3410-4a9d-835e-8fdabb6e4cc5",
     "Stages": [
       {
-        "colorMap": "metal_canyonbridge_01b_d.dds",
-        "normalMap": "metal_canyonbridge_01b_n.dds",
+        "colorMap": "/levels/utah/art/shapes/misc/metal_canyonbridge_01b_d.dds",
+        "normalMap": "/levels/utah/art/shapes/misc/metal_canyonbridge_01b_n.dds",
         "pixelSpecular": true,
         "specular": [
           0.5,
@@ -249,12 +272,24 @@
           0.5,
           1
         ],
-        "specularMap": "metal_canyonbridge_01b_s.dds",
+        "specularMap": "/levels/utah/art/shapes/misc/metal_canyonbridge_01b_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "ASPHALT_OLD",
     "materialTag0": "beamng",

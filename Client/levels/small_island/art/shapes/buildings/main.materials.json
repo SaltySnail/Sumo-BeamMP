@@ -211,35 +211,6 @@
     "translucent": true,
     "translucentZWrite": true
   },
-  "Plywood_old": {
-    "name": "Plywood_old",
-    "mapTo": "Plywood_old",
-    "class": "Material",
-    "persistentId": "45f01913-f2ec-4174-89c2-b8a42622f4fb",
-    "Stages": [
-      {
-        "colorMap": "/levels/small_island/art/shapes/buildings/Plywood_old_d.dds",
-        "normalMap": "/levels/small_island/art/shapes/buildings/Plywood_old_n.dds",
-        "specularMap": "/levels/small_island/art/shapes/buildings/Plywood_old_s.dds",
-        "specularPower": 1,
-        "useAnisotropic": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 121,
-    "alphaTest": true,
-    "annotation": "BUILDINGS",
-    "doubleSided": true,
-    "groundType": "WOOD",
-    "invertBackFaceNormals": true,
-    "materialTag0": "beamng",
-    "materialTag1": "beamng",
-    "materialTag2": "Industrial",
-    "specularStrength0": "0.294118",
-    "specularStrength1": "0.2"
-  },
   "WareHouse_door": {
     "name": "WareHouse_door",
     "mapTo": "WareHouse_door",
@@ -2277,42 +2248,6 @@
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "small_island",
-    "specularColor0": "0.1 0.1 0.1 0.1",
-    "specularStrength0": "0.05",
-    "translucentBlendOp": "None"
-  },
-  "si_metal_roof": {
-    "name": "si_metal_roof",
-    "mapTo": "si_metal_roof",
-    "class": "Material",
-    "persistentId": "34e4efa7-2e92-4cef-bfd1-9626ffb67e20",
-    "Stages": [
-      {
-        "colorMap": "levels/small_island/art/shapes/buildings/si_metal_roof_d.dds",
-        "diffuseColor": [
-          0.988235354,
-          0.988235354,
-          0.988235354,
-          0.0820000023
-        ],
-        "normalMap": "/levels/small_island/art/shapes/buildings/si_metal_roof.normal.png",
-        "overlayMap": "levels/small_island/art/shapes/buildings/utah_breakup_texture.dds",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.45179379,
-        "specularMap": "levels/small_island/art/shapes/buildings/si_metal_roof_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "annotation": "BUILDINGS",
-    "cubemap": "global_cubemap_metalblurred",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "materialTag2": "utah",
     "specularColor0": "0.1 0.1 0.1 0.1",
     "specularStrength0": "0.05",
     "translucentBlendOp": "None"

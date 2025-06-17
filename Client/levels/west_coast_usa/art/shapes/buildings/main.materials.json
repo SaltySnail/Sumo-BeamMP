@@ -6,30 +6,41 @@
     "persistentId": "0b2a4111-4209-46a8-aaee-6ffd27c82c66",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/canal_d.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_canal_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_canal_b.color.png",
         "detailMap": "/levels/west_coast_usa/art/shapes/roads/Concrete-04-diff.dds",
         "detailScale": [
           6,
           6
         ],
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/canal_n.dds",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_canal_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/canal_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/canal_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_canal_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "cubemap": "global_cubemap_metalblurred",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "architraves": {
     "name": "architraves",
@@ -38,23 +49,32 @@
     "persistentId": "85c40c54-00d4-4657-9247-1c9af47b18ab",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/architraves_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/architraves_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_architraves_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_architraves_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_architraves_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/architraves_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_architraves_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "balustrades": {
     "name": "balustrades",
@@ -63,17 +83,26 @@
     "persistentId": "c021e7f6-496d-4bec-aca0-1a6e18a0a88c",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/balustrades_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/balustrades_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_balustrades_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_balustrades_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_balustrades_nm.normal.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/buildings/t_balustrades_o.data.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/balustrades_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_balustrades_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 64,
     "alphaTest": true,
@@ -82,7 +111,8 @@
     "invertBackFaceNormals": true,
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "brick_herringbone": {
     "name": "brick_herringbone",
@@ -91,26 +121,46 @@
     "persistentId": "6168c44f-9237-46b2-9353-1c8715756e45",
     "Stages": [
       {
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_herringbone_ao.data.png",
         "baseColorFactor": [
           0.928803027,
           0.790638983,
           0.73041898,
           1
         ],
-        "baseColorMap": "levels/west_coast_usa/art/shapes/buildings/brick_herringbone_d.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_herringbone_b.color.png",
+        "detailBaseColorMapStrength": 0,
         "detailMap": "/levels/west_coast_usa/art/shapes/buildings/t_grunge_detail1_b.data.png",
         "detailScale": [
           0.25,
           0.25
         ],
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/brick_herringbone_n.dds",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_herringbone_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.519999981,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_herringbone_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "baseColorFactor": null,
+        "detailBaseColorMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailBaseColorMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "baseColorFactor": null,
+        "detailBaseColorMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "SIDEWALK",
@@ -127,23 +177,32 @@
     "persistentId": "6b47e50a-065f-4dea-b141-701480e67a05",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/brick_painted_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/brick_plain_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_painted_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/brick_plain_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "brick_plain": {
     "name": "brick_plain",
@@ -152,23 +211,43 @@
     "persistentId": "6d75984d-3cff-4546-ae5a-e93c9c99a923",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/brick_plain_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/brick_plain_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_b.color.png",
+        "detailNormalMapStrength": 0.5,
+        "detailScale": [
+          3,
+          3
+        ],
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/brick_plain_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_brick_plain_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "busstop": {
     "name": "busstop",
@@ -220,33 +299,6 @@
     "translucent": true,
     "translucentZWrite": true
   },
-  "cladding_zinc": {
-    "name": "cladding_zinc",
-    "mapTo": "cladding_zinc",
-    "class": "Material",
-    "persistentId": "926c71d6-8664-4b7d-8474-a363550bc5e1",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/cladding_zinc_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/cladding_zinc_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/cladding_zinc_r.dds",
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/cladding_zinc_s.dds",
-        "specularPower": 32,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 0,
-    "cubemap": "global_cubemap_metalblurred",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucentBlendOp": "None"
-  },
   "columns": {
     "name": "columns",
     "mapTo": "columns",
@@ -254,23 +306,36 @@
     "persistentId": "c4ca6013-2e75-4d0d-bf98-77aa663962b7",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/columns_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/columns_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_columns_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_columns_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_columns_nm.normal.png",
         "pixelSpecular": true,
         "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/columns_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_columns_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "concrete_precast1": {
     "name": "concrete_precast1",
@@ -279,23 +344,32 @@
     "persistentId": "37b34082-9b97-44a2-9d18-fe7af38f9a82",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/concrete_precast1_white.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/concrete_precast1_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_concrete_precast1_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_concrete_precast1_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_concrete_precast1_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/concrete_precast1_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_concrete_precast1_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "corrugated_modern": {
     "name": "corrugated_modern",
@@ -304,22 +378,41 @@
     "persistentId": "dfeda9f3-b255-49f5-82cb-93a6ff9d8ef5",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/corrugated_modern_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/corrugated_modern_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_corrugated_modern_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_corrugated_modern_b.color.png",
+        "metallicFactor": 0.899999976,
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_corrugated_modern_nm.normal.png",
+        "normalMapStrength": 2,
         "overlayMap": "levels/west_coast_usa/art/shapes/buildings/grunge_dripping_d.dds",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/corrugated_modern_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_corrugated_modern_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "metallicFactor": null,
+        "normalMapStrength": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "metallicFactor": null,
+        "normalMapStrength": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "metallicFactor": null,
+        "normalMapStrength": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
+    "alphaRef": 0,
     "annotation": "BUILDINGS",
+    "dynamicCubemap": true,
     "materialTag0": "beamng",
-    "materialTag1": "building"
+    "materialTag1": "building",
+    "version": 1.5
   },
   "highrise": {
     "name": "highrise",
@@ -328,28 +421,50 @@
     "persistentId": "7ecdcd3d-c3c2-4e5f-84bd-aacd67b0d034",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/highrise_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/highrise_n.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_highrise_b.color.png",
+        "emissive": null,
+        "emissiveFactor": [
+          0.501960993,
+          0.501960993,
+          0.501960993
+        ],
+        "emissiveMap": "/levels/west_coast_usa/art/shapes/buildings/t_highrise_e.data.png",
+        "metallicFactor": 0.800000012,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/buildings/t_highrise_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_highrise_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/highrise_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/highrise_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_highrise_r.data.png",
         "vertColor": true
       },
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/highrise_g.dds",
-        "emissive": true
+        "emissive": true,
+        "emissiveFactor": null,
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
       },
-      {},
-      {}
+      {
+        "emissive": null,
+        "emissiveFactor": null,
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "emissive": null,
+        "emissiveFactor": null,
+        "metallicFactor": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "dynamicCubemap": true,
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "m_batching_plant_mm": {
     "name": "m_batching_plant_mm",
@@ -433,15 +548,26 @@
     "persistentId": "1b62af9d-180f-43e6-bd01-70f332b04ce5",
     "Stages": [
       {
-        "colorMap": "/levels/west_coast_usa/art/shapes/buildings/logos_dealership_garage_wca_d.color.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/logos_dealership_garage_wca_d.color.png",
         "overlayMap": "/levels/Industrial/art/shapes/buildings/utah_breakup_texture.dds",
+        "roughnessFactor": 0.600000024,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "roughnessFactor": null,
+        "vertColor": null
+      }
     ],
-    "annotation": "BUILDINGS"
+    "annotation": "BUILDINGS",
+    "version": 1.5
   },
   "m_mascot": {
     "name": "m_mascot",
@@ -452,14 +578,19 @@
       {
         "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_mascot_ao.data.png",
         "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_mascot_b.color.png",
-        "metallicMap": "/levels/west_coast_usa/art/shapes/buildings/t_mascot_m.data.png",
         "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_mascot_nm.normal.png",
         "pixelSpecular": true,
         "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_mascot_r.data.png"
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null
+      },
+      {
+        "pixelSpecular": null
+      },
+      {
+        "pixelSpecular": null
+      }
     ],
     "alphaRef": 0,
     "version": 1.5
@@ -597,7 +728,6 @@
     "alphaTest": true,
     "annotation": "BUILDINGS",
     "translucentBlendOp": "None",
-    "translucentZWrite": true,
     "version": 1.5
   },
   "rooftiles": {
@@ -607,23 +737,32 @@
     "persistentId": "25c1030e-eebb-4808-8d67-0b841aca0e16",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/rooftiles1_grey.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/rooftiles1_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_rooftiles_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_rooftiles_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_rooftiles_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/rooftiles1_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_rooftiles_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "slabs_brutalist": {
     "name": "slabs_brutalist",
@@ -632,50 +771,32 @@
     "persistentId": "867a4350-8e62-4dc6-8e9d-1fb5de835b1b",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/slabs_brutalist_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/slabs_brutalist_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_slabs_brutalist_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_slabs_brutalist_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_slabs_brutalist_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/slabs_brutalist_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_slabs_brutalist_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 0,
-    "annotation": "BUILDINGS",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucentBlendOp": "None"
-  },
-  "slabs_marble": {
-    "name": "slabs_marble",
-    "mapTo": "slabs_marble",
-    "class": "Material",
-    "persistentId": "293a4970-d13b-4ace-bd38-755dac3e3ce7",
-    "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/slabs_marble_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/slabs_marble_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/slabs_marble_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/slabs_marble_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
+        "pixelSpecular": null,
+        "vertColor": null
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "cubemap": "cubemap_buildings_reflection",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "stone_brick_irregular": {
     "name": "stone_brick_irregular",
@@ -684,23 +805,32 @@
     "persistentId": "a13496c1-912a-4943-a00f-bac48c930bab",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/stone_brick_irregular_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/stone_brick_irregular_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/stone_brick_irregular_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "stone_brick_regular": {
     "name": "stone_brick_regular",
@@ -709,23 +839,32 @@
     "persistentId": "cb09a7af-ee44-4c4e-abba-8a4e2df126d7",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/stone_brick_regular_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/stone_brick_regular_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/stone_brick_regular_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_brick_regular_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "stone_joins": {
     "name": "stone_joins",
@@ -734,23 +873,40 @@
     "persistentId": "48108dfb-33bf-4923-813f-37ea4e9100d9",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/stone_joins_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/stone_joins_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_joins_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_joins_b.color.png",
+        "detailNormalMap": "/levels/west_coast_usa/art/road/pbr_textures/detailed_normals/t_asphalt_detail_04.normal.png",
+        "detailScale": [
+          1,
+          2
+        ],
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_joins_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/stone_joins_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_stone_joins_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "stucco1_white": {
     "name": "stucco1_white",
@@ -759,22 +915,31 @@
     "persistentId": "792bbe8c-0619-4978-84f2-f4723ffaeb45",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/stucco1_white.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/stucco1_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_stucco1_white_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_stucco1_white_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_stucco1_white_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/stucco1_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_stucco1_white_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
-    "materialTag1": "building"
+    "materialTag1": "building",
+    "version": 1.5
   },
   "tent": {
     "name": "tent",
@@ -783,23 +948,39 @@
     "persistentId": "9bd98bdd-a68f-49d4-b06d-148b9ee4d3a8",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/tent_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/tent_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_tent_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_tent_b.color.png",
+        "detailScale": [
+          400,
+          200
+        ],
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_tent_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/tent_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_tent_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "tiles_marble_square": {
     "name": "tiles_marble_square",
@@ -808,25 +989,33 @@
     "persistentId": "a225c36d-19d2-4f0b-ab55-818cb77d513a",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/tiles_marble_square_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/tiles_marble_square_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_tiles_marble_square_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_tiles_marble_square_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_tiles_marble_square_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/tiles_marble_square_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/tiles_marble_square_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_tiles_marble_square_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "cubemap": "cubemap_buildings_reflection",
+    "dynamicCubemap": true,
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "tunnel": {
     "name": "tunnel",
@@ -874,18 +1063,30 @@
     "Stages": [
       {
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "useAnisotropic": true,
+        "roughnessFactor": 0.600000024,
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "roughnessFactor": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "weatherboards": {
     "name": "weatherboards",
@@ -894,52 +1095,33 @@
     "persistentId": "2fe866bc-75ff-4e19-a709-e52925dbb80f",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/weatherboards1_white.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/weatherboards1_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_weatherboards_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_weatherboards_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_weatherboards_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/weatherboards1_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_weatherboards_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "groundType": "WOOD",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
-  },
-  "windows_doors_reflective": {
-    "name": "windows_doors_reflective",
-    "mapTo": "windows_doors_reflective",
-    "class": "Material",
-    "persistentId": "ebc74da1-01df-40bd-bc10-c140d6383517",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/windows_doors_reflective_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/windows_doors_reflective_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/buildings/windows_doors_reflective_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/windows_doors_reflective_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 127,
-    "alphaTest": true,
-    "annotation": "BUILDINGS",
-    "cubemap": "cubemap_buildings_reflection",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "wood_rough": {
     "name": "wood_rough",
@@ -948,23 +1130,32 @@
     "persistentId": "6d6177bf-093f-4045-97ad-2e4a3e9b16dc",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/buildings/wood_rough_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/buildings/wood_rough_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/buildings/t_wood_rough_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/buildings/t_wood_rough_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/buildings/t_wood_rough_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/buildings/wood_rough_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/buildings/t_wood_rough_r.data.png",
         "vertColor": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      },
+      {
+        "pixelSpecular": null,
+        "vertColor": null
+      }
     ],
     "alphaRef": 0,
     "annotation": "POLE",
     "groundType": "WOOD",
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   }
 }

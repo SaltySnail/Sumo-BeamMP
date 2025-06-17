@@ -371,33 +371,6 @@
     "materialTag1": "vehicle",
     "translucentBlendOp": "None"
   },
-  "roadworks_objects": {
-    "name": "roadworks_objects",
-    "mapTo": "roadworks_objects",
-    "class": "Material",
-    "persistentId": "1c783635-6b01-4d8a-9ec4-d3aafe17396e",
-    "Stages": [
-      {
-        "colorMap": "levels/hirochi_raceway/art/shapes/objects/construction_equipment_d.dds",
-        "normalMap": "levels/hirochi_raceway/art/shapes/objects/construction_equipment_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/hirochi_raceway/art/shapes/objects/construction_equipment_r.dds",
-        "specularMap": "levels/hirochi_raceway/art/shapes/objects/construction_equipment_s.dds",
-        "specularPower": 32,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "annotation": "OBSTACLES",
-    "cubemap": "cubemap_city",
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
-  },
   "toilet": {
     "name": "toilet",
     "mapTo": "toilet",

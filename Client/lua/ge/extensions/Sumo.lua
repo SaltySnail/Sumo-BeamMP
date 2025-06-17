@@ -691,7 +691,7 @@ function onSumoTrigger(data)
 		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 		end
 	elseif string.find(trigger, "outOfBoundTrigger") then
-		if gamestate and (gamestate.time and gamestate.time < 0) or not gamestate.gameRunning then return end
+		if gamestate and (gamestate.time and gamestate.time < -3) or not gamestate.gameRunning then return end
 		--explode player
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID == data.subjectID then
@@ -847,7 +847,7 @@ function updateSumoGameState(data)
 			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownGO", {volume = 25})
 		end
 	end
-	if gamestate.gameRunning and time and time == 1 then
+	if gamestate.gameRunning and time and time >= 1 and time <= 2 then
 		guihooks.trigger('sumoClearCountdown', 0)
 	end
 

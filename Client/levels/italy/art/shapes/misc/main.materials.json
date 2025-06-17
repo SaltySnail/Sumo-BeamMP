@@ -83,10 +83,6 @@
     "version": 1.5
   },
   "Concrete_Road_Barrier_a": {
-    "name": "Concrete_Road_Barrier_a",
-    "mapTo": "concrete_road_barrier_a",
-    "class": "Material",
-    "persistentId": "402a68a7-a800-43d8-abdb-013ce897979f",
     "Stages": [
       {
         "colorMap": "concrete_road_barrier_a_d.dds",
@@ -104,15 +100,15 @@
       {},
       {}
     ],
+    "class": "Material",
     "groundType": "SOFT_COLLISION_GENERAL",
+    "mapTo": "concrete_road_barrier_a",
     "materialTag0": "beamng",
-    "materialTag1": "Industrial"
+    "materialTag1": "Industrial",
+    "name": "Concrete_Road_Barrier_a",
+    "persistentId": "402a68a7-a800-43d8-abdb-013ce897979f"
   },
   "a_asphalt_01_a": {
-    "name": "a_asphalt_01_a",
-    "mapTo": "asphalt_01_a",
-    "class": "Material",
-    "persistentId": "9818d383-c902-437d-b030-3107d274e96f",
     "Stages": [
       {
         "colorMap": "/levels/italy/art/shapes/misc/asphalt_01_a_d.dds",
@@ -128,25 +124,25 @@
       {},
       {}
     ],
+    "class": "Material",
     "doubleSided": true,
     "groundType": "ASPHALT_OLD",
+    "mapTo": "asphalt_01_a",
     "materialTag0": "beamng",
     "materialTag1": "RoadAndPath",
+    "name": "a_asphalt_01_a",
+    "persistentId": "9818d383-c902-437d-b030-3107d274e96f",
     "translucentBlendOp": "None"
   },
   "clouds_test": {
-    "name": "clouds_test",
-    "mapTo": "clouds_test",
-    "class": "Material",
-    "persistentId": "18b7cd37-9378-4232-b47d-d8f91150bee0",
     "Stages": [
       {
         "animFlags": 1,
         "colorMap": "levels/italy/art/shapes/misc/clouds_d.dds",
         "diffuseColor": [
-          0.9882353544235228,
-          0.9882353544235228,
-          0.9882353544235228,
+          0.9882353544,
+          0.9882353544,
+          0.9882353544,
           1
         ],
         "emissive": true,
@@ -172,17 +168,17 @@
     ],
     "alphaRef": 50,
     "castShadows": false,
+    "class": "Material",
+    "mapTo": "clouds_test",
     "materialTag0": "beamng",
     "materialTag1": "vegetation",
     "materialTag2": "Natural",
     "materialTag3": "Natural",
+    "name": "clouds_test",
+    "persistentId": "18b7cd37-9378-4232-b47d-d8f91150bee0",
     "translucent": true
   },
   "concrete_bridge_01a": {
-    "name": "concrete_bridge_01a",
-    "mapTo": "concrete_bridge_01a",
-    "class": "Material",
-    "persistentId": "fed778d4-9898-45ed-a02a-f70695e682d2",
     "Stages": [
       {
         "colorMap": "concrete_bridge_01a_d.dds",
@@ -208,15 +204,15 @@
       {},
       {}
     ],
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "concrete_bridge_01a",
     "materialTag0": "beamng",
-    "materialTag1": "Industrial"
+    "materialTag1": "Industrial",
+    "name": "concrete_bridge_01a",
+    "persistentId": "fed778d4-9898-45ed-a02a-f70695e682d2"
   },
   "containers_01_a": {
-    "name": "containers_01_a",
-    "mapTo": "containers_01_a",
-    "class": "Material",
-    "persistentId": "a39a7133-1181-4c07-8b4b-cf3a44cf0a4b",
     "Stages": [
       {
         "colorMap": "/levels/italy/art/shapes/misc/containers_01_a_d.dds",
@@ -234,15 +230,15 @@
       {},
       {}
     ],
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "containers_01_a",
+    "name": "containers_01_a",
     "order_simset": -1082130432,
+    "persistentId": "a39a7133-1181-4c07-8b4b-cf3a44cf0a4b",
     "translucentBlendOp": "None"
   },
   "italy_backdrop": {
-    "name": "italy_backdrop",
-    "mapTo": "italy_backdrop",
-    "class": "Material",
-    "persistentId": "68918536-c3ac-4f17-87a4-bfe3f1bff96c",
     "Stages": [
       {
         "detailMap": "levels/italy/art/terrains/Macro_generic.dds",
@@ -269,24 +265,24 @@
       {},
       {}
     ],
+    "class": "Material",
     "doubleSided": true,
     "groundType": "GRAVEL",
+    "mapTo": "italy_backdrop",
     "materialTag0": "beamng",
     "materialTag1": "italy",
+    "name": "italy_backdrop",
+    "persistentId": "68918536-c3ac-4f17-87a4-bfe3f1bff96c",
     "translucentBlendOp": "None"
   },
   "misc_markings_01": {
-    "name": "misc_markings_01",
-    "mapTo": "misc_markings_01",
-    "class": "Material",
-    "persistentId": "ffaf6d81-70be-4aac-a48b-8e5f9e4a9f33",
     "Stages": [
       {
         "colorMap": "misc_markings.dds",
         "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "pixelSpecular": true,
@@ -305,42 +301,17 @@
     "alphaRef": 40,
     "alphaTest": true,
     "castShadows": false,
+    "class": "Material",
     "doubleSided": true,
     "groundType": "ASPHALT_OLD",
+    "mapTo": "misc_markings_01",
     "materialTag0": "beamng",
     "materialTag1": "Industrial",
+    "name": "misc_markings_01",
+    "persistentId": "ffaf6d81-70be-4aac-a48b-8e5f9e4a9f33",
     "translucentZWrite": true
   },
-  "parkinglot_01_a_terrain_rockydirt": {
-    "name": "parkinglot_01_a_terrain_rockydirt",
-    "mapTo": "terrain_rockydirt",
-    "class": "Material",
-    "persistentId": "a10f8273-b4ab-4a23-a4d2-56bfd2048cf9",
-    "Stages": [
-      {
-        "colorMap": "levels/italy/art/terrains/RockyDirt-01-D.dds",
-        "diffuseColor": [
-          0.835294008,
-          0.807843029,
-          0.800000012,
-          1
-        ],
-        "normalMap": "levels/italy/art/terrains/RockyDirt-01-N.dds",
-        "specularMap": "levels/italy/art/terrains/RockyDirt-01-S.dds"
-      },
-      {},
-      {},
-      {}
-    ],
-    "doubleSided": true,
-    "groundType": "GRAVEL",
-    "translucentBlendOp": "None"
-  },
   "port_objects": {
-    "name": "port_objects",
-    "mapTo": "port_objects",
-    "class": "Material",
-    "persistentId": "5fced0fa-e0fb-41eb-a2cc-cbd904d5eb8e",
     "Stages": [
       {
         "colorMap": "levels/italy/art/shapes/misc/port_objects_d.dds",
@@ -357,16 +328,16 @@
     ],
     "alphaRef": 0,
     "annotation": "OBSTACLES",
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "port_objects",
     "materialTag0": "beamng",
+    "name": "port_objects",
+    "persistentId": "5fced0fa-e0fb-41eb-a2cc-cbd904d5eb8e",
     "translucentBlendOp": "None"
   },
   "river_white_water": {
-    "name": "river_white_water",
-    "mapTo": "river_white_water",
-    "class": "Material",
-    "persistentId": "3f8d3ccc-2607-46cd-bbf5-1bb1e89bc48f",
     "Stages": [
       {
         "animFlags": 1,
@@ -381,9 +352,9 @@
         "pixelSpecular": true,
         "scrollDir": [
           0.00999999978,
-          -0.1700000017881393
+          -0.1700000018
         ],
-        "scrollSpeed": 1.881999969482422,
+        "scrollSpeed": 1.881999969,
         "specularPower": 79,
         "useAnisotropic": true
       },
@@ -391,9 +362,9 @@
         "animFlags": 9,
         "colorMap": "levels/italy/art/water/river_white_water_d.dds",
         "diffuseColor": [
-          0.9882353544235228,
-          0.9882353544235228,
-          0.9882353544235228,
+          0.9882353544,
+          0.9882353544,
+          0.9882353544,
           0.711000025
         ],
         "normalMap": "levels/italy/art/water/ripple3.dds",
@@ -402,7 +373,7 @@
           0.00999999978,
           -0.340000004
         ],
-        "scrollSpeed": 1.294000029563904,
+        "scrollSpeed": 1.29400003,
         "useAnisotropic": true,
         "vertColor": true
       },
@@ -411,16 +382,16 @@
     ],
     "alphaRef": 0,
     "castShadows": false,
+    "class": "Material",
     "doubleSided": true,
+    "mapTo": "river_white_water",
     "materialTag0": "beamng",
     "materialTag1": "water",
+    "name": "river_white_water",
+    "persistentId": "3f8d3ccc-2607-46cd-bbf5-1bb1e89bc48f",
     "translucent": true
   },
   "speedbump_01a": {
-    "name": "speedbump_01a",
-    "mapTo": "speedbump_01a",
-    "class": "Material",
-    "persistentId": "b52ae656-7d42-451b-b75c-422477b8bd5a",
     "Stages": [
       {
         "colorMap": "speedbump_01a_d.dds",
@@ -434,58 +405,12 @@
       {},
       {}
     ],
+    "class": "Material",
     "groundType": "SOFT_COLLISION_GENERAL",
+    "mapTo": "speedbump_01a",
     "materialTag0": "beamng",
-    "materialTag1": "Industrial"
-  },
-  "terrain_grass2": {
-    "name": "terrain_grass2",
-    "mapTo": "terrain_grass2",
-    "class": "Material",
-    "persistentId": "4e953338-5bc7-40b6-ba86-4cf78a7161aa",
-    "Stages": [
-      {
-        "colorMap": "levels/italy/art/terrains/Grass-02-D.dds",
-        "diffuseColor": [
-          0.87450999,
-          0.854902029,
-          0.639216006,
-          1
-        ],
-        "normalMap": "levels/italy/art/terrains/Grass-02-N.dds"
-      },
-      {},
-      {},
-      {}
-    ],
-    "doubleSided": true,
-    "groundType": "GRASS",
-    "materialTag0": "beamng",
-    "materialTag1": "Natural",
-    "translucentBlendOp": "None"
-  },
-  "terrain_gravel": {
-    "name": "terrain_gravel",
-    "mapTo": "terrain_gravel",
-    "class": "Material",
-    "persistentId": "3af42fdb-86ed-4086-b158-11d40ebab670",
-    "Stages": [
-      {
-        "diffuseColor": [
-          0.662745118,
-          0.623529434,
-          0.552941203,
-          1
-        ],
-        "normalMap": "levels/italy/art/terrains/terrain_gravel_n.dds",
-        "useAnisotropic": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "doubleSided": true,
-    "groundType": "GRAVEL",
-    "translucentBlendOp": "None"
+    "materialTag1": "Industrial",
+    "name": "speedbump_01a",
+    "persistentId": "b52ae656-7d42-451b-b75c-422477b8bd5a"
   }
 }

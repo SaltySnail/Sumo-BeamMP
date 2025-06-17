@@ -125,33 +125,30 @@
     "persistentId": "5368da71-45ee-4329-a035-20df8f15e6f2",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/billboards_d.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_billboards_b.color.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/billboards_s.dds",
-        "useAnisotropic": true
+        "roughnessFactor": 0.75,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_billboards_r.data.png"
       },
       {
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "roughnessFactor": null
       },
       {
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "roughnessFactor": null
       },
       {
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "roughnessFactor": null
       }
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
     "materialTag0": "beamng",
     "materialTag1": "commercial",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "boom_lift": {
     "name": "boom_lift",
@@ -160,36 +157,38 @@
     "persistentId": "f78ec5f2-523e-49ee-9ae9-4efd0d173f30",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/boom_lift_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/boom_lift_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_boom_lift_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_boom_lift_b.color.png",
+        "detailBaseColorMapStrength": 0.5,
+        "metallicFactor": 1,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_boom_lift_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_boom_lift_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/boom_lift_r.dds",
-        "roughnessFactor": 0.690170288,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/boom_lift_s.dds",
-        "useAnisotropic": true
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_boom_lift_r.data.png"
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "detailBaseColorMapStrength": null,
+        "metallicFactor": null,
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "detailBaseColorMapStrength": null,
+        "metallicFactor": null,
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "detailBaseColorMapStrength": null,
+        "metallicFactor": null,
+        "pixelSpecular": null
       }
     ],
     "alphaRef": 0,
     "annotation": "OBSTACLES",
-    "cubemap": "global_cubemap_metalblurred",
+    "dynamicCubemap": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "catchfence": {
     "name": "catchfence",
@@ -198,30 +197,32 @@
     "persistentId": "65c215a6-58b9-466f-bef6-15cc6c37b7b0",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/catchfence_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/catchfence_n.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_catchfence_01_b.color.png",
+        "metallicFactor": 0.800000012,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_catchfence_01_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_catchfence_01_nm.normal.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/objects/t_catchfence_01_o.data.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/catchfence_s.dds",
-        "useAnisotropic": true,
+        "roughnessFactor": 0.800000012,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_catchfence_01_r.data.png",
         "vertColor": true
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
@@ -229,11 +230,13 @@
     "alphaTest": true,
     "annotation": "OBSTACLES",
     "doubleSided": true,
+    "dynamicCubemap": true,
     "groundType": "METAL",
     "invertBackFaceNormals": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "corrugation": {
     "name": "corrugation",
@@ -242,42 +245,39 @@
     "persistentId": "6dfb06bb-d086-48d2-a999-06aa669dc625",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/corrugation_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/corrugation_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_corrugation_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_corrugation_b.color.png",
+        "metallicFactor": 0.600000024,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_corrugation_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_corrugation_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/corrugation_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/corrugation_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_corrugation_r.data.png",
         "vertColor": true
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
-    "alphaRef": 64,
-    "alphaTest": true,
+    "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "cubemap": "cubemap_wca_reflection",
+    "dynamicCubemap": true,
     "groundType": "METAL",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "covet_blueprint": {
     "name": "covet_blueprint",
@@ -286,25 +286,17 @@
     "persistentId": "e42254b5-81aa-4c7b-a07f-85fe25141236",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/covet_blueprint_d.dds",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "useAnisotropic": true
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_covet_blueprint_b.color.png",
+        "pixelSpecular": true
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       }
     ],
     "alphaRef": 0,
@@ -312,7 +304,8 @@
     "invertBackFaceNormals": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "curbramp": {
     "name": "curbramp",
@@ -350,67 +343,43 @@
     "persistentId": "9b434392-db03-4582-9acd-0a0b1e203687",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/fencewire_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/fencewire_n.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_fencewire_b.color.png",
+        "metallicFactor": 1,
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_fencewire_nm.normal.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/objects/t_fencewire_o.data.png",
         "pixelSpecular": true,
         "roughnessFactor": 0.607767701,
-        "useAnisotropic": true,
         "vertColor": true
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
-    "alphaRef": 40,
+    "alphaRef": 80,
     "alphaTest": true,
     "annotation": "OBSTACLES",
     "doubleSided": true,
+    "dynamicCubemap": true,
     "groundType": "METAL",
     "invertBackFaceNormals": true,
     "materialTag0": "beamng",
-    "materialTag1": "vehicle"
-  },
-  "filmset": {
-    "name": "filmset",
-    "mapTo": "filmset",
-    "class": "Material",
-    "persistentId": "95af54a5-104e-49fe-be34-1aaaf7c67036",
-    "Stages": [
-      {
-        "colorMap": "art/shapes/objects/filmset_d.dds",
-        "normalMap": "art/shapes/objects/filmset_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "art/shapes/objects/filmset_r.dds",
-        "specularMap": "art/shapes/objects/filmset_s.dds",
-        "specularPower": 32,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "annotation": "OBSTACLES",
-    "cubemap": "cubemap_buildings_reflection",
-    "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "version": 1.5
   },
   "flag_usa_loose": {
     "name": "flag_usa_loose",
@@ -419,29 +388,26 @@
     "persistentId": "ae3b2a86-1776-4cc9-b15f-74223d4c910c",
     "Stages": [
       {
-        "colorMap": "flag_usa_loose_d.dds",
-        "normalMap": "flag_usa_loose_n.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_flag_usa_loose_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_flag_usa_loose_nm.normal.png",
         "pixelSpecular": true,
-        "specularMap": "flag_usa_loose_s.dds",
-        "useAnisotropic": true
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_flag_usa_loose_r.data.png"
       },
       {
-        "pixelSpecular": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       }
     ],
     "doubleSided": true,
     "groundType": "PLASTIC",
     "materialTag0": "beamng",
-    "materialTag1": "Utah"
+    "materialTag1": "Utah",
+    "version": 1.5
   },
   "floodlight": {
     "name": "floodlight",
@@ -450,36 +416,34 @@
     "persistentId": "a7956189-1e5f-4e00-9e8d-daa0ed11d772",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/floodlight_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/floodlight_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_floodlight_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_floodlight_b.color.png",
+        "metallicFactor": 1,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_floodlight_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_floodlight_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/floodlight_r.dds",
-        "roughnessFactor": 0.690170288,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/floodlight_s.dds",
-        "useAnisotropic": true
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_floodlight_r.data.png"
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null,
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null,
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null,
+        "pixelSpecular": null
       }
     ],
     "alphaRef": 0,
     "annotation": "OBSTACLES",
-    "cubemap": "global_cubemap_metalblurred",
+    "dynamicCubemap": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "garbage": {
     "name": "garbage",
@@ -488,58 +452,25 @@
     "persistentId": "d9779e7d-b4ea-4d74-9148-6dc5522fda31",
     "Stages": [
       {
-        "colorMap": "/levels/west_coast_usa/art/shapes/objects/garbage_d.dds",
-        "normalMap": "/levels/west_coast_usa/art/shapes/objects/garbage_n.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_garbage_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_garbage_nm.normal.png",
         "pixelSpecular": true,
-        "specularMap": "/levels/west_coast_usa/art/shapes/objects/garbage_s.dds",
-        "useAnisotropic": true
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_garbage_r.data.png"
       },
       {
-        "pixelSpecular": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       }
     ],
     "annotation": "OBSTACLES",
     "materialTag0": "beamng",
-    "materialTag1": "garbage"
-  },
-  "guardrail": {
-    "name": "guardrail",
-    "mapTo": "guardrail",
-    "class": "Material",
-    "persistentId": "0e3f97e9-15ee-4a0f-85eb-30bd6344788d",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/guardrail_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/guardrail_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/guardrail_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/guardrail_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "annotation": "GUARD_RAIL",
-    "cubemap": "global_cubemap_metalblurred",
-    "doubleSided": true,
-    "groundType": "METAL",
-    "invertBackFaceNormals": true,
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucent": true,
-    "translucentBlendOp": "None"
+    "materialTag1": "garbage",
+    "version": 1.5
   },
   "guardrail_painted": {
     "name": "guardrail_painted",
@@ -548,46 +479,43 @@
     "persistentId": "76c44a0f-2ffe-49b6-8b8b-38a68ff57bb5",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/guardrail_d.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_guardrail_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_guardrail_b.color.png",
         "diffuseMapUseUV": null,
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/guardrail_n.dds",
+        "metallicFactor": 0.300000012,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_guardrail_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_guardrail_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/guardrail_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/guardrail_s.dds",
-        "useAnisotropic": true,
-        "vertColor": null
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_guardrail_r.data.png",
+        "vertColor": true
       },
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/guardrail_c.dds",
         "diffuseMapUseUV": 1,
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": true
       },
       {
         "diffuseMapUseUV": null,
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
         "diffuseMapUseUV": null,
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
     "annotation": "GUARD_RAIL",
-    "cubemap": "global_cubemap_metalblurred",
+    "dynamicCubemap": true,
     "groundType": "METAL",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
     "translucent": true,
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "hr_tirewall": {
     "name": "hr_tirewall",
@@ -596,31 +524,23 @@
     "persistentId": "f8039b7c-7e69-460b-aace-296d2104d80f",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/tirewall_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/tirewall_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_hr_tirewall_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_hr_tirewall_b.color.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_hr_tirewall_nm.normal.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.690170288,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/tirewall_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_hr_tirewall_r.data.png",
         "vertColor": null
       },
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/tirewall_c.dds",
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": true
       },
       {
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
@@ -628,7 +548,8 @@
     "annotation": "OBSTACLES",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "m_container_tank": {
     "name": "m_container_tank",
@@ -679,65 +600,62 @@
     "persistentId": "cafa7ee1-4701-4113-886e-f81518ae0716",
     "Stages": [
       {
-        "colorMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_edge_decal_d.color.png",
-        "detailNormalMap": "/levels/west_coast_usa/art/shapes/objects/ind_concrete_nm.normal.png",
-        "detailScale": [
-          8,
-          8
-        ],
-        "diffuseColor": [
+        "baseColorFactor": [
           1,
           0.999989986,
           0.999989986,
           1
         ],
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_edge_decal_b.color.png",
+        "detailScale": [
+          8,
+          8
+        ],
         "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_edge_decal_nm.normal.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_edge_decal_o.data.png",
         "pixelSpecular": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_edge_decal_r.data.png",
         "specular": [
           1,
           0.999989986,
           0.999989986,
           1
         ],
-        "specularMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_edge_decal_s.color.png",
-        "useAnisotropic": true,
         "vertColor": true
       },
       {
+        "baseColorFactor": null,
         "detailScale": null,
-        "diffuseColor": null,
         "pixelSpecular": null,
         "specular": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "baseColorFactor": null,
         "detailScale": null,
-        "diffuseColor": null,
         "pixelSpecular": null,
         "specular": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "baseColorFactor": null,
         "detailScale": null,
-        "diffuseColor": null,
         "pixelSpecular": null,
         "specular": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
     "alphaRef": 185,
     "annotation": "OBSTACLES",
+    "castShadows": false,
     "groundType": "ASPHALT_OLD",
     "materialTag0": "beamng",
     "materialTag1": "gridmap",
     "materialTag2": "concrete",
     "specularStrength0": "0.490196",
     "translucent": true,
-    "translucentRecvShadows": true,
-    "translucentZWrite": true
+    "translucentZWrite": true,
+    "version": 1.5
   },
   "m_gm_concrete_plain": {
     "name": "m_gm_concrete_plain",
@@ -998,31 +916,25 @@
     "persistentId": "67b22f0d-d18f-4918-8aff-16cbfb7259d9",
     "Stages": [
       {
-        "colorMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_metal_hotspotting_d.color.png",
-        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_metal_hotspotting_n.normal.png",
-        "reflectivityMapFactor": 0.0700000003,
-        "roughnessFactor": 0.349999994,
-        "specularMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_metal_hotspotting_s.color.png",
-        "useAnisotropic": true
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_metal_hotspotting_b.color.png",
+        "metallicFactor": 0.349999994,
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_metal_hotspotting_nm.normal.png",
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_metal_hotspotting_r.data.png"
       },
       {
-        "reflectivityMapFactor": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null
       },
       {
-        "reflectivityMapFactor": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null
       },
       {
-        "reflectivityMapFactor": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null
       }
     ],
     "annotation": "OBSTACLES",
-    "groundType": "METAL_TREAD"
+    "dynamicCubemap": true,
+    "groundType": "METAL_TREAD",
+    "version": 1.5
   },
   "m_metal_new_01": {
     "name": "m_metal_new_01",
@@ -1052,6 +964,7 @@
       {
         "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_metal_plates_ao.data.png",
         "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_metal_plates_b.color.png",
+        "metallicFactor": 0.800000012,
         "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_metal_plates_m.data.png",
         "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_metal_plates_nm.normal.png",
         "pixelSpecular": true,
@@ -1059,14 +972,17 @@
         "vertColor": true
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
         "vertColor": null
       }
@@ -1074,8 +990,8 @@
     "alphaRef": 64,
     "alphaTest": true,
     "annotation": "BUILDINGS",
-    "cubemap": "global_cubemap_metalblurred",
     "doubleSided": true,
+    "dynamicCubemap": true,
     "groundType": "METAL",
     "invertBackFaceNormals": true,
     "materialTag0": "beamng",
@@ -1090,63 +1006,28 @@
     "persistentId": "e4eb4eac-ed29-4005-be5e-374a13dcabbe",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/cables_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/cables_n.dds",
-        "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/cables_s.dds",
-        "useAnisotropic": true
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_power_cables_b.color.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/objects/t_power_cables_o.data.png",
+        "pixelSpecular": true
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "pixelSpecular": null
       }
     ],
-    "alphaRef": 100,
+    "alphaRef": 0,
     "annotation": "OBSTACLES",
     "castShadows": false,
     "doubleSided": true,
     "materialTag0": "beamng",
     "materialTag1": "building",
-    "translucent": true
-  },
-  "roadworks_objects": {
-    "name": "roadworks_objects",
-    "mapTo": "roadworks_objects",
-    "class": "Material",
-    "persistentId": "d004dff8-cb51-47be-8d13-56d2e6ee6255",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/construction_equipment_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/construction_equipment_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/construction_equipment_r.dds",
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/construction_equipment_s.dds",
-        "specularPower": 32,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "annotation": "OBSTACLES",
-    "cubemap": "cubemap_buildings_reflection",
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucent": true,
+    "version": 1.5
   },
   "rumblestrip": {
     "name": "rumblestrip",
@@ -1155,49 +1036,47 @@
     "persistentId": "5c735489-376a-4996-b47b-d4a22b3d31ba",
     "Stages": [
       {
-        "colorMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_line_d.color.png",
-        "diffuseColor": [
+        "baseColorFactor": [
           1,
           0.729412019,
           0.200000003,
           0.901961029
         ],
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_line_b.color.png",
         "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_line_nm.normal.png",
+        "opacityMap": "/levels/west_coast_usa/art/shapes/objects/t_gm_line_o.data.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.349999994,
+        "roughnessFactor": 0.649999976,
         "specular": [
           0.156863004,
           0.156863004,
           0.156863004,
           1
-        ],
-        "useAnisotropic": true
+        ]
       },
       {
-        "diffuseColor": null,
+        "baseColorFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "specular": null,
-        "useAnisotropic": null
+        "specular": null
       },
       {
-        "diffuseColor": null,
+        "baseColorFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "specular": null,
-        "useAnisotropic": null
+        "specular": null
       },
       {
-        "diffuseColor": null,
+        "baseColorFactor": null,
         "pixelSpecular": null,
         "roughnessFactor": null,
-        "specular": null,
-        "useAnisotropic": null
+        "specular": null
       }
     ],
     "groundType": "RUMBLE_STRIP",
     "translucent": true,
-    "translucentZWrite": true
+    "translucentZWrite": true,
+    "version": 1.5
   },
   "solar_panel": {
     "name": "solar_panel",
@@ -1206,36 +1085,32 @@
     "persistentId": "7cecf1b7-b3a0-41cb-9570-2e5cebec0bd2",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/solarpanel_d.dds",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_solarpanel_b.color.png",
+        "metallicFactor": 0.649999976,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_solarpanel_m.data.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/solarpanel_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/solarpanel_s.dds",
-        "useAnisotropic": true
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_solarpanel_r.data.png"
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null,
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null,
+        "pixelSpecular": null
       },
       {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
+        "metallicFactor": null,
+        "pixelSpecular": null
       }
     ],
-    "alphaRef": 64,
-    "alphaTest": true,
+    "alphaRef": 0,
     "annotation": "BUILDINGS",
-    "cubemap": "global_cubemap_metalblurred",
+    "dynamicCubemap": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "trafficLight": {
     "name": "trafficLight",
@@ -1325,34 +1200,6 @@
       {}
     ]
   },
-  "wca_objects1": {
-    "name": "wca_objects1",
-    "mapTo": "wca_objects1",
-    "class": "Material",
-    "persistentId": "979469f8-df04-435e-9884-573e44bb28a6",
-    "Stages": [
-      {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_n.dds",
-        "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_s.dds",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 64,
-    "alphaTest": true,
-    "annotation": "POLE",
-    "cubemap": "global_cubemap_metalblurred",
-    "materialTag0": "beamng",
-    "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
-  },
   "wca_objects_construction": {
     "name": "wca_objects_construction",
     "mapTo": "wca_objects_construction",
@@ -1360,41 +1207,38 @@
     "persistentId": "0209614e-0414-4fbb-b1cd-2e09bd8ef0d8",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_construction_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_construction_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_wca_objects_construction_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_wca_objects_construction_b.color.png",
+        "metallicFactor": 0.335000008,
+        "metallicMap": "/levels/west_coast_usa/art/shapes/objects/t_wca_objects_construction_m.data.png",
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_wca_objects_construction_nm.normal.png",
         "pixelSpecular": true,
-        "reflectivityMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_construction_r.dds",
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/wca_objects_construction_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_wca_objects_construction_r.data.png",
         "vertColor": true
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
-    "alphaRef": 64,
-    "alphaTest": true,
+    "alphaRef": 0,
     "annotation": "OBSTACLES",
-    "cubemap": "global_cubemap_metalblurred",
+    "dynamicCubemap": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   },
   "wirefence": {
     "name": "wirefence",
@@ -1403,40 +1247,48 @@
     "persistentId": "fbbbe725-e510-4ec7-908b-9e57270cbacb",
     "Stages": [
       {
-        "colorMap": "levels/west_coast_usa/art/shapes/objects/wirefence_d.dds",
-        "normalMap": "levels/west_coast_usa/art/shapes/objects/wirefence_n.dds",
+        "ambientOcclusionMap": "/levels/west_coast_usa/art/shapes/objects/t_wirefence_ao.data.png",
+        "baseColorMap": "/levels/west_coast_usa/art/shapes/objects/t_wirefence_b.color.png",
+        "metallicFactor": 0.800000012,
+        "normalMap": "/levels/west_coast_usa/art/shapes/objects/t_wirefence_nm.normal.png",
+        "normalMapStrength": 2,
+        "opacityFactor": 0.899999976,
+        "opacityMap": "/levels/west_coast_usa/art/shapes/objects/t_wirefence_o.data.png",
         "pixelSpecular": true,
-        "roughnessFactor": 0.607767701,
-        "specularMap": "levels/west_coast_usa/art/shapes/objects/wirefence_s.dds",
-        "useAnisotropic": true,
+        "roughnessMap": "/levels/west_coast_usa/art/shapes/objects/t_wirefence_r.data.png",
         "vertColor": true
       },
       {
+        "metallicFactor": null,
+        "normalMapStrength": null,
+        "opacityFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
+        "normalMapStrength": null,
+        "opacityFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       },
       {
+        "metallicFactor": null,
+        "normalMapStrength": null,
+        "opacityFactor": null,
         "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null,
         "vertColor": null
       }
     ],
-    "alphaRef": 64,
+    "alphaRef": 90,
     "alphaTest": true,
     "annotation": "OBSTACLES",
     "doubleSided": true,
+    "dynamicCubemap": true,
     "invertBackFaceNormals": true,
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
-    "translucentBlendOp": "None"
+    "translucentBlendOp": "None",
+    "version": 1.5
   }
 }

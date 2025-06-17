@@ -1006,49 +1006,6 @@
     "translucent": true,
     "translucentBlendOp": "AddAlpha"
   },
-  "italy_bld_metal": {
-    "name": "italy_bld_metal",
-    "mapTo": "italy_bld_metal",
-    "class": "Material",
-    "persistentId": "6919d035-1fff-49a6-a29d-d31038008aa0",
-    "Stages": [
-      {
-        "colorMap": "levels/italy/art/shapes/buildings/italy_bld_metal_d.dds",
-        "detailNormalMapStrength": 0.5,
-        "detailScale": [
-          1,
-          1
-        ],
-        "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
-          0.074000001
-        ],
-        "normalMap": "levels/italy/art/shapes/buildings/italy_bld_metal_n.dds",
-        "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
-          1
-        ],
-        "specularMap": "levels/italy/art/shapes/buildings/italy_bld_metal_s.dds",
-        "specularPower": 36,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "alphaRef": 0,
-    "cubemap": "global_cubemap_metalblurred",
-    "doubleSided": true,
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "italy",
-    "specularStrength0": "0.490196",
-    "translucentBlendOp": "None"
-  },
   "italy_bld_object_atlas": {
     "name": "italy_bld_object_atlas",
     "mapTo": "italy_bld_object_atlas",
@@ -1813,39 +1770,6 @@
       {}
     ],
     "order_simset": -1115675998
-  },
-  "italy_guardrails": {
-    "name": "italy_guardrails",
-    "mapTo": "italy_guardrails",
-    "class": "Material",
-    "persistentId": "b3993ff9-24fd-43bf-a8af-2d85193dae5d",
-    "Stages": [
-      {
-        "colorMap": "levels/italy/art/shapes/buildings/italy_guardrails_d.dds",
-        "detailScale": [
-          6,
-          6
-        ],
-        "normalMap": "levels/italy/art/shapes/buildings/italy_guardrails_n.dds",
-        "reflectivityMap": "levels/italy/art/shapes/buildings/italy_guardrails_r.dds",
-        "specularMap": "levels/italy/art/shapes/buildings/italy_guardrails_s.dds",
-        "specularPower": 1,
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {}
-    ],
-    "cubemap": "global_cubemap_metalblurred",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "italy",
-    "specularStrength0": "0.490196",
-    "translucentBlendOp": "None"
   },
   "italy_medieval_stone_wall": {
     "name": "italy_medieval_stone_wall",

@@ -82,35 +82,9 @@
     "translucentBlendOp": "None",
     "version": 1.5
   },
-  "Concrete_Road_Barrier_a": {
-    "name": "Concrete_Road_Barrier_a",
-    "mapTo": "concrete_road_barrier_a",
-    "class": "Material",
-    "persistentId": "b243f114-5c07-41f6-981e-b20ea2a0b07b",
-    "Stages": [
-      {
-        "colorMap": "concrete_road_barrier_a_d.dds",
-        "diffuseColor": [
-          0.992156982,
-          0.992156982,
-          0.992156982,
-          1
-        ],
-        "normalMap": "concrete_road_barrier_a_n.dds",
-        "specularMap": "concrete_road_barrier_a_s.dds",
-        "specularPower": 1
-      },
-      {},
-      {},
-      {}
-    ],
-    "groundType": "ASPHALT_OLD",
-    "materialTag0": "beamng",
-    "materialTag1": "Industrial"
-  },
   "a_asphalt_01_a": {
     "name": "a_asphalt_01_a",
-    "mapTo": "asphalt_01_a",
+    "mapTo": "a_asphalt_01_a",
     "class": "Material",
     "persistentId": "6ac6aa71-41f6-45ea-a8b5-c59bc5b90a09",
     "Stages": [
@@ -124,9 +98,15 @@
         ],
         "specularMap": "/levels/jungle_rock_island/art/shapes/misc/asphalt_01_a_s.dds"
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
     ],
     "doubleSided": true,
     "groundType": "ASPHALT_OLD",
@@ -141,9 +121,9 @@
     "persistentId": "d077690f-10be-49c5-8ab3-b6daf74ff264",
     "Stages": [
       {
-        "colorMap": "animals_diff.dds",
-        "normalMap": "animals_n.dds",
-        "specularMap": "animals_spec.dds"
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/animals_diff.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/animals_n.dds",
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/animals_spec.dds"
       },
       {},
       {},
@@ -158,14 +138,14 @@
     "persistentId": "f4a3a739-98f9-471b-ba94-26563d1a8f62",
     "Stages": [
       {
-        "colorMap": "concrete_bridge_01a_d.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/concrete_bridge_01a_d.dds",
         "diffuseColor": [
           0.800000012,
           0.800000012,
           0.800000012,
           1
         ],
-        "normalMap": "concrete_bridge_01a_n.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/concrete_bridge_01a_n.dds",
         "pixelSpecular": true,
         "specular": [
           0.400000006,
@@ -173,13 +153,27 @@
           0.400000006,
           1
         ],
-        "specularMap": "concrete_bridge_01a_s.dds",
-        "specularPower": 4,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/concrete_bridge_01a_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "ASPHALT_OLD",
     "materialTag0": "beamng",
@@ -187,32 +181,41 @@
   },
   "container_01_a_containers_01_a": {
     "name": "container_01_a_containers_01_a",
-    "mapTo": "containers_01_a",
+    "mapTo": "container_01_a_containers_01_a",
     "class": "Material",
     "persistentId": "c5ff8d3d-3eb1-4f0c-85d0-b915c176f843",
     "Stages": [
       {
-        "colorMap": "containers_01_a_d.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/containers_01_a_d.dds",
         "diffuseColor": [
-          0.9960780143737792,
+          0.996078014,
           0.992156982,
           0.992156982,
           1
         ],
-        "normalMap": "containers_01_a_n.dds",
-        "specularMap": "containers_01_a_s.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/containers_01_a_n.dds",
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/containers_01_a_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "METAL",
     "translucentBlendOp": "None"
   },
   "container_01_b_Material": {
     "name": "container_01_b_Material",
-    "mapTo": "Material",
+    "mapTo": "container_01_b_Material",
     "class": "Material",
     "persistentId": "f67d81eb-3564-4d78-ae99-ad266bb2b55c",
     "Stages": [
@@ -224,9 +227,15 @@
           1
         ]
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      },
+      {
+        "diffuseColor": null
+      }
     ],
     "doubleSided": true,
     "groundType": "METAL",
@@ -319,16 +328,24 @@
     "persistentId": "6b3c2079-82b4-4dd9-937d-520b5a4d0423",
     "Stages": [
       {
-        "colorMap": "ferry_blue.dds",
-        "normalMap": "ferry_n.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_blue.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_n.dds",
         "pixelSpecular": true,
-        "specularMap": "ferry_s.dds",
-        "specularPower": 4,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "METAL",
     "materialTag0": "beamng",
@@ -341,16 +358,24 @@
     "persistentId": "c0f9c20f-4487-428d-9bfe-b0ac69a0ff13",
     "Stages": [
       {
-        "colorMap": "ferry_hazard.dds",
-        "normalMap": "ferry_n.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_hazard.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_n.dds",
         "pixelSpecular": true,
-        "specularMap": "ferry_s.dds",
-        "specularPower": 4,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "METAL",
     "materialTag0": "beamng",
@@ -388,16 +413,24 @@
     "persistentId": "00a817f8-3a0c-408d-9afa-e0ed166bbd4d",
     "Stages": [
       {
-        "colorMap": "ferry_red.dds",
-        "normalMap": "ferry_n.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_red.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_n.dds",
         "pixelSpecular": true,
-        "specularMap": "ferry_s.dds",
-        "specularPower": 4,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "METAL",
     "materialTag0": "beamng",
@@ -410,16 +443,24 @@
     "persistentId": "eacee48b-5955-4933-bf98-4035368d9cff",
     "Stages": [
       {
-        "colorMap": "ferry_white.dds",
-        "normalMap": "ferry_n.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_white.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_n.dds",
         "pixelSpecular": true,
-        "specularMap": "ferry_s.dds",
-        "specularPower": 4,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/ferry_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "METAL",
     "materialTag0": "beamng",
@@ -544,7 +585,7 @@
     "persistentId": "64fe116c-7e78-4ced-a63b-1da598c651c8",
     "Stages": [
       {
-        "colorMap": "billboards_01b.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/billboards_01b.dds",
         "detailScale": [
           10,
           10
@@ -556,12 +597,26 @@
           0.5,
           1
         ],
-        "specularPower": 1,
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
     "doubleSided": true,
     "groundType": "PLASTIC",
@@ -578,11 +633,11 @@
     "persistentId": "d447221b-0dc1-484a-9e25-aa080a752ba9",
     "Stages": [
       {
-        "colorMap": "misc_markings.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/misc_markings.dds",
         "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.996078014,
+          0.996078014,
+          0.996078014,
           1
         ],
         "pixelSpecular": true,
@@ -591,12 +646,23 @@
           0.5,
           0.5,
           1
-        ],
-        "specularPower": 1
+        ]
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null
+      },
+      {
+        "diffuseColor": null,
+        "pixelSpecular": null,
+        "specular": null
+      }
     ],
     "alphaRef": 40,
     "alphaTest": true,
@@ -614,16 +680,24 @@
     "persistentId": "0f5d6a02-ab1d-41bc-bbce-dbb0387af366",
     "Stages": [
       {
-        "colorMap": "speedbump_01a_d.dds",
-        "normalMap": "speedbump_01a_n.dds",
+        "colorMap": "/levels/jungle_rock_island/art/shapes/misc/speedbump_01a_d.dds",
+        "normalMap": "/levels/jungle_rock_island/art/shapes/misc/speedbump_01a_n.dds",
         "pixelSpecular": true,
-        "specularMap": "speedbump_01a_s.dds",
-        "specularPower": 3,
+        "specularMap": "/levels/jungle_rock_island/art/shapes/misc/speedbump_01a_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "METAL",
     "materialTag0": "beamng",

@@ -344,20 +344,28 @@
     "persistentId": "b4aa2cb1-54ef-44bd-ac7d-fb5163dddb18",
     "Stages": [
       {
-        "colorMap": "tin-01_d.dds",
+        "colorMap": "/levels/utah/art/shapes/buildings/tin-01_d.dds",
         "detailMap": "detail_grunge_02_streak.dds",
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.100000001,
+          0.100000001
         ],
-        "normalMap": "tin-01_n.dds",
-        "specularMap": "tin-01_s.dds",
-        "specularPower": 1,
+        "normalMap": "/levels/utah/art/shapes/buildings/tin-01_n.dds",
+        "specularMap": "/levels/utah/art/shapes/buildings/tin-01_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "useAnisotropic": null
+      }
     ],
     "doubleSided": true,
     "groundType": "METAL",
@@ -416,32 +424,46 @@
     "persistentId": "55d804e6-7c14-4b6d-a97f-a4f69e1548f3",
     "Stages": [
       {
-        "colorMap": "concrete-01_d.dds",
+        "colorMap": "/levels/utah/art/shapes/buildings/concrete-01_d.dds",
         "detailMap": "detail_grunge_03.dds",
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.100000001,
+          0.100000001
         ],
         "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.996078014,
+          0.996078014,
+          0.996078014,
           1
         ],
-        "normalMap": "concrete-01_n.dds",
+        "normalMap": "/levels/utah/art/shapes/buildings/concrete-01_n.dds",
         "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.996078014,
+          0.996078014,
+          0.996078014,
           1
         ],
-        "specularMap": "Concrete-01_s.dds",
-        "specularPower": 1,
+        "specularMap": "/levels/utah/art/shapes/buildings/Concrete-01_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "specular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "diffuseColor": null,
+        "specular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "ASPHALT_OLD",
     "materialTag0": "beamng",
@@ -510,20 +532,32 @@
     "persistentId": "6c8ba0c5-b083-4908-894e-fa489314ef69",
     "Stages": [
       {
-        "colorMap": "tin-01b_d.dds",
+        "colorMap": "/levels/utah/art/shapes/buildings/tin-01b_d.dds",
         "detailMap": "detail_grunge_02_streak.dds",
-        "detailNormalMapStrength": 0.1000000014901161,
+        "detailNormalMapStrength": 0.100000001,
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.100000001,
+          0.100000001
         ],
-        "normalMap": "tin-01_n.dds",
-        "specularMap": "tin-01b_s.dds",
+        "normalMap": "/levels/utah/art/shapes/buildings/tin-01_n.dds",
+        "specularMap": "/levels/utah/art/shapes/buildings/tin-01b_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailNormalMapStrength": null,
+        "detailScale": null,
+        "useAnisotropic": null
+      }
     ],
     "doubleSided": true,
     "groundType": "METAL",
@@ -598,7 +632,7 @@
   },
   "ind_planks_01": {
     "name": "ind_planks_01",
-    "mapTo": "Ind_planks",
+    "mapTo": "ind_planks_01",
     "class": "Material",
     "persistentId": "5fb91732-070c-469f-8412-933a08db6932",
     "Stages": [
@@ -606,12 +640,17 @@
         "colorMap": "levels/Utah/art/shapes/buildings/ind_planks_01_d.dds",
         "normalMap": "levels/Utah/art/shapes/buildings/ind_planks_01_n.dds",
         "specularMap": "levels/Utah/art/shapes/buildings/ind_planks_01_s.dds",
-        "specularPower": 1,
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "useAnisotropic": null
+      },
+      {
+        "useAnisotropic": null
+      },
+      {
+        "useAnisotropic": null
+      }
     ],
     "alphaRef": 121,
     "alphaTest": true,
@@ -2099,31 +2138,6 @@
     "materialTag2": "utah",
     "translucentBlendOp": "None"
   },
-  "ut_bld_wood_old": {
-    "name": "ut_bld_wood_old",
-    "mapTo": "ut_bld_wood_old",
-    "class": "Material",
-    "persistentId": "87965296-eb41-4444-bd50-1f53e3b53523",
-    "Stages": [
-      {
-        "colorMap": "/levels/Utah/art/shapes/buildings/ut_wood_old_d.color.png",
-        "normalMap": "/levels/Utah/art/shapes/buildings/ut_wood_old_nm.normal.png",
-        "overlayMap": "levels/Utah/art/shapes/buildings/utah_breakup_texture.dds",
-        "specularMap": "/levels/Utah/art/shapes/buildings/ut_wood_old_s.color.png",
-        "useAnisotropic": true,
-        "vertColor": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "groundType": "WOOD",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "materialTag2": "utah",
-    "order_simset": 1055107772,
-    "translucentBlendOp": "None"
-  },
   "ut_building_decoration_1": {
     "name": "ut_building_decoration_1",
     "mapTo": "ut_building_decoration_1",
@@ -2195,21 +2209,29 @@
     "persistentId": "b900cf52-15ea-4cb2-87b3-052c12f4647e",
     "Stages": [
       {
-        "colorMap": "ut_busstop_old_sign_d.dds",
+        "colorMap": "/levels/utah/art/shapes/buildings/ut_busstop_old_sign_d.dds",
         "diffuseColor": [
           0.992156982,
           0.992156982,
           0.992156982,
           1
         ],
-        "normalMap": "ut_busstop_old_sign_n.dds",
-        "specularMap": "ut_busstop_old_sign_s.dds",
-        "specularPower": 1,
+        "normalMap": "/levels/utah/art/shapes/buildings/ut_busstop_old_sign_n.dds",
+        "specularMap": "/levels/utah/art/shapes/buildings/ut_busstop_old_sign_s.dds",
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      },
+      {
+        "diffuseColor": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "WOOD",
     "materialTag0": "beamng"
@@ -2560,18 +2582,29 @@
     "persistentId": "d64aecd1-a851-4b59-ba3c-fb0f6bb8f43e",
     "Stages": [
       {
-        "colorMap": "ut_tourist_posters_etc_d.dds",
+        "colorMap": "/levels/utah/art/shapes/buildings/ut_tourist_posters_etc_d.dds",
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.100000001,
+          0.100000001
         ],
         "pixelSpecular": true,
-        "specularPower": 1,
         "useAnisotropic": true
       },
-      {},
-      {},
-      {}
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      },
+      {
+        "detailScale": null,
+        "pixelSpecular": null,
+        "useAnisotropic": null
+      }
     ],
     "groundType": "PLASTIC",
     "materialTag0": "beamng",

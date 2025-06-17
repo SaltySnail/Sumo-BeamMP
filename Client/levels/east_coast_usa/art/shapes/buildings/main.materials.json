@@ -32,10 +32,6 @@
     "translucentBlendOp": "None"
   },
   "bld_glass_transparent": {
-    "name": "bld_glass_transparent",
-    "mapTo": "bld_glass_transparent",
-    "class": "Material",
-    "persistentId": "cf12cada-35ab-42ea-ab81-eb203c464e82",
     "Stages": [
       {
         "colorMap": "levels/italy/art/shapes/buildings/italy_bld_glass_d.dds",
@@ -47,13 +43,13 @@
         "diffuseColor": [
           0.894117713,
           0.960784376,
-          0.9960784912109376,
+          0.9960784912,
           0.561999977
         ],
         "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "specularMap": "levels/italy/art/shapes/buildings/Italy_bld_glass_s.dds",
@@ -65,19 +61,19 @@
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "BNG_Sky_02_cubemap",
     "groundType": "METAL",
+    "mapTo": "bld_glass_transparent",
     "materialTag0": "beamng",
     "materialTag1": "italy",
     "materialTag2": "Natural",
+    "name": "bld_glass_transparent",
+    "persistentId": "cf12cada-35ab-42ea-ab81-eb203c464e82",
     "specularStrength0": "0.490196",
     "translucent": true
   },
   "busstop": {
-    "name": "busstop",
-    "mapTo": "busstop",
-    "class": "Material",
-    "persistentId": "8e3c53c1-704c-4e1f-8cfb-ee5e10a18a94",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/busstop_d.dds",
@@ -96,15 +92,15 @@
     "alphaRef": 64,
     "alphaTest": true,
     "annotation": "OBSTACLES",
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "busstop",
+    "name": "busstop",
+    "persistentId": "8e3c53c1-704c-4e1f-8cfb-ee5e10a18a94",
     "translucentBlendOp": "None"
   },
   "busstop_windows": {
-    "name": "busstop_windows",
-    "mapTo": "busstop_windows",
-    "class": "Material",
-    "persistentId": "26d4016f-8223-41ad-9c30-ec06563b43ae",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/busstop_d.dds",
@@ -115,33 +111,21 @@
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/busstop_s.dds",
         "useAnisotropic": true
       },
-      {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
-      },
-      {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
-      },
-      {
-        "pixelSpecular": null,
-        "roughnessFactor": null,
-        "useAnisotropic": null
-      }
+      {},
+      {},
+      {}
     ],
     "alphaRef": 49,
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "busstop_windows",
+    "name": "busstop_windows",
+    "persistentId": "26d4016f-8223-41ad-9c30-ec06563b43ae",
     "translucent": true,
     "translucentRecvShadows": true
   },
   "eca_asphalt": {
-    "name": "eca_asphalt",
-    "mapTo": "eca_asphalt",
-    "class": "Material",
-    "persistentId": "1aef8a02-213d-42fa-89e7-ae67ac7865ce",
     "Stages": [
       {
         "ambientOcclusionMap": "/levels/east_coast_usa/art/shapes/buildings/t_asphalt_ao.data.png",
@@ -168,53 +152,18 @@
     ],
     "alphaRef": 0,
     "annotation": "ASPHALT",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_asphalt",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_asphalt",
+    "persistentId": "1aef8a02-213d-42fa-89e7-ae67ac7865ce",
     "translucentBlendOp": "None",
     "version": 1.5
   },
-  "eca_bld_brick_paintedred_annotation_sidewalk": {
-    "name": "eca_bld_brick_paintedred_annotation_sidewalk",
-    "mapTo": "eca_bld_brick_paintedred_annotation_sidewalk",
-    "class": "Material",
-    "persistentId": "89292386-cddc-40e3-b387-f0756ee391ca",
-    "Stages": [
-      {
-        "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_brick_01_painted_d.dds",
-        "detailMap": "levels/east_coast_usa/art/shapes/buildings/eca_grungewood_b.dds",
-        "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
-        ],
-        "diffuseColor": [
-          0.592157006,
-          0.44313699,
-          0.431373,
-          1
-        ],
-        "normalMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_brick_01_n.dds",
-        "specularMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_brick_01_s.dds",
-        "specularPower": 1,
-        "useAnisotropic": true
-      },
-      {},
-      {},
-      {}
-    ],
-    "annotation": "SIDEWALK",
-    "groundType": "ASPHALT_OLD",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "materialTag2": "east_coast_usa",
-    "translucentBlendOp": "None"
-  },
   "eca_bld_bricks": {
-    "name": "eca_bld_bricks",
-    "mapTo": "eca_bld_bricks",
-    "class": "Material",
-    "persistentId": "119a7a13-623e-4ad2-b6ae-17f828d6202b",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_bricks_d.dds",
@@ -230,17 +179,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_bricks",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_bricks",
+    "persistentId": "119a7a13-623e-4ad2-b6ae-17f828d6202b",
     "translucentBlendOp": "None"
   },
   "eca_bld_bricks_dark": {
-    "name": "eca_bld_bricks_dark",
-    "mapTo": "eca_bld_bricks_dark",
-    "class": "Material",
-    "persistentId": "4489714b-c29d-4b50-b11f-c2c741393942",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_bricks_dark_d.dds",
@@ -256,17 +205,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_bricks_dark",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_bricks_dark",
+    "persistentId": "4489714b-c29d-4b50-b11f-c2c741393942",
     "translucentBlendOp": "None"
   },
   "eca_bld_bricks_painted": {
-    "name": "eca_bld_bricks_painted",
-    "mapTo": "eca_bld_bricks_painted",
-    "class": "Material",
-    "persistentId": "91a2fe08-279f-4f29-8667-f02f02b0d5cc",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_bricks_painted_d.dds",
@@ -282,17 +231,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_bricks_painted",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_bricks_painted",
+    "persistentId": "91a2fe08-279f-4f29-8667-f02f02b0d5cc",
     "translucentBlendOp": "None"
   },
   "eca_bld_chainlink": {
-    "name": "eca_bld_chainlink",
-    "mapTo": "eca_bld_chainlink",
-    "class": "Material",
-    "persistentId": "5048cf94-6562-488c-924d-9323c799d8a1",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_chainlink_d.dds",
@@ -313,25 +262,25 @@
     ],
     "alphaRef": 27,
     "annotation": "BUILDINGS",
+    "class": "Material",
     "doubleSided": true,
     "groundType": "METAL",
+    "mapTo": "eca_bld_chainlink",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_chainlink",
+    "persistentId": "5048cf94-6562-488c-924d-9323c799d8a1",
     "translucent": true
   },
   "eca_bld_cleanmetal": {
-    "name": "eca_bld_cleanmetal",
-    "mapTo": "eca_bld_cleanmetal",
-    "class": "Material",
-    "persistentId": "f74c972d-e96b-4e13-9f3f-524f25dc4813",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/null.dds",
         "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_cleanmetal_n.dds",
@@ -349,25 +298,25 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "eca_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "eca_bld_cleanmetal",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_cleanmetal",
+    "persistentId": "f74c972d-e96b-4e13-9f3f-524f25dc4813",
     "translucentBlendOp": "None"
   },
   "eca_bld_cleanmetal_annotation_street": {
-    "name": "eca_bld_cleanmetal_annotation_street",
-    "mapTo": "eca_bld_cleanmetal_annotation_street",
-    "class": "Material",
-    "persistentId": "1cfb6cf4-9431-442b-afa6-c0d28150a990",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/null.dds",
         "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "specularPower": 1,
@@ -381,18 +330,18 @@
       {}
     ],
     "annotation": "GUARD_RAIL",
+    "class": "Material",
     "cubemap": "eca_cubemap_metalblurred",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_cleanmetal_annotation_street",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_cleanmetal_annotation_street",
+    "persistentId": "1cfb6cf4-9431-442b-afa6-c0d28150a990",
     "translucentBlendOp": "None"
   },
   "eca_bld_cleanmetalb": {
-    "name": "eca_bld_cleanmetalb",
-    "mapTo": "eca_bld_cleanmetalb",
-    "class": "Material",
-    "persistentId": "f10172ac-5cbf-4066-92f4-1a4c96332ea0",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_cleanmetalb_d.dds",
@@ -412,17 +361,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_cleanmetalb",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_cleanmetalb",
+    "persistentId": "f10172ac-5cbf-4066-92f4-1a4c96332ea0",
     "translucentBlendOp": "None"
   },
   "eca_bld_cleanmetalb_annotation_guard_rail": {
-    "name": "eca_bld_cleanmetalb_annotation_guard_rail",
-    "mapTo": "eca_bld_cleanmetalb_annotation_guard_rail",
-    "class": "Material",
-    "persistentId": "25b94685-a753-4dd4-81ce-63bb28762895",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_cleanmetalb_d.dds",
@@ -441,17 +390,17 @@
       {}
     ],
     "annotation": "GUARD_RAIL",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_cleanmetalb_annotation_guard_rail",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_cleanmetalb_annotation_guard_rail",
+    "persistentId": "25b94685-a753-4dd4-81ce-63bb28762895",
     "translucentBlendOp": "None"
   },
   "eca_bld_cleanmetalb_annotation_pole": {
-    "name": "eca_bld_cleanmetalb_annotation_pole",
-    "mapTo": "eca_bld_cleanmetalb_annotation_pole",
-    "class": "Material",
-    "persistentId": "50323ef4-42f1-4115-a7c9-31c3cf0385fd",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_cleanmetalb_d.dds",
@@ -470,17 +419,17 @@
       {}
     ],
     "annotation": "POLE",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_cleanmetalb_annotation_pole",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_cleanmetalb_annotation_pole",
+    "persistentId": "50323ef4-42f1-4115-a7c9-31c3cf0385fd",
     "translucentBlendOp": "None"
   },
   "eca_bld_cleanmetalb_annotation_sidebars": {
-    "name": "eca_bld_cleanmetalb_annotation_sidebars",
-    "mapTo": "eca_bld_cleanmetalb_annotation_sidebars",
-    "class": "Material",
-    "persistentId": "6747a98e-6608-4967-914c-f92e9b62172a",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_cleanmetalb_d.dds",
@@ -499,17 +448,17 @@
       {}
     ],
     "annotation": "SIDEBARS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_cleanmetalb_annotation_sidebars",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_cleanmetalb_annotation_sidebars",
+    "persistentId": "6747a98e-6608-4967-914c-f92e9b62172a",
     "translucentBlendOp": "None"
   },
   "eca_bld_concrete": {
-    "name": "eca_bld_concrete",
-    "mapTo": "eca_bld_concrete",
-    "class": "Material",
-    "persistentId": "bdaa001e-5175-42bb-ab76-9ab9506712d9",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_concrete_d.dds",
@@ -529,17 +478,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "CONCRETE",
+    "mapTo": "eca_bld_concrete",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_concrete",
+    "persistentId": "bdaa001e-5175-42bb-ab76-9ab9506712d9",
     "translucentBlendOp": "None"
   },
   "eca_bld_decking": {
-    "name": "eca_bld_decking",
-    "mapTo": "eca_bld_decking",
-    "class": "Material",
-    "persistentId": "cf74fef1-f9bc-4c86-b7ba-eea413f7a585",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_bld_decking_d.dds",
@@ -555,17 +504,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_decking",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_decking",
+    "persistentId": "cf74fef1-f9bc-4c86-b7ba-eea413f7a585",
     "translucentBlendOp": "None"
   },
   "eca_bld_decking_old": {
-    "name": "eca_bld_decking_old",
-    "mapTo": "eca_bld_decking_old",
-    "class": "Material",
-    "persistentId": "34cbcf75-1060-43c1-b6db-8f3b911238e4",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_decking_old_d.dds",
@@ -580,24 +529,24 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_decking_old",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_decking_old",
+    "persistentId": "34cbcf75-1060-43c1-b6db-8f3b911238e4",
     "translucentBlendOp": "None"
   },
   "eca_bld_decking_oldwood_annotation_street": {
-    "name": "eca_bld_decking_oldwood_annotation_street",
-    "mapTo": "eca_bld_decking_oldwood_annotation_street",
-    "class": "Material",
-    "persistentId": "a7321ed7-657a-449c-af2a-9bfe597772a5",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_decking_oldwood_d.dds",
         "detailMap": "levels/east_coast_usa/art/shapes/buildings/detail_grunge_03.dds",
         "detailScale": [
-          0.300000011920929,
-          0.300000011920929
+          0.3000000119,
+          0.3000000119
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_decking_01_n.dds",
         "overlayMap": "levels/east_coast_usa/art/shapes/buildings/eca_breakup_texture.dds",
@@ -610,24 +559,24 @@
       {}
     ],
     "annotation": "STREET",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_decking_oldwood_annotation_street",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_decking_oldwood_annotation_street",
+    "persistentId": "a7321ed7-657a-449c-af2a-9bfe597772a5",
     "translucentBlendOp": "None"
   },
   "eca_bld_grass1": {
-    "name": "eca_bld_grass1",
-    "mapTo": "eca_bld_grass1",
-    "class": "Material",
-    "persistentId": "2c4dbd84-5019-47ea-b9ab-d33ce9496e60",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_grass_1_d.dds",
         "detailMap": "levels/east_coast_usa/art/terrains/Overlay_01.dds",
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.1000000015,
+          0.1000000015
         ],
         "diffuseColor": [
           0.835294008,
@@ -647,17 +596,17 @@
       {}
     ],
     "annotation": "NATURE",
+    "class": "Material",
     "groundType": "grass",
+    "mapTo": "eca_bld_grass1",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_grass1",
+    "persistentId": "2c4dbd84-5019-47ea-b9ab-d33ce9496e60",
     "translucentBlendOp": "None"
   },
   "eca_bld_house_decoration": {
-    "name": "eca_bld_house_decoration",
-    "mapTo": "eca_bld_house_decoration",
-    "class": "Material",
-    "persistentId": "8e48836d-19c0-4907-bf00-558841d046b5",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_bld_house_decoration_d.dds",
@@ -670,24 +619,24 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_house_decoration",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_house_decoration",
+    "persistentId": "8e48836d-19c0-4907-bf00-558841d046b5",
     "translucentBlendOp": "None"
   },
   "eca_bld_metal_01_white_annotation_pole": {
-    "name": "eca_bld_metal_01_white_annotation_pole",
-    "mapTo": "eca_bld_metal_01_white_annotation_pole",
-    "class": "Material",
-    "persistentId": "3439a2f8-38c5-4919-a062-f0ad572c0bf0",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metal_01_d_white.dds",
         "detailMap": "levels/east_coast_usa/art/shapes/buildings/eca_grungewood_b.dds",
         "detailScale": [
-          0.2000000029802322,
-          0.2000000029802322
+          0.200000003,
+          0.200000003
         ],
         "pixelSpecular": true,
         "specularPower": 26,
@@ -699,19 +648,19 @@
       {}
     ],
     "annotation": "POLE",
+    "class": "Material",
     "doubleSided": true,
     "groundType": "METAL",
+    "mapTo": "eca_bld_metal_01_white_annotation_pole",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_metal_01_white_annotation_pole",
+    "persistentId": "3439a2f8-38c5-4919-a062-f0ad572c0bf0",
     "specularStrength0": "0.588235",
     "translucentBlendOp": "None"
   },
   "eca_bld_metal_painted": {
-    "name": "eca_bld_metal_painted",
-    "mapTo": "eca_bld_metal_painted",
-    "class": "Material",
-    "persistentId": "4cb6196a-fd17-44ca-b156-aefd5b70c9d8",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metal_painted_d.dds",
@@ -726,18 +675,18 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "eca_bld_metal_painted",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_metal_painted",
+    "persistentId": "4cb6196a-fd17-44ca-b156-aefd5b70c9d8",
     "translucentBlendOp": "None"
   },
   "eca_bld_metal_trim": {
-    "name": "eca_bld_metal_trim",
-    "mapTo": "eca_bld_metal_trim",
-    "class": "Material",
-    "persistentId": "6d43786e-ee62-441f-8bf8-55919bc21578",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metal_trim_d.dds",
@@ -760,15 +709,15 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "eca_bld_metal_trim",
+    "name": "eca_bld_metal_trim",
+    "persistentId": "6d43786e-ee62-441f-8bf8-55919bc21578",
     "translucentBlendOp": "None"
   },
   "eca_bld_metalbeams": {
-    "name": "eca_bld_metalbeams",
-    "mapTo": "eca_bld_metalbeams",
-    "class": "Material",
-    "persistentId": "35ca0614-9f8c-49c9-b92d-b61b37801075",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metalbeams_d.dds",
@@ -786,24 +735,24 @@
       {}
     ],
     "annotation": "TRAFFIC_SIGNS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_metalbeams",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_metalbeams",
+    "persistentId": "35ca0614-9f8c-49c9-b92d-b61b37801075",
     "translucentBlendOp": "None"
   },
   "eca_bld_metalbeams_annotation_pole": {
-    "name": "eca_bld_metalbeams_annotation_pole",
-    "mapTo": "eca_bld_metalbeams_annotation_pole",
-    "class": "Material",
-    "persistentId": "5a1c0627-bb9e-4531-a0fa-f27ef9408c08",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metalbeams_d.dds",
         "detailMap": "levels/east_coast_usa/art/shapes/buildings/detail_grunge_01_low_desat.dds",
         "detailScale": [
-          0.2000000029802322,
-          0.2000000029802322
+          0.200000003,
+          0.200000003
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metalbeams_n.dds",
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metalbeams_s.dds",
@@ -815,24 +764,24 @@
       {}
     ],
     "annotation": "POLE",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_metalbeams_annotation_pole",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_metalbeams_annotation_pole",
+    "persistentId": "5a1c0627-bb9e-4531-a0fa-f27ef9408c08",
     "translucentBlendOp": "None"
   },
   "eca_bld_metaltrim": {
-    "name": "eca_bld_metaltrim",
-    "mapTo": "eca_bld_metaltrim",
-    "class": "Material",
-    "persistentId": "ba99d70a-41b3-4609-96b1-eb70f9893cee",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metal_trim_d.dds",
         "detailMap": "levels/east_coast_usa/art/shapes/buildings/eca_grungewood_b.dds",
         "detailScale": [
-          0.2000000029802322,
-          0.2000000029802322
+          0.200000003,
+          0.200000003
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_metal_trim_n.dds",
         "pixelSpecular": true,
@@ -847,19 +796,19 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "eca_bld_metaltrim",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_metaltrim",
+    "persistentId": "ba99d70a-41b3-4609-96b1-eb70f9893cee",
     "specularStrength0": "0.588235",
     "translucentBlendOp": "None"
   },
   "eca_bld_moderncorrugated_tin": {
-    "name": "eca_bld_moderncorrugated_tin",
-    "mapTo": "eca_bld_moderncorrugated_tin",
-    "class": "Material",
-    "persistentId": "dd015b4d-10b5-4375-a924-358603a89462",
     "Stages": [
       {
         "colorMap": "eca_bld_moderncorrugated_tin_d.dds",
@@ -875,17 +824,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_bld_moderncorrugated_tin",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_moderncorrugated_tin",
+    "persistentId": "dd015b4d-10b5-4375-a924-358603a89462",
     "translucentBlendOp": "None"
   },
   "eca_bld_oldwood_annotation_pole": {
-    "name": "eca_bld_oldwood_annotation_pole",
-    "mapTo": "eca_bld_oldwood_annotation_pole",
-    "class": "Material",
-    "persistentId": "57bad8af-1560-46b1-acd7-473b66dafab1",
     "Stages": [
       {
         "colorMap": "eca_bld_oldwood_d.dds",
@@ -900,17 +849,17 @@
       {}
     ],
     "annotation": "POLE",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_oldwood_annotation_pole",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_oldwood_annotation_pole",
+    "persistentId": "57bad8af-1560-46b1-acd7-473b66dafab1",
     "translucentBlendOp": "None"
   },
   "eca_bld_shop_opaque_decoration": {
-    "name": "eca_bld_shop_opaque_decoration",
-    "mapTo": "eca_bld_shop_opaque_decoration",
-    "class": "Material",
-    "persistentId": "a93d21a1-62eb-4ea5-9928-eee9739aa887",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_shop_opaque_decoration_d.dds",
@@ -922,17 +871,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_shop_opaque_decoration",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_shop_opaque_decoration",
+    "persistentId": "a93d21a1-62eb-4ea5-9928-eee9739aa887",
     "translucentBlendOp": "None"
   },
   "eca_bld_shop_window_decoration": {
-    "name": "eca_bld_shop_window_decoration",
-    "mapTo": "eca_bld_shop_window_decoration",
-    "class": "Material",
-    "persistentId": "7112d658-682d-458a-82ed-094e842edbae",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_shop_window_decoration_d.dds",
@@ -944,35 +893,26 @@
         ],
         "useAnisotropic": true
       },
-      {
-        "specular": null,
-        "useAnisotropic": null
-      },
-      {
-        "specular": null,
-        "useAnisotropic": null
-      },
-      {
-        "specular": null,
-        "useAnisotropic": null
-      }
+      {},
+      {},
+      {}
     ],
     "alphaRef": 107,
     "alphaTest": true,
     "annotation": "BUILDINGS",
+    "class": "Material",
     "doubleSided": true,
     "groundType": "WOOD",
+    "mapTo": "eca_bld_shop_window_decoration",
     "materialTag0": "beamng",
     "materialTag1": "vegetation",
     "materialTag2": "Natural",
+    "name": "eca_bld_shop_window_decoration",
+    "persistentId": "7112d658-682d-458a-82ed-094e842edbae",
     "specularStrength0": "0.784314",
     "translucentZWrite": true
   },
   "eca_bld_sidewalks": {
-    "name": "eca_bld_sidewalks",
-    "mapTo": "eca_bld_sidewalks",
-    "class": "Material",
-    "persistentId": "7cb7c58c-4601-43cb-ae57-db888caac9b9",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_bld_sidewalks_d.dds",
@@ -988,17 +928,17 @@
       {}
     ],
     "annotation": "SIDEWALK",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_sidewalks",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_sidewalks",
+    "persistentId": "7cb7c58c-4601-43cb-ae57-db888caac9b9",
     "translucentBlendOp": "None"
   },
   "eca_bld_sidewalks_annotation_building": {
-    "name": "eca_bld_sidewalks_annotation_building",
-    "mapTo": "eca_bld_sidewalks_annotation_building",
-    "class": "Material",
-    "persistentId": "98b69cc9-27c9-415e-813b-4e019c660a82",
     "Stages": [
       {
         "colorMap": "game:levels/east_coast_usa/art/shapes/buildings/eca_bld_sidewalks_d.dds",
@@ -1012,17 +952,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_sidewalks_annotation_building",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_sidewalks_annotation_building",
+    "persistentId": "98b69cc9-27c9-415e-813b-4e019c660a82",
     "translucentBlendOp": "None"
   },
   "eca_bld_stone_clean": {
-    "name": "eca_bld_stone_clean",
-    "mapTo": "eca_bld_stone_clean",
-    "class": "Material",
-    "persistentId": "1b889960-fe3e-4c53-a1b1-3b6412861b49",
     "Stages": [
       {
         "colorMap": "eca_bld_stone_clean_d.dds",
@@ -1036,17 +976,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_bld_stone_clean",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_stone_clean",
+    "persistentId": "1b889960-fe3e-4c53-a1b1-3b6412861b49",
     "translucentBlendOp": "None"
   },
   "eca_bld_trim_wood": {
-    "name": "eca_bld_trim_wood",
-    "mapTo": "eca_bld_trim_wood",
-    "class": "Material",
-    "persistentId": "8ad1a0dd-53f2-41e8-8c91-1dfbc0a1c9be",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_bld_trim_wood_d.dds",
@@ -1060,17 +1000,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_trim_wood",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_trim_wood",
+    "persistentId": "8ad1a0dd-53f2-41e8-8c91-1dfbc0a1c9be",
     "translucentBlendOp": "None"
   },
   "eca_bld_trim_wood_paint": {
-    "name": "eca_bld_trim_wood_paint",
-    "mapTo": "eca_bld_trim_wood_paint",
-    "class": "Material",
-    "persistentId": "166e9240-ac79-4136-a4fb-8a9cdc100de6",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_bld_trim_wood_paint_d.dds",
@@ -1084,17 +1024,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_trim_wood_paint",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_trim_wood_paint",
+    "persistentId": "166e9240-ac79-4136-a4fb-8a9cdc100de6",
     "translucentBlendOp": "None"
   },
   "eca_bld_wood": {
-    "name": "eca_bld_wood",
-    "mapTo": "eca_bld_wood",
-    "class": "Material",
-    "persistentId": "3b7d34ad-4b02-4c3f-8fb9-26ff0c34cb70",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_bld_wood_d.dds",
@@ -1109,17 +1049,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_wood",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_wood",
+    "persistentId": "3b7d34ad-4b02-4c3f-8fb9-26ff0c34cb70",
     "translucentBlendOp": "None"
   },
   "eca_bld_wood_rooftiles": {
-    "name": "eca_bld_wood_rooftiles",
-    "mapTo": "eca_bld_wood_rooftiles",
-    "class": "Material",
-    "persistentId": "48b5f5f5-d8d0-4b47-84e5-479e3530b695",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_tiles_01_d.dds",
@@ -1135,17 +1075,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_wood_rooftiles",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_wood_rooftiles",
+    "persistentId": "48b5f5f5-d8d0-4b47-84e5-479e3530b695",
     "translucentBlendOp": "None"
   },
   "eca_bld_woodcladding_new": {
-    "name": "eca_bld_woodcladding_new",
-    "mapTo": "eca_bld_woodcladding_new",
-    "class": "Material",
-    "persistentId": "711a9962-c6f4-4666-b16b-5a8d0d82fa79",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_woodcladding_new_d.dds",
@@ -1161,17 +1101,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_woodcladding_new",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_woodcladding_new",
+    "persistentId": "711a9962-c6f4-4666-b16b-5a8d0d82fa79",
     "translucentBlendOp": "None"
   },
   "eca_bld_woodcladding_old": {
-    "name": "eca_bld_woodcladding_old",
-    "mapTo": "eca_bld_woodcladding_old",
-    "class": "Material",
-    "persistentId": "7d24658a-0646-41eb-93a7-2ac10a22c762",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_bld_woodcladding_01_d.dds",
@@ -1187,17 +1127,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "eca_bld_woodcladding_old",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_bld_woodcladding_old",
+    "persistentId": "7d24658a-0646-41eb-93a7-2ac10a22c762",
     "translucentBlendOp": "None"
   },
   "eca_curb": {
-    "name": "eca_curb",
-    "mapTo": "eca_curb",
-    "class": "Material",
-    "persistentId": "d9674ffd-3b34-440d-ac7b-a998d5282d6d",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_curb_d.dds",
@@ -1211,17 +1151,17 @@
       {}
     ],
     "annotation": "SIDEWALK",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_curb",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_curb",
+    "persistentId": "d9674ffd-3b34-440d-ac7b-a998d5282d6d",
     "translucentBlendOp": "None"
   },
   "eca_doors_windows": {
-    "name": "eca_doors_windows",
-    "mapTo": "eca_doors_windows",
-    "class": "Material",
-    "persistentId": "f092fc43-4fe0-45c6-8d57-bfca64314a82",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_doors_windows_d.dds",
@@ -1232,32 +1172,23 @@
         "useAnisotropic": true,
         "vertColor": true
       },
-      {
-        "useAnisotropic": null,
-        "vertColor": null
-      },
-      {
-        "useAnisotropic": null,
-        "vertColor": null
-      },
-      {
-        "useAnisotropic": null,
-        "vertColor": null
-      }
+      {},
+      {},
+      {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "cubemap_eca_town_reflection",
     "groundType": "METAL",
+    "mapTo": "eca_doors_windows",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_doors_windows",
+    "persistentId": "f092fc43-4fe0-45c6-8d57-bfca64314a82",
     "translucentBlendOp": "None"
   },
   "eca_fabric_generic": {
-    "name": "eca_fabric_generic",
-    "mapTo": "eca_fabric_generic",
-    "class": "Material",
-    "persistentId": "01673db7-3e78-4f8a-83f7-d6ecb665ce28",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/fabric_generic_d.dds",
@@ -1271,17 +1202,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "PLASTIC",
+    "mapTo": "eca_fabric_generic",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_fabric_generic",
+    "persistentId": "01673db7-3e78-4f8a-83f7-d6ecb665ce28",
     "translucentBlendOp": "None"
   },
   "eca_fiberglass": {
-    "name": "eca_fiberglass",
-    "mapTo": "eca_fiberglass",
-    "class": "Material",
-    "persistentId": "ab9c257a-1ab7-4a5f-bdbf-bf7464f30d5b",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/eca_fiberglass_d.dds",
@@ -1295,24 +1226,24 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "PLASTIC",
+    "mapTo": "eca_fiberglass",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_fiberglass",
+    "persistentId": "ab9c257a-1ab7-4a5f-bdbf-bf7464f30d5b",
     "translucentBlendOp": "None"
   },
   "eca_genericsigns": {
-    "name": "eca_genericsigns",
-    "mapTo": "eca_genericsigns",
-    "class": "Material",
-    "persistentId": "5580c6d9-520d-4aad-9a9e-fdb8916a3ad6",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_genericsigns_d.dds",
         "specular": [
-          0.9882349967956544,
-          0.9882349967956544,
-          0.9882349967956544,
+          0.9882349968,
+          0.9882349968,
+          0.9882349968,
           1
         ],
         "specularPower": 1,
@@ -1329,35 +1260,18 @@
     ],
     "alphaRef": 159,
     "alphaTest": true,
+    "class": "Material",
     "doubleSided": true,
     "groundType": "METAL",
+    "mapTo": "eca_genericsigns",
     "materialTag0": "beamng",
     "materialTag1": "east_coast_usa",
+    "name": "eca_genericsigns",
+    "persistentId": "5580c6d9-520d-4aad-9a9e-fdb8916a3ad6",
     "specularStrength0": "0.784314",
     "translucentZWrite": true
   },
-  "eca_net": {
-    "name": "eca_net",
-    "mapTo": "eca_net",
-    "class": "Material",
-    "persistentId": "a28740d6-f609-4fe0-80c7-db4a1c6832cd",
-    "Stages": [
-      {},
-      {},
-      {},
-      {}
-    ],
-    "annotation": "BUILDINGS",
-    "groundType": "PLASTIC",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "materialTag2": "east_coast_usa"
-  },
   "eca_plastic_rough": {
-    "name": "eca_plastic_rough",
-    "mapTo": "eca_plastic_rough",
-    "class": "Material",
-    "persistentId": "04b4481f-eb25-468d-bd3a-45fa7bdd5572",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_plastic_rough_d.dds",
@@ -1371,17 +1285,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "PLASTIC",
+    "mapTo": "eca_plastic_rough",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_plastic_rough",
+    "persistentId": "04b4481f-eb25-468d-bd3a-45fa7bdd5572",
     "translucentBlendOp": "None"
   },
   "eca_road_curb": {
-    "name": "eca_road_curb",
-    "mapTo": "eca_road_curb",
-    "class": "Material",
-    "persistentId": "658b1d1a-b1e1-4682-9e10-c6c971d07b34",
     "Stages": [
       {
         "colorMap": "eca_road_curb_d.dds",
@@ -1395,17 +1309,17 @@
       {}
     ],
     "annotation": "SIDEWALK",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_road_curb",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_road_curb",
+    "persistentId": "658b1d1a-b1e1-4682-9e10-c6c971d07b34",
     "translucentBlendOp": "None"
   },
   "eca_road_curb_annotation_guard_rail": {
-    "name": "eca_road_curb_annotation_guard_rail",
-    "mapTo": "eca_road_curb_annotation_guard_rail",
-    "class": "Material",
-    "persistentId": "b9a92db3-a59f-47df-bfe0-8069b5acf91b",
     "Stages": [
       {
         "colorMap": "eca_road_curb_d.dds",
@@ -1419,17 +1333,17 @@
       {}
     ],
     "annotation": "GUARD_RAIL",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_road_curb_annotation_guard_rail",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_road_curb_annotation_guard_rail",
+    "persistentId": "b9a92db3-a59f-47df-bfe0-8069b5acf91b",
     "translucentBlendOp": "None"
   },
   "eca_road_sidewalk_concrete_annotation_guard_rail": {
-    "name": "eca_road_sidewalk_concrete_annotation_guard_rail",
-    "mapTo": "eca_road_sidewalk_concrete_annotation_guard_rail",
-    "class": "Material",
-    "persistentId": "44af42a4-a81c-4e69-8c99-a4b16ef69ff7",
     "Stages": [
       {
         "colorMap": "eca_road_sidewalk_concrete_d.dds",
@@ -1443,17 +1357,17 @@
       {}
     ],
     "annotation": "GUARD_RAIL",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_road_sidewalk_concrete_annotation_guard_rail",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_road_sidewalk_concrete_annotation_guard_rail",
+    "persistentId": "44af42a4-a81c-4e69-8c99-a4b16ef69ff7",
     "translucentBlendOp": "None"
   },
   "eca_road_sidewalk_concrete_annotation_sidebars": {
-    "name": "eca_road_sidewalk_concrete_annotation_sidebars",
-    "mapTo": "eca_road_sidewalk_concrete_annotation_sidebars",
-    "class": "Material",
-    "persistentId": "91b2823f-02fb-40e2-87e2-0bea92218225",
     "Stages": [
       {
         "colorMap": "eca_road_sidewalk_concrete_d.dds",
@@ -1467,17 +1381,17 @@
       {}
     ],
     "annotation": "SIDEBARS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "eca_road_sidewalk_concrete_annotation_sidebars",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_road_sidewalk_concrete_annotation_sidebars",
+    "persistentId": "91b2823f-02fb-40e2-87e2-0bea92218225",
     "translucentBlendOp": "None"
   },
   "eca_sand_pebbles": {
-    "name": "eca_sand_pebbles",
-    "mapTo": "eca_sand_pebbles",
-    "class": "Material",
-    "persistentId": "e412853f-b6d5-4dfa-9477-2c991ae27235",
     "Stages": [
       {
         "colorMap": "eca_bld_stone_clean_d.dds",
@@ -1491,51 +1405,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "DIRT",
+    "mapTo": "eca_sand_pebbles",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "eca_sand_pebbles",
+    "persistentId": "e412853f-b6d5-4dfa-9477-2c991ae27235",
     "translucentBlendOp": "None"
   },
-  "eca_scrapjunk_a": {
-    "name": "eca_scrapjunk_a",
-    "mapTo": "eca_scrapjunk_a",
-    "class": "Material",
-    "persistentId": "422a34c1-690d-49b6-8e1f-af0819e35d2a",
-    "Stages": [
-      {},
-      {},
-      {},
-      {}
-    ],
-    "annotation": "BUILDINGS",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "materialTag2": "east_coast_usa"
-  },
-  "eca_scrapjunk_b": {
-    "name": "eca_scrapjunk_b",
-    "mapTo": "eca_scrapjunk_b",
-    "class": "Material",
-    "persistentId": "115d71c6-499e-4dbb-81ae-3b7e9e2520ea",
-    "Stages": [
-      {},
-      {},
-      {},
-      {}
-    ],
-    "annotation": "BUILDINGS",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "building",
-    "materialTag2": "east_coast_usa"
-  },
   "eca_traffic_lights": {
-    "name": "eca_traffic_lights",
-    "mapTo": "eca_traffic_lights",
-    "class": "Material",
-    "persistentId": "24e2c4d5-f87e-4139-9c2f-676c0755e7f9",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_traffic_lights_d.dds",
@@ -1549,37 +1429,17 @@
       {}
     ],
     "annotation": "TRAFFIC_SIGNALS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "eca_traffic_lights",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
-    "translucentBlendOp": "None"
-  },
-  "german_60kmh_sign": {
-    "name": "german_60kmh_sign",
-    "mapTo": "german_60kmh_sign",
-    "class": "Material",
-    "persistentId": "4e6f6661-c52d-4893-b42a-78bbd96104e4",
-    "Stages": [
-      {
-        "colorMap": "german_60kmh_sign_d.dds",
-        "specularMap": "ind_bld_buildingextras2_s.dds"
-      },
-      {},
-      {},
-      {}
-    ],
-    "annotation": "TRAFFIC_SIGNS",
-    "doubleSided": true,
-    "groundType": "METAL",
-    "materialTag0": "beamng",
+    "name": "eca_traffic_lights",
+    "persistentId": "24e2c4d5-f87e-4139-9c2f-676c0755e7f9",
     "translucentBlendOp": "None"
   },
   "guardrail": {
-    "name": "guardrail",
-    "mapTo": "guardrail",
-    "class": "Material",
-    "persistentId": "0e3f97e9-15ee-4a0f-85eb-30bd6344788d",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/eca_guardrail_d.dds",
@@ -1596,25 +1456,25 @@
       {}
     ],
     "annotation": "GUARD_RAIL",
+    "class": "Material",
     "cubemap": "global_cubemap_metalblurred",
     "groundType": "METAL",
+    "mapTo": "guardrail",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
+    "name": "guardrail",
+    "persistentId": "0e3f97e9-15ee-4a0f-85eb-30bd6344788d",
     "translucent": true,
     "translucentBlendOp": "None"
   },
   "ind_bld_Tin_01": {
-    "name": "ind_bld_Tin_01",
-    "mapTo": "ind_bld_Tin_01",
-    "class": "Material",
-    "persistentId": "590f1221-bd42-44d3-944a-99e46ed53871",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/tin-01_d.dds",
         "detailMap": "levels/east_coast_usa/art/shapes/buildings/detail_grunge_02_streak.dds",
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.1000000015,
+          0.1000000015
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/tin-01_n.dds",
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/tin-01_s.dds",
@@ -1626,48 +1486,23 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "ind_bld_Tin_01",
     "materialTag0": "Industrial",
     "materialTag1": "beamng",
-    "translucentBlendOp": "None"
-  },
-  "ind_bld_extras_annotation_background": {
-    "name": "ind_bld_extras_annotation_background",
-    "mapTo": "ind_bld_extras_annotation_background",
-    "class": "Material",
-    "persistentId": "4728d88b-46fd-4f3d-9561-81ac8d0decde",
-    "Stages": [
-      {
-        "colorMap": "levels/east_coast_usa/art/shapes/buildings/ind_bld_buildingextras_d.dds",
-        "normalMap": "levels/east_coast_usa/art/shapes/buildings/ind_bld_buildingextras_n.dds",
-        "pixelSpecular": true,
-        "specularMap": "levels/east_coast_usa/art/shapes/buildings/ind_bld_buildingextras_s.dds",
-        "specularPower": 1
-      },
-      {},
-      {},
-      {}
-    ],
-    "annotation": "BACKGROUND",
-    "groundType": "METAL",
-    "materialTag0": "beamng",
-    "materialTag1": "beamng",
-    "materialTag2": "Industrial",
-    "specularStrength0": "1.3",
+    "name": "ind_bld_Tin_01",
+    "persistentId": "590f1221-bd42-44d3-944a-99e46ed53871",
     "translucentBlendOp": "None"
   },
   "ind_bld_rustymetal": {
-    "name": "ind_bld_rustymetal",
-    "mapTo": "ind_bld_rustymetal",
-    "class": "Material",
-    "persistentId": "7855d2ca-ca46-4e80-8336-0db80165953a",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/ind_bld_rustymetal_01_d.dds",
-        "detailNormalMapStrength": 0.1000000014901161,
+        "detailNormalMapStrength": 0.1000000015,
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.1000000015,
+          0.1000000015
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/ind_bld_rustymetal_01_n.dds",
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/ind_bld_rustymetal_01_s.dds",
@@ -1678,25 +1513,25 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "doubleSided": true,
     "groundType": "METAL",
+    "mapTo": "ind_bld_rustymetal",
     "materialTag0": "Industrial",
     "materialTag1": "beamng",
+    "name": "ind_bld_rustymetal",
+    "persistentId": "7855d2ca-ca46-4e80-8336-0db80165953a",
     "translucentBlendOp": "None"
   },
   "ind_bld_tin_02": {
-    "name": "ind_bld_tin_02",
-    "mapTo": "ind_bld_Tin_02",
-    "class": "Material",
-    "persistentId": "a59c518e-9026-454b-93ec-a993fbf8f58a",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/tin-01b_d.dds",
         "detailMap": "levels/east_coast_usa/art/shapes/buildings/detail_grunge_02_streak.dds",
-        "detailNormalMapStrength": 0.1000000014901161,
+        "detailNormalMapStrength": 0.1000000015,
         "detailScale": [
-          0.1000000014901161,
-          0.1000000014901161
+          0.1000000015,
+          0.1000000015
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/tin-01_n.dds",
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/tin-01b_s.dds",
@@ -1707,35 +1542,35 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "doubleSided": true,
     "groundType": "METAL",
+    "mapTo": "ind_bld_Tin_02",
     "materialTag0": "Industrial",
     "materialTag1": "beamng",
+    "name": "ind_bld_tin_02",
+    "persistentId": "a59c518e-9026-454b-93ec-a993fbf8f58a",
     "translucentBlendOp": "None"
   },
   "ind_concreteleak": {
-    "name": "ind_concreteleak",
-    "mapTo": "ind_concreteleak",
-    "class": "Material",
-    "persistentId": "49527485-f6ce-4371-b34b-bd49500b2b03",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/ind_concreteleak_d.dds",
         "detailScale": [
-          0.2000000029802322,
-          0.2000000029802322
+          0.200000003,
+          0.200000003
         ],
         "diffuseColor": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/ind_concreteleak_n.dds",
         "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/ind_concreteleak_s.dds",
@@ -1746,16 +1581,16 @@
       {},
       {}
     ],
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "ind_concreteleak",
     "materialTag0": "beamng",
+    "name": "ind_concreteleak",
+    "persistentId": "49527485-f6ce-4371-b34b-bd49500b2b03",
     "specularStrength0": "0.4",
     "translucentBlendOp": "None"
   },
   "italy_bld_electric_wire": {
-    "name": "italy_bld_electric_wire",
-    "mapTo": "italy_bld_electric_wire",
-    "class": "Material",
-    "persistentId": "21a3f56b-9720-4c5c-b944-01005d4dbae1",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/italy_bld_electric_wire_d.dds",
@@ -1772,9 +1607,9 @@
         ],
         "normalMap": "levels/east_coast_usa/art/shapes/buildings/italy_bld_electric_wire_n.dds",
         "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/italy_bld_electric_wire_s.dds",
@@ -1788,16 +1623,16 @@
     "alphaRef": 113,
     "alphaTest": true,
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "PLASTIC",
+    "mapTo": "italy_bld_electric_wire",
     "materialTag0": "beamng",
     "materialTag1": "italy",
+    "name": "italy_bld_electric_wire",
+    "persistentId": "21a3f56b-9720-4c5c-b944-01005d4dbae1",
     "specularStrength0": "0.490196"
   },
   "italy_bld_glass_transparent": {
-    "name": "italy_bld_glass_transparent",
-    "mapTo": "italy_bld_glass_transparent",
-    "class": "Material",
-    "persistentId": "5040160d-ce10-44c3-9e15-d8a9ebffb761",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/Italy_bld_glass_d.dds",
@@ -1809,13 +1644,13 @@
         "diffuseColor": [
           0.894117713,
           0.960784376,
-          0.9960784912109376,
-          0.4379999935626984
+          0.9960784912,
+          0.4379999936
         ],
         "specular": [
-          0.9960780143737792,
-          0.9960780143737792,
-          0.9960780143737792,
+          0.9960780144,
+          0.9960780144,
+          0.9960780144,
           1
         ],
         "specularMap": "levels/east_coast_usa/art/shapes/buildings/Italy_bld_glass_s.dds",
@@ -1828,19 +1663,19 @@
     ],
     "alphaRef": 0,
     "annotation": "BUILDINGS",
+    "class": "Material",
     "cubemap": "BNG_Sky_02_cubemap",
     "groundType": "METAL",
+    "mapTo": "italy_bld_glass_transparent",
     "materialTag0": "beamng",
     "materialTag1": "italy",
     "materialTag2": "Natural",
+    "name": "italy_bld_glass_transparent",
+    "persistentId": "5040160d-ce10-44c3-9e15-d8a9ebffb761",
     "specularStrength0": "0.490196",
     "translucent": true
   },
   "logos_dealership_garage_eca": {
-    "name": "logos_dealership_garage_eca",
-    "mapTo": "logos_dealership_garage_eca",
-    "class": "Material",
-    "persistentId": "43449020-12ee-491d-9c78-38f067d5015f",
     "Stages": [
       {
         "colorMap": "/levels/east_coast_usa/art/shapes/buildings/logos_dealership_garage_eca_d.color.png",
@@ -1857,17 +1692,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "ASPHALT_OLD",
+    "mapTo": "logos_dealership_garage_eca",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "logos_dealership_garage_eca",
+    "persistentId": "43449020-12ee-491d-9c78-38f067d5015f",
     "translucentBlendOp": "None"
   },
   "oldwood": {
-    "name": "oldwood",
-    "mapTo": "oldwood",
-    "class": "Material",
-    "persistentId": "e3ba417a-f051-4a27-addd-76be60946aa7",
     "Stages": [
       {
         "colorMap": "levels/east_coast_usa/art/shapes/buildings/old_wood_d.dds",
@@ -1882,17 +1717,17 @@
       {}
     ],
     "annotation": "BUILDINGS",
+    "class": "Material",
     "groundType": "WOOD",
+    "mapTo": "oldwood",
     "materialTag0": "beamng",
     "materialTag1": "building",
     "materialTag2": "east_coast_usa",
+    "name": "oldwood",
+    "persistentId": "e3ba417a-f051-4a27-addd-76be60946aa7",
     "translucentBlendOp": "None"
   },
   "trafficlight": {
-    "name": "trafficlight",
-    "mapTo": "trafficlight",
-    "class": "Material",
-    "persistentId": "b4b5182a-0c5b-4700-8dda-e4561e166973",
     "Stages": [
       {
         "animFlags": 16,
@@ -1913,9 +1748,13 @@
     "alphaRef": 239,
     "annotation": "TRAFFIC_SIGNALS",
     "castShadows": false,
+    "class": "Material",
     "groundType": "METAL",
+    "mapTo": "trafficlight",
     "materialTag0": "beamng",
     "materialTag1": "vehicle",
+    "name": "trafficlight",
+    "persistentId": "b4b5182a-0c5b-4700-8dda-e4561e166973",
     "translucent": true,
     "translucentBlendOp": "AddAlpha"
   }
