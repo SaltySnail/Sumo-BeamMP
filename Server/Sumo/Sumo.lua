@@ -450,9 +450,9 @@ function sumoGameEnd(reason)
 				MP.SendChatMessage(-1,"Game over, " .. alivePlayers[1] .. " wins!") --FIXME: if MAX_ALIVE is more than 1 this is fucked, don't think you should set it to more though
 				if scoringSystem then
 					if gameState.players[alivePlayers[1]].score then
-						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + 10
+						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + gameState.players[alivePlayers[1]].survivedSafezones
 					else
-						gameState.players[alivePlayers[1]].score = 10
+						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].survivedSafezones
 					end
 					gameState.players[alivePlayers[1]].isRoundWinner = true
 				end
