@@ -1,119 +1,98 @@
-#heads up, I didn't feel like coding this so I made copilot my bitch and do it. Prepare for unnessacery imports ^^
-
 import os
 import zipfile
-import re #regular expressions
+import re
 import json
-
-import shutil #maybe these are not needed if I only use os...
-import glob
-
+import shutil
 import copy #f python. Why does it not deep copy by default when doing variable1 = variable2, that is so messed up
+from pathlib import Path
 
-BEAMMP_CLIENT_FOLDER = "C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client"
-BEAMNG_LEVELS_FOLDER = "I:/SteamLibrary/steamapps/common/BeamNG.drive/content/levels"
-# BEAMNG_MODS_FOLDER = "C:/Users/Julian/AppData/Local/BeamNG.drive/0.32/mods" #only for if anyone else needs this
-MATERIALS_TO_PUT_IN_EVERY_LEVEL = "materialsToCopy"
+BEAMMP_CLIENT_FOLDER = Path("C:/Users/Julian/Desktop/beammp_Server/windows/Resources/Client")
+BEAMNG_LEVELS_FOLDER = Path("I:/SteamLibrary/steamapps/common/BeamNG.drive/content/levels")
+# BEAMNG_MODS_FOLDER = Path("C:/Users/Julian/AppData/Local/BeamNG.drive/0.32/mods") #only for if anyone else needs this
+MATERIALS_TO_PUT_IN_EVERY_LEVEL = Path("materialsToCopy")
+OUTPUT_FOLDER = Path("Client")
 
-level_name_pattern = "levels/([^/.]+)/info.json"
+LEVEL_NAME_PATTERN = re.compile(r"levels/([^/.]+)/info.json")
 
-def levelsInZips(dir): 
-    level_list = set()
-    files_in_directory = os.listdir(dir)
-    zip_files = [file for file in files_in_directory if file.endswith('.zip')]
-    for zip_file in zip_files:
-        full_file_path = os.path.join(dir, zip_file)
-        with zipfile.ZipFile(full_file_path, 'r') as zip_ref:
-            all_files = zip_ref.namelist()
-            for s in all_files:
-                match = re.search(level_name_pattern, s)
-                if match:
-                    level_list.add(match.group(1))
-    return level_list
 
-def appendMaterials(dir):
-    files_in_directory = list_files(MATERIALS_TO_PUT_IN_EVERY_LEVEL)
-    json_files = [file for file in files_in_directory if file.endswith('.json')]
-    for json_file in json_files: 
-        try:
-            with open(MATERIALS_TO_PUT_IN_EVERY_LEVEL + "/" + json_file, 'r') as f:
-                original_json_data_to_append = json.load(f)
-                files_in_directory = os.listdir(dir)
-                zip_files = [file for file in files_in_directory if file.endswith('.zip')]
-                for zip_file in zip_files:
-                    # for level in levelsInZips(dir):
-                    full_file_path = os.path.join(dir, zip_file)
+def get_source_materials(source_dir: Path):
+    materials = {}
+    if not source_dir.is_dir():
+        print(f"Error: Source directory '{source_dir}' does not exist.")
+        return materials
+    # rglob recursively searches all subdirectories
+    for path in source_dir.rglob('*.json'):
+        with open(path, 'r', encoding='utf-8') as f:
+            try:
+                relative_path = path.relative_to(source_dir)
+                materials[relative_path] = json.load(f)
+            except json.JSONDecodeError:
+                print(f"Warning: Malformed JSON file ignored: {path}")
+    return materials
+
+def replace_placeholders(data, level_name):
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if isinstance(value, str):
+                data[key] = value.replace("/REPLACE_ME/", "/art/SumoMaterials/")
+            else:
+                replace_placeholders(value, level_name)
+    elif isinstance(data, list):
+        for i, item in enumerate(data):
+            if isinstance(item, str):
+                data[i] = item.replace("/REPLACE_ME/", "/art/SumoMaterials/")
+            else:
+                replace_placeholders(item, level_name)
+
+def process_zip_file(zip_path: Path, source_materials: dict):
+    try:
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            all_files_in_zip = zip_ref.namelist()
+            for file_in_zip in all_files_in_zip:
+                match = LEVEL_NAME_PATTERN.search(file_in_zip)
+                if not match:
+                    continue
+                level_name = match.group(1)
+                for rel_path, original_material_data in source_materials.items():
+                    final_data = copy.deepcopy(original_material_data)
+                    relative_dir = rel_path.parent
+                    path_to_merge_in_zip = f'levels/{level_name}/{relative_dir}/main.materials.json'
                     try:
-                        with zipfile.ZipFile(full_file_path, 'r') as f:
-                            all_files = f.namelist()
-                            for s in all_files:
-                                match = re.search(level_name_pattern, s)
-                                if match:
-                                    json_data_to_append = copy.deepcopy(original_json_data_to_append)
-                                    try:
-                                        # print("/" + match.group())
-                                        json_path = os.path.dirname(json_file)
-                                        level = match.group()
-                                        # print(match)
-                                        level = level.replace("levels/", "")
-                                        level = level.replace("/info.json", "")
-                                        # print(level)
-                                        json_path = json_path.replace('\\', "/")
-                                        # print(full_file_path + '\t\t\tlevels/' + level + '/' + json_path + "/" + 'main.materials.json')    
-                                        # try:
-                                        with f.open('levels/' + level + '/' + json_path + "/" + 'main.materials.json', 'r') as sf:
-                                            original_json_data = json.load(sf)
-                                            for key, value in original_json_data.items():
-                                                # print(value)
-                                                json_data_to_append[key] = value #original is now new
-                                        # except Exception as e:
-                                        #     print("An error occurred:", e)
-                                    except KeyError:
-                                        match = False
-                                    try:
-                                        json_path = os.path.dirname(json_file)
-                                        json_path = json_path.replace('\\', "/")
-                                        os.makedirs('Client/levels/' + level + "/" + json_path, exist_ok=True)
-                                        with open('Client/levels/' + level + "/" + json_file, 'w') as output_file:
-                                            json_data_to_append_final = copy.deepcopy(json_data_to_append) #I wonder why the creator of python decided it was better to reference by default
-                                            replace_nested_json(json_data_to_append_final, level, json_path)
-                                            json.dump(json_data_to_append_final, output_file, indent=2)
-                                    except FileNotFoundError:
-                                        print("Filesystem didn't create: " + 'Client/levels/' + level + json_file)
-                                    # copyMaterialFiles(MATERIALS_TO_PUT_IN_EVERY_LEVEL + "/" + json_path, 'Client/levels/' + level + "/" + json_path) 
-                    except FileNotFoundError:
-                        print("no original file " + full_file_path)
-        except FileNotFoundError:
-            print("file to append doesn't exist somehow " + MATERIALS_TO_PUT_IN_EVERY_LEVEL + "/" + json_file)
+                        with zip_ref.open(path_to_merge_in_zip, 'r') as f_merge:
+                            data_to_merge = json.load(f_merge)
+                            final_data.update(data_to_merge)
+                    except (KeyError, json.JSONDecodeError):
+                        pass
+                    replace_placeholders(final_data, level_name)
+                    output_path = OUTPUT_FOLDER / 'levels' / level_name / rel_path
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
+                    with open(output_path, 'w', encoding='utf-8') as f_out:
+                        json.dump(final_data, f_out, indent=2)
+    except FileNotFoundError:
+        print(f"Error: Zip file not found: {zip_path}")
+    except zipfile.BadZipFile:
+        print(f"Error: Corrupted zip file: {zip_path}")
 
-def copyMaterialFiles(fromDir, toDir):
-    # find and copy .dds and .png files
-    for file_type in ['*.dds', '*.png']:
-        for file_name in glob.glob(fromDir + '/' + file_type):
-            shutil.copy(file_name, toDir)
+def main():
+    source_materials = get_source_materials(MATERIALS_TO_PUT_IN_EVERY_LEVEL)
+    if not source_materials:
+        print("No source materials found. Stopping the script.")
+        return
+    directories_to_scan = [BEAMMP_CLIENT_FOLDER, BEAMNG_LEVELS_FOLDER]
+    # directories_to_scan.append(BEAMNG_MODS_FOLDER)
+    for directory in directories_to_scan:
+        if not directory.is_dir():
+            print(f"Warning: Directory '{directory}' does not exist, skipping.")
+            continue
+        print(f"\n--- Processing directory: {directory} ---")
+        zip_files = list(directory.glob('*.zip'))
+        if not zip_files:
+            print("No .zip files found in this directory.")
+            continue
+        for zip_path in zip_files:
+            print(f"Analyzing: {zip_path.name}")
+            process_zip_file(zip_path, source_materials)
+    print("\nScript finished.")
 
-def list_files(path):
-    file_paths = []
-    for root, dirs, files in os.walk(path):
-        for name in files:
-            relative_path = os.path.relpath(os.path.join(root, name), path)
-            file_paths.append(relative_path)
-    return file_paths
-
-def replace_nested_json(json_data, level, json_path):
-    for key, value in json_data.items():
-        if isinstance(value, str):
-            if "/REPLACE_ME/" in value:
-                # new_value = value.replace("/REPLACE_ME/", 'levels/' + level + "/" + json_path + "/")
-                new_value = value.replace("/REPLACE_ME/", "/art/SumoMaterials/") #idk if the .dds and .png files are materials or textures that compose a texture
-                json_data[key] = new_value
-        elif isinstance(value, dict):
-            replace_nested_json(value, level, json_path)
-        elif isinstance(value, list):
-            for item in value:
-                if isinstance(item, dict):
-                    replace_nested_json(item, level, json_path)
-
-appendMaterials(BEAMMP_CLIENT_FOLDER)
-appendMaterials(BEAMNG_LEVELS_FOLDER)
-# appendMaterials(BEAMNG_MODS_FOLDER)
+if __name__ == "__main__":
+    main()
