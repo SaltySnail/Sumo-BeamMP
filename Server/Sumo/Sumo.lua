@@ -1073,5 +1073,6 @@ M.sumoSaveArena = sumoSaveArena
 M.loadScores = loadScores
 M.saveAddedScores = saveAddedScores
 M.setJoinNextRound = setJoinNextRound
+M.loadSettings = loadSettings
 
 return M
