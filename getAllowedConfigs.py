@@ -1,50 +1,42 @@
-import os
 import zipfile
 import json
 from pathlib import Path
 
-def collect_pc_paths(root_dir):
-    """
-    Traverse all .zip files under root_dir, collect .pc file paths inside zips
-    following the pattern vehicles/<vehicle>/<config>.pc
-    """
-    pc_paths = []
+VEHICLES_SOURCE_DIR = Path(r"I:\SteamLibrary\steamapps\common\BeamNG.drive\content\vehicles")
+OUTPUT_JSON_FILE = Path(r"Server/Sumo/Data/allowedConfigs.json")
 
-    # Walk through directory tree
-    for dirpath, _, filenames in os.walk(root_dir):
-        for fname in filenames:
-            if fname.lower().endswith('.zip'):
-                zip_path = Path(dirpath) / fname
-                try:
-                    with zipfile.ZipFile(zip_path, 'r') as zf:
-                        for member in zf.namelist():
-                            # Normalize forward slashes
-                            parts = member.split('/')
-                            if len(parts) == 3 and parts[0] == 'vehicles' and parts[2].endswith('.pc'):
-                                # Store the path within the zip
-                                pc_paths.append(member)
-                except zipfile.BadZipFile:
-                    print(f"Warning: Failed to read zip file: {zip_path}")
-    return pc_paths
+def find_all_vehicle_configs(root_dir: Path):
+    pc_file_paths = []
+    if not root_dir.is_dir():
+        print(f"Error: Source directory not found: {root_dir}")
+        return pc_file_paths
+    print(f"Scanning for .pc files in zips under {root_dir}...")
+    for zip_path in root_dir.rglob('*.zip'):
+        try:
+            with zipfile.ZipFile(zip_path, 'r') as zip_file:
+                for member_path in zip_file.namelist():
+                    parts = member_path.split('/')
+                    if len(parts) == 3 and parts[0] == 'vehicles' and parts[2].endswith('.pc'):
+                        pc_file_paths.append(member_path)
+                        # print(f"  -> Found config: {member_path} in {zip_path.name}")
+        except zipfile.BadZipFile:
+            print(f"Warning: Corrupted zip file, skipping: {zip_path.name}")
+    return pc_file_paths
 
+def save_configs_to_file(config_list: list, output_file: Path):
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    data_to_save = {"allowedConfigs": config_list}
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(data_to_save, f, indent=2)
+    print(f"\nSuccessfully saved {len(config_list)} allowed configs to: {output_file}")
 
-def save_allowed_configs(pc_paths, output_file):
-    """
-    Save the list of PC paths to a JSON file under Server/Data
-    """
-    output_path = Path(output_file)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    data = {"allowedConfigs": pc_paths}
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2)
-    print(f"Saved allowed configs ({len(pc_paths)}) to {output_path}")
-
+def main():
+    all_configs = find_all_vehicle_configs(VEHICLES_SOURCE_DIR)
+    if all_configs:
+        save_configs_to_file(all_configs, OUTPUT_JSON_FILE)
+    else:
+        print("No vehicle configs found.")
+    print("Script finished.")
 
 if __name__ == '__main__':
-    # Change these paths as needed
-    steam_vehicles_dir = Path(r"I:/SteamLibrary/steamapps/common/BeamNG.drive/content/vehicles")
-    output_json = Path(r"Server/Sumo/Data/allowedConfigs.json")
-
-    print("Collecting .pc paths from zip files...")
-    paths = collect_pc_paths(steam_vehicles_dir)
-    save_allowed_configs(paths, output_json)
+    main()
