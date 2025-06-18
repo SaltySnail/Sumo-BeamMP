@@ -30,9 +30,6 @@ local spectatingPlayer = "" -- player that is being spectated
 local ogCamBeforeSpectating = "orbit"
 local ogUIState = "multiplayer"
 local ogUIStateBeforeMenu = "multiplayer"
--- local showHelpWindow = false
--- local helpPage = 0
--- local maxHelpPages = 6
 local sumoMenuOpen = false
 
 local currentArena = ""
@@ -61,20 +58,13 @@ local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
 local debugView = false
 
--- local gui_module = require("ge/extensions/editor/api/gui")
--- local gui = {setupEditorGuiTheme = nop}
--- local im = ui_imgui
--- local windowOpen = im.BoolPtr(true)
--- local ffi = require('ffi')
 
 local gameRunning = false -- this is dumb but needed for comparing if gameRunning state has changed
 
 local playerPressedReset = true -- primed because the function isn't called yet when this happens
 local teleported = false
 local joinNextRound = false
--- local joinNextRoundCheckboxState = im.BoolPtr(joinNextRound)
 local autoSpectate = true
--- local autoSpectateCheckboxState = im.BoolPtr(autoSpectate)
 local motd = {}
 motd.title = "This server is running Sumo"
 motd.description = [[
@@ -238,27 +228,10 @@ function resetSumoCarColors(data)
 	end
 	scenetree["PostEffectCombinePassObject"]:setField("enableBlueShift", 0,0)
 	scenetree["PostEffectCombinePassObject"]:setField("blueShiftColor", 0,"0 0 0")
-
-
-	--core_input_actionFilter.addAction(0, 'vehicleTeleporting', false)
-	--core_input_actionFilter.addAction(0, 'vehicleMenues', false)
-	--core_input_actionFilter.addAction(0, 'freeCam', false)
-	--core_input_actionFilter.addAction(0, 'resetPhysics', false)
 end
 
 function receiveSumoGameState(data)
 	local data = jsonDecode(data)
-	-- if not gamestate.gameRunning and data.gameRunning then
-	-- 	for k,vehicle in pairs(MPVehicleGE.getVehicles()) do
-	-- 		local ID = vehicle.gameVehicleID
-	-- 		local veh = be:getObjectByID(ID)
-	-- 		if veh then
-	-- 			vehicle.originalColor = be:getObjectByID(ID).color
-	-- 			vehicle.originalcolorPalette0 = be:getObjectByID(ID).colorPalette0
-	-- 			vehicle.originalcolorPalette1 = be:getObjectByID(ID).colorPalette1
-	-- 		end
-	-- 	end
-	-- end
 	print("receiveSumoGameState called: " .. dump(data))
 	gamestate = data
 end
@@ -484,19 +457,6 @@ function teleportToSumoArena(spawnPointID)
 		local arenaData = mapData.arenaData[currentArena]
 		local chosenLocation = (spawnPointID % #arenaData.spawnLocations) + 1 -- make sure the spawn point is within the range of the spawn locations
 
-		-- if spawnCount >= playerCount and spawnCount % playerCount == 0 then
-		-- 	local playerIndex = 1
-		-- 	for index, vehData in pairs(MPVehicleGE.getOwnMap()) do
-		-- 		if vehID == index then
-		-- 			break
-		-- 		end
-		-- 		playerIndex = playerIndex + 1
-		-- 	end
-		-- 	chosenLocation = ((playerIndex - 1) % spawnCount) + 1
-		-- else
-		-- 	chosenLocation = rand(1, spawnCount)
-		-- end
-		-- local chosenLocation = rand(1, #arenaData.spawnLocations)
 		if arenaData.spawnLocations[chosenLocation] then
 			-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
 			local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
@@ -1040,165 +1000,6 @@ function onPreRender(dt)
 	end
 end
 
--- function onDrawSumoMenu()
--- 	-- print("onDrawSumoMenu called")	
--- 	gui.setupWindow("Sumo Menu")
--- 	im.Begin("Sumo Menu")
--- 	-- if im.Button("Spawn Sumo Menu") then
--- 	-- 	-- spawn layout and 	
--- 	-- end
--- 	local joinNextRoundChanged = im.Checkbox("Join next round", joinNextRoundCheckboxState)
--- 	if joinNextRoundChanged then
--- 		print("Join next round changed, state: " .. dump(joinNextRoundCheckboxState))
--- 		joinNextRound = joinNextRoundCheckboxState[0]
--- 		print("Join next round: " .. dump(joinNextRound))
--- 	end
--- 	if im.Button("Spectate an alive player") then
--- 		sumoSpectateAlivePlayer()
--- 	end
--- 	local autoSpectateChanged = im.Checkbox("Auto Spectate", autoSpectateCheckboxState)
--- 	if autoSpectateChanged then
--- 		print("Auto spectate changed, state: " .. dump(autoSpectateCheckboxState))
--- 		autoSpectate = autoSpectateCheckboxState[0]
--- 		print("Auto spectate: " .. dump(autoSpectate))
--- 	end
-
--- 	-- Help button and popup
--- 	if im.Button("Help") then    
--- 		showHelpWindow = not showHelpWindow
---     	helpPage       = 0
--- 		im.OpenPopup("SumoHelpModal") 
--- 		-- im.OpenPopup("SumoHelpPopup0")
--- 		-- im.OpenPopup("SumoHelpPopup2")
--- 		-- im.OpenPopup("SumoHelpPopup3")
--- 	end
-
--- 	-- Single modal popup
--- 	if showHelpWindow then
--- 		if im.BeginPopupModal("Sumo Game Help", nil, im.WindowFlags_AlwaysAutoResize) then
--- 			-- im.TextColored(im.ImVec4(1,1,0,1), "Sumo Game Help")
--- 			-- im.Separator()
--- 			-- Page content
--- 			if helpPage == 0 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("1. Join by Spawning:")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("Spawn a car to participate in the game. Use 'Join next round' to auto spawn in the next round.")
--- 			elseif helpPage == 1 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("2. Automatic Start:")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("The game begins once two or more players are active (configurable).")
--- 			elseif helpPage == 2 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("3. Safezone Mechanics:")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("Every 30 seconds, a new safezone spawns at 70% the size of the last one.")
--- 			elseif helpPage == 3 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("4. Explosive Elimination:")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("If you're outside the zone when the timer ends, you'll explode!")
--- 			elseif helpPage == 4 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("5. Reset Rule (Enforced):")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("Resets are only allowed if you're outside the safezone and moving slower than 20 km/h.")
--- 			elseif helpPage == 5 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("6. No Resets After Death:")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("If you're eliminated, all reset functions are locked until the round ends.")
--- 			elseif helpPage == 6 then
--- 				im.PushStyleColor(im.Text, ImVec4(0.75,0.75,0,1))
--- 				im.TextWrapped("7. Victory Conditions:")
--- 				im.PopStyleColor()
--- 				im.TextWrapped("Last player standing wins OR: All players inside the final zone when the last timer ends.")
--- 			end
-
--- 			im.Separator()
--- 			-- Navigation
--- 			if helpPage > 0 then
--- 				if im.Button("Previous") then
--- 					helpPage = helpPage - 1
--- 				end
--- 				im.SameLine()
--- 			end
--- 			if helpPage < maxHelpPages then
--- 				if im.Button("Next") then
--- 					helpPage = helpPage + 1
--- 				end
--- 			else
--- 				if im.Button("Close") then
--- 					im.CloseCurrentPopup()
--- 					showHelp = false
--- 				end
--- 			end
-
--- 			im.EndPopup()
--- 		end
--- 	end
-
-
-
-
-
--- 		-- if im.BeginPopup("SumoHelpPopup0") then
--- 		-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
--- 		-- 	im.Separator()
--- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "1. Join by Spawning:")
--- 		-- 	im.TextWrapped("Spawn a car to participate in the game. You can use the 'Join next round' option to automatically spawn a car in the next round.")
--- 		-- 	im.Separator()
--- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "2. Automatic Start:")
--- 		-- 	im.TextWrapped("The game begins once two or more players are active (depending on config).")
--- 		-- 	if im.Button("Next Page") then
--- 		-- 		currentHelpPopup = "SumoHelpPopup1"
--- 		-- 		im.CloseCurrentPopup()
--- 		-- 	end
--- 		-- 	im.EndPopup()
--- 		-- end
-
--- 		-- if currentHelpPopup == "SumoHelpPopup1" then
--- 		-- 	im.OpenPopup("SumoHelpPopup1")
--- 		-- end
-
--- 		-- if im.BeginPopup("SumoHelpPopup1") then --FIXME this doesn't get shown.
--- 		-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
--- 		-- 	im.Separator()
--- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "3. Safezone Mechanics:")
--- 		-- 	im.TextWrapped("Every 30 seconds, a new safezone spawns at 70% the size of the last one.")
--- 		-- 	im.Separator()
--- 		-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "4. Explosive Elimination:")
--- 		-- 	im.TextWrapped("If you're outside the zone when the timer ends, you'll explode!")
--- 		-- 	if im.Button("Next Page") then
--- 		-- 		currentPopup = "SumoHelpPopup2"
--- 		-- 		im.CloseCurrentPopup()
--- 		-- 	end
--- 		-- 	im.EndPopup()
--- 		-- end
-	
--- 	-- if im.BeginPopup("SumoHelpPopup2") then
--- 	-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
--- 	-- 	im.Separator()
--- 	-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "5. Reset Rule (Enforced):")
--- 	-- 	im.TextWrapped("Resets are only allowed by the gamemode if:")
--- 	-- 	im.TextWrapped("- You're outside the safezone")
--- 	-- 	im.TextWrapped("- Moving slower than 20 km/h")
--- 	-- 	im.EndPopup()
--- 	-- end
--- 	-- if im.BeginGroup("SumoHelpPopup3") then
--- 	-- 	im.TextColored(im.ImVec4(1, 1, 0, 1), "Sumo Game Help")
--- 	-- 	im.Separator()
--- 	-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "6. No Resets After Death:")
--- 	-- 	im.TextWrapped("If you're eliminated, all reset functions are locked until the round ends.")
--- 	-- 	im.Separator()
--- 	-- 	im.TextColored(im.ImVec4(0.75, 0.75, 0, 1), "7. Victory Conditions:")
--- 	-- 	im.TextWrapped("Last player standing wins OR: All players inside the final zone when the last timer ends.")
--- 	-- 	im.EndGroup()
--- 	-- end
--- 	im.End()
--- end
-
 function onResetGameplay(id)
 	-- print( "onResetGameplay called")
 end
@@ -1238,7 +1039,7 @@ end
 
 function onSumoSaveArena(name)
 	newArena.name = name
-	TriggerServerEvent("sumoSaveArena", jsonEncode(newArena))
+	if TriggerServerEvent then TriggerServerEvent("sumoSaveArena", jsonEncode(newArena)) end
 end
 
 function isInTable(tbl, value)
@@ -1292,39 +1093,14 @@ function onVehicleResetted(vehID)
   	playerPressedReset = true
   	return
   end
-	if MPVehicleGE and isPlayerInReverseGravity then -- roll the vehicle so the wheels touch the ground when resetting in the reverse gravity area
+	if MPVehicleGE 
+		and isPlayerInReverseGravity 
+		and gamestate 
+		and gamestate.gameRunning 
+		and gamestate.time 
+		and gamestate.time > 0 then -- roll the vehicle so the wheels touch the ground when resetting in the reverse gravity area
 		if MPVehicleGE.isOwn(vehID) then
 			local veh = be:getObjectByID(reverseGravitySubjectId)
-			-- local upVector = veh:getDirectionVectorUp() --* (180/math.pi)
-			-- --print(dump(upVector))
-			-- local worldUpVsVehUp = upVector:dot(vec3(0, 0, 1))
-			--
-			-- -- if worldUpVsVehUp > 0.9 then --reasonably upright
-			-- -- 	
-			-- -- end
-			-- -- if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
-			-- -- 	local pos = veh:getPosition()
-			-- -- 	local rot = veh:getRotation()
-			-- -- 	rot = rot:toEuler() * (180/math.pi)
-			-- -- 	--print(dump(rot))
-			-- -- 	rot.y = rot.y + 180
-			-- -- 	rot = rot * (math.pi/180)
-			-- -- 	--print("Rot is now: " ..  dump(rot))
-			-- -- 	rot = quatFromEuler(rot.x, rot.y, rot.z)
-			-- -- 	veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
-			-- -- end		
-			-- -- if upVector.z > 25 and upVector.z < 90 then --no clue on why the vector up z coordinate is ~57 (west coast is slanted confirmed)
-			-- local pos = veh:getPosition()
-			-- local rot = veh:getRotation()
-			-- rot = rot:toEuler() * (180/math.pi)
-			-- -- 	--print(dump(rot))
-			-- -- 	rot.y = rot.y + 180
-			-- -- 	rot = rot * (math.pi/180)
-			-- -- 	--print("Rot is now: " ..  dump(rot))
-			-- rot = quatFromEuler(rot.x, rot.y, rot.z)
-			-- veh:setPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
-			-- -- end
-			-- --
 			-- Get current rotation and position
 			local currentRot = quat(veh:getRotation())
 			local currentPos = veh:getPosition()
@@ -1347,8 +1123,6 @@ function onVehicleResetted(vehID)
     		rotAxis = rotAxis:normalized()
     		local alignQuat = quatFromAxisAngle(rotAxis, angle)
     		newRot = alignQuat * currentRot
-    		-- newRot = quat(vec3(veh:getRotation().x, 0, 1))
-    		-- newRot = quatFromEuler(veh:getRotation().x, 0, -1)
     		
 				-- Apply position and new rotation
 				playerPressedReset = false -- make sure we now when this function is called recursively and cancel that
@@ -1366,19 +1140,6 @@ function onSumoShowScoreboard(data)
 	data = jsonDecode(data)
 	guihooks.trigger('scoreboardSpawn', {})
 	guihooks.trigger('scoreboardSetScores', data)
-	-- if data then 
-	-- 	local overallWinner = nil
-	-- 	local highestScore = 0
-	-- 	for i, player in pairs(data) do
-	-- 		if player.score and player.score > highestScore then
-	-- 			highestScore = player.score
-	-- 			overallWinner = player.name
-	-- 		end
-	-- 	end
-	-- 	if not (highestScore > 0) then return end
-	-- 	-- guihooks.trigger('scoreboardSelectRoundWinner', roundWinner)
-	-- 	-- guihooks.trigger('scoreboardSelectOverallWinner', overallWinner)
-	-- end
 end
 
 function blockConsole()
@@ -1449,7 +1210,7 @@ end
 local function setJoinNextRound(state)
 	print("setJoinNextRound called")
 	joinNextRound = state
-	MP.TriggerServerEvent('Sumo.setJoinNextRound', state) --FIXE: fix later
+	TriggerServerEvent('Sumo.setJoinNextRound', state) --FIXE: fix later
 end
 
 local function getSumoMenuState()
@@ -1562,7 +1323,6 @@ if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboa
 if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
 if MPGameNetwork then AddEventHandler("blockConsole", blockConsole) end
 if MPGameNetwork then AddEventHandler("blockEditor", blockEditor) end
--- if MPGameNetwork then AddEventHandler("onSumoGoalTrigger", onSumoGoalTrigger) end
 
 M.requestSumoGameState = requestSumoGameState
 M.receiveSumoGameState = receiveSumoGameState
@@ -1572,7 +1332,6 @@ M.requestSumoArenaNames = requestSumoArenaNames
 M.requestSumoLevels = requestSumoLevels
 M.requestSumoGoalCount = requestSumoGoalCount
 M.onPreRender = onPreRender
--- M.onVehicleSwitched = onVehicleSwitched
 M.resetSumoCarColors = resetSumoCarColors
 M.spawnFlag = spawnFlag
 M.spawnSumoGoal = spawnSumoGoal
@@ -1585,8 +1344,6 @@ M.onResetGameplay = onResetGameplay
 M.allowSumoResets = allowSumoResets
 M.disallowSumoResets = disallowSumoResets
 M.onVehicleResetted = onVehicleResetted
--- M.onSumoFlagTrigger = onSumoFlagTrigger
--- M.onSumoGoalTrigger = onSumoGoalTrigger
 M.explodeSumoCar = explodeSumoCar
 M.onSumoTrigger = onSumoTrigger
 M.onSumoGameEnd = onSumoGameEnd
@@ -1618,8 +1375,7 @@ M.getPlayerList = getPlayerList
 M.spectatePlayer = spectatePlayer
 M.onSumoStopResetting = onSumoStopResetting
 M.onSumoStartResetting = onSumoStartResetting
--- M.onSumoVehicleSpawned = onSumoVehicleSpawned
--- M.onSumoVehicleDeleted = onSumoVehicleDeleted
+
 return M
 --
 -- local veh = be:getObjectByID(be:getPlayerVehicleID(0));
