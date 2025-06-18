@@ -1,45 +1,54 @@
 import os
 import zipfile
 import shutil
+from pathlib import Path
 
-# Paths
-source_folder = r"I:\SteamLibrary\steamapps\common\BeamNG.drive\content\vehicles"
-destination_base = r"Client/vehicles"
+VEHICLE_ZIPS_FOLDER = Path(r"I:\SteamLibrary\steamapps\common\BeamNG.drive\content\vehicles")
+DESTINATION_ROOT = Path(r"Client/vehicles")
+TEMP_EXTRACT_FOLDER = Path("./temp_extract_pc_files")
 
-def delete_pc_files(base_folder):
-    """Delete all .pc files in the specified folder and its subdirectories."""
-    for root, _, files in os.walk(base_folder):
-        for file in files:
-            if file.endswith(".pc"):
-                file_path = os.path.join(root, file)
-                os.remove(file_path)
-                print(f"Deleted {file_path}")
+def delete_all_pc_files(folder_to_clean: Path):
+    print(f"Searching for .pc files to delete in {folder_to_clean}...")
+    if not folder_to_clean.is_dir():
+        print("Folder does not exist, nothing to delete.")
+        return
+    for pc_file in folder_to_clean.rglob("*.pc"):
+        try:
+            pc_file.unlink()
+            print(f"Deleted {pc_file}")
+        except OSError as e:
+            print(f"Error deleting {pc_file}: {e}")
 
-# # Example usage of the delete_pc_files function
-# delete_pc_files(r"Client/vehicles")
-
-# Iterate through all zip files in the source folder
-for zip_filename in os.listdir(source_folder):
-    if zip_filename.endswith(".zip"):
-        zip_path = os.path.join(source_folder, zip_filename)
-        vehicle_name = os.path.splitext(zip_filename)[0]
-        destination_folder = os.path.join(destination_base, vehicle_name)
-
-        # Check if the destination folder exists
-        if os.path.exists(destination_folder):
+def copy_vehicle_configs():
+    if not VEHICLE_ZIPS_FOLDER.is_dir():
+        print(f"Error: Source folder not found: {VEHICLE_ZIPS_FOLDER}")
+        return
+    TEMP_EXTRACT_FOLDER.mkdir(exist_ok=True)
+    print(f"Scanning for vehicle zips in: {VEHICLE_ZIPS_FOLDER}")
+    for zip_path in VEHICLE_ZIPS_FOLDER.glob("*.zip"):
+        vehicle_name = zip_path.stem  # .stem gets the filename without the extension.
+        destination_folder = DESTINATION_ROOT / vehicle_name
+        if not destination_folder.is_dir():
+            print(f"Skipping {vehicle_name}: Destination folder does not exist.")
+            continue
+        print(f"Processing vehicle: {vehicle_name}")
+        try:
             with zipfile.ZipFile(zip_path, 'r') as zip_file:
-                # Iterate through files in the zip
-                for file in zip_file.namelist():
-                    if file.endswith(".pc") and file.startswith(f"vehicles/{vehicle_name}/"):
-                        # Extract the .pc file to a temporary location
-                        temp_path = zip_file.extract(file, "/tmp")
-                        # Construct the destination path
-                        relative_path = os.path.relpath(file, f"vehicles/{vehicle_name}/")
-                        final_destination = os.path.join(destination_folder, relative_path)
-                        # Ensure the destination directory exists
-                        os.makedirs(os.path.dirname(final_destination), exist_ok=True)
-                        # Move the file to the destination
-                        shutil.move(temp_path, final_destination)
-                        print(f"Copied {file} to {final_destination}")
-        else:
-            print(f"Destination folder does not exist for vehicle: {vehicle_name}")
+                for file_in_zip in zip_file.namelist():
+                    expected_prefix = f"vehicles/{vehicle_name}/"
+                    if file_in_zip.endswith(".pc") and file_in_zip.startswith(expected_prefix):
+                        extracted_file_path = Path(zip_file.extract(file_in_zip, TEMP_EXTRACT_FOLDER))
+                        relative_path = file_in_zip.replace(expected_prefix, "")
+                        final_destination = destination_folder / relative_path
+                        final_destination.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.move(str(extracted_file_path), str(final_destination))
+                        print(f"  -> Copied {file_in_zip} to {final_destination}")
+        except zipfile.BadZipFile:
+            print(f"Warning: Corrupted zip file, skipping: {zip_path.name}")
+    print("Cleaning up temporary files...")
+    shutil.rmtree(TEMP_EXTRACT_FOLDER)
+
+if __name__ == "__main__":
+    # delete_all_pc_files(DESTINATION_ROOT)
+    copy_vehicle_configs()
+    print("\nScript finished.")
