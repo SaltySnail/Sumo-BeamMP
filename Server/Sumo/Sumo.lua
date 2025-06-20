@@ -54,6 +54,7 @@ local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
 local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
 local allowedConfigs = {}
+local amountOfSpawnsOnArena = {}
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -270,11 +271,16 @@ end
 function spawnSumoGoal()
 	-- gameState.goalScale = (gameState.goalScale or 1) - gameState.goalScaleResize
 	gameState.goalScale = gameState.goalScale * 0.7
-	local newGoalID = rand(1,goalPrefabCount)
-	while (newGoalID == goalID) do
-		newGoalID = rand(1,goalPrefabCount)
+	
+	local goalIndexList = {}
+	print('SpawnSumoGoal called ' .. goalPrefabCount)
+	for i=1, goalPrefabCount do
+		if i ~= goalID then
+			table.insert(goalIndexList, i)
+		end
 	end
-	goalID = newGoalID
+	print('goalIndexList: ' .. dump(goalIndexList) .. " size " .. #goalIndexList)
+	goalID = goalIndexList[rand(1,#goalIndexList)]
 	print("Chosen goal: art/goal" .. goalID .. ".prefab.json")
 	MP.TriggerClientEvent(-1, "spawnSumoGoal", "art/goal" .. goalID .. ".prefab.json")
 end
@@ -623,9 +629,23 @@ function sumoGameRunningLoop()
 	end
 
 	if gameState.time < -3 and gameState.time > -10 then
+		local possibleSpawns = {}
 		for ID,Player in pairs(MP.GetPlayers()) do
 			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
-				MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. ID)
+				if amountOfSpawnsOnArena and chosenArena and amountOfSpawnsOnArena[chosenArena] then
+					if #possibleSpawns == 0 then
+						for i=1, amountOfSpawnsOnArena[chosenArena] do
+							table.insert(possibleSpawns, i) 
+						end
+					end
+					local chosenSpawn = rand(1,amountOfSpawnsOnArena[chosenArena]) --chosenSpawn is the index so that we can remove it by index from possibleSpawns
+					MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. tostring(possibleSpawns[chosenSpawn % possibleSpawns + 1]))
+					table.remove(possibleSpawns, chosenSpawn)
+				else
+					if not chosenArena then chosenArena = "" end
+					print("Warning! the amountOfSpawnsOnArena wasn't filled correctly " .. chosenArena .. " " .. dump(amountOfSpawnsOnArena))
+					MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. tostring(ID))
+				end
 			end
 		end
 	end
@@ -778,6 +798,9 @@ function onPlayerJoin(playerID)
 	if next(arenaNames) == nil then --fill arenaNames
 		for name, value in pairs(Util.JsonDecode(contents)) do
 			table.insert(arenaNames, name)
+			if value.spawns then
+				amountOfSpawnsOnArena[name] = #value.spawns
+			end
 		end
 	end
 	if arena and gameState.gameRunning then
@@ -1050,5 +1073,6 @@ M.sumoSaveArena = sumoSaveArena
 M.loadScores = loadScores
 M.saveAddedScores = saveAddedScores
 M.setJoinNextRound = setJoinNextRound
+M.loadSettings = loadSettings
 
 return M
