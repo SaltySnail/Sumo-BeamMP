@@ -55,6 +55,7 @@ local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path f
 local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
 local allowedConfigs = {}
 local amountOfSpawnsOnArena = {}
+local playerJoinsNextRound = {}
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -350,6 +351,7 @@ function sumoGameSetup()
 	local chosenTeam = possibleTeams[rand(1,#possibleTeams)]
 	local teamCount = 0
 	local class = ""
+	local possibleConfigs = {}
 	if randomVehicles then
 		local keys = {}
 		for k,_ in pairs(allowedConfigs) do
@@ -372,14 +374,24 @@ function sumoGameSetup()
 			end
 			teamCount = 0
 		end
+		if randomVehicles and #possibleConfigs == 0 and allowedConfigs and allowedConfigs[class] then
+			for _,v in pairs(allowedConfigs[class]) do
+				table.insert(possibleConfigs, v)
+			end
+		end
+		print(dump(possibleConfigs))
 		if MP.IsPlayerConnected(ID) then
 			local player = {}
+			if not gameState then gameState = {} end
 			if not gameState.players then gameState.players = {} end
 			if not gameState.players[Name] then gameState.players[Name] = {} end
-			if not (gameState.players[Name].joinNextRound or MP.GetPlayerVehicles(ID)) then gameState.players[Name].joinNextRound = false end -- clear table as the player doesn't have vehicles or joinNextRound selected
-			if randomVehicles and (MP.GetPlayerVehicles(ID) or gameState.players[Name].joinNextRound) then		
+			if randomVehicles and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Name]) then		
 				print("Chosen class: " .. class)
-				gameState.players[Name].chosenConfig = allowedConfigs[class][rand(1,#allowedConfigs[class])]
+				local chosenConfig = rand(1,#possibleConfigs)
+				print("chosenConfig: " .. chosenConfig)
+				print(dump(allowedConfigs[class]))
+				gameState.players[Name].chosenConfig = allowedConfigs[class][chosenConfig]
+				table.remove(possibleConfigs, chosenConfig)
 				print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
 			end
 			if MP.GetPlayerVehicles(ID) then
@@ -532,7 +544,7 @@ function sumo(player, argument)
 		end
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
-			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
 				playerCount = playerCount + 1
 			end
 		end
@@ -820,6 +832,9 @@ end
 function onPlayerDisconnect(playerID)
 	gameState.players[MP.GetPlayerName(playerID)] = nil
 	players[MP.GetPlayerName(playerID)] = nil
+	if amountOfPlayersJoiningNextRound > 0 then 
+		amountOfPlayersJoiningNextRound = amountOfPlayersJoiningNextRound - 1 
+	end
 end
 
 --called whenever a player sends a chat message
@@ -1026,7 +1041,12 @@ function sumoSaveArena(playerID, data)
 end
 
 local function setJoinNextRound(playerID, state)
-	gameState.players[MP.GetPlayerName(playerID)].joinNextRound = state
+	print("" .. MP.GetPlayerName(playerID) .. "changed state to " .. tostring(state))
+	if state then
+		playerJoinsNextRound[MP.GetPlayerName(playerID)] = true
+	else
+		playerJoinsNextRound[MP.GetPlayerName(playerID)] = nil	
+	end
 end
 
 M.onInit = onInit
