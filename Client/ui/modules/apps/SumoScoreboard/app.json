@@ -6,8 +6,8 @@
     "directive": "sumoscoreboard",
     "domElement": "<sumoscoreboard></sumoscoreboard>",
     "css": {
-      "width": "500px",
-      "height": "500px",
+      "width": "65%",
+      "height": "75%",
       "top": "0px",
       "left": "0px"
     },
