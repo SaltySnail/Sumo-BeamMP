@@ -1051,6 +1051,10 @@ function isInTable(tbl, value)
     return false
 end
 
+local function spawnVehicleConfig(configPath)
+	core_vehicles.replaceVehicle(configPath:match("^vehicles/([^/]+)/") , {config = configPath})
+end
+
 function spawnSumoRandomVehicle()
 	local hasCar = false
 	local playerName = ""
@@ -1079,7 +1083,7 @@ function spawnSumoRandomVehicle()
 	for playername, player in pairs(gamestate.players) do
 		if playername == playerName then
 			print("Playername: " .. playername .. " chosenConfig: " .. dump(player.chosenConfig))
-			core_vehicles.replaceVehicle(player.chosenConfig:match("^vehicles/([^/]+)/") , {config = player.chosenConfig})
+			spawnVehicleConfig(player.chosenConfig)
 			break
 		end
 	end
@@ -1375,6 +1379,8 @@ M.getPlayerList = getPlayerList
 M.spectatePlayer = spectatePlayer
 M.onSumoStopResetting = onSumoStopResetting
 M.onSumoStartResetting = onSumoStartResetting
+M.spawnVehicleConfig = spawnVehicleConfig
+
 
 return M
 --

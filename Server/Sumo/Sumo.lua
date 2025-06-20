@@ -56,6 +56,10 @@ local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between differe
 local allowedConfigs = {}
 local amountOfSpawnsOnArena = {}
 local playerJoinsNextRound = {}
+local testingConfigSpawnsTime = 0
+local testingAllConfigsOnAllSpawns = false
+local testingConfig = 0
+local testingSpawn = 0
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -770,6 +774,17 @@ function sumoTimer()
 			selectRandomArena()
 			sumoGameSetup()
 		end
+	elseif testingAllConfigsOnAllSpawns then
+			-- testingConfigSpawnsTime = testingConfigSpawnsTime + 1
+			-- if testingConfig > #allowedConfigs then
+			-- 	testingConfig = 0	
+		 --  end
+			-- for i = , #arenaNames do
+			-- 	chosenArena = arenaNames[1]
+			-- 	onSumoArenaChange()
+			-- 	showSumoPrefabs(player, false)
+			-- end
+		 --  testingConfig = testingConfig + 1
 	end
 end
 

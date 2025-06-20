@@ -32,5 +32,13 @@
     "vehicles/roamer/sumoamer.pc",
     "vehicles/pickup/D-Sumo.pc",
     "vehicles/van/H-Sumo.pc"
+  ],
+  "High End": [
+    "vehicles/sunburst2/highend_sunburst2_sumo.pc",
+    "vehicles/vivace/highend_fcv2_sumo.pc",
+    "vehicles/vivace/highend_fcv1_sumo.pc",
+    "vehicles/etkc/highend_etk-k_sumo.pc",
+    "vehicles/etk800/highend_etk-800_sumo.pc",
+    "vehicles/sbr/highend_sbr_sumo.pc"
   ]
 }
