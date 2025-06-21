@@ -1055,6 +1055,33 @@ local function spawnVehicleConfig(configPath)
 	core_vehicles.replaceVehicle(configPath:match("^vehicles/([^/]+)/") , {config = configPath})
 end
 
+local function spawnConfigOnEverySpawn(configPath)
+	print('spawnConfigOnEverySpawn called: ' .. configPath)
+	for vehID, theCar in pairs(MPVehicleGE.getOwnMap()) do
+		local vehicle = scenetree.findObjectById(theCar.gameVehicleID)
+		if vehicle then
+			vehicle:delete()
+		end
+	end
+	spawnVehicleConfig(configPath)
+	for i=1,#mapData.arenaData[currentArena] do
+		core_vehicles.clone_current()
+	end
+	for id, veh in pairs(MPVehicleGE.GetOwnMap()) do
+		teleported = false
+		teleportToSumoArena(id)
+	end
+end
+
+local function removeAllVehicles()
+	for vehID, veh in pairs(MPVehicleGE.getOwnMap()) do
+		local vehicle = scenetree.findObjectById(veh.gameVehicleID)
+		if vehicle then
+			vehicle:delete()
+		end
+	end
+end
+
 function spawnSumoRandomVehicle()
 	local hasCar = false
 	local playerName = ""
@@ -1380,7 +1407,8 @@ M.spectatePlayer = spectatePlayer
 M.onSumoStopResetting = onSumoStopResetting
 M.onSumoStartResetting = onSumoStartResetting
 M.spawnVehicleConfig = spawnVehicleConfig
-
+M.spawnConfigOnEverySpawn = spawnConfigOnEverySpawn
+M.removeAllVehicles = removeAllVehicles
 
 return M
 --
