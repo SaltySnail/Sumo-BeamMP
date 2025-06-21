@@ -58,8 +58,11 @@ local amountOfSpawnsOnArena = {}
 local playerJoinsNextRound = {}
 local testingConfigSpawnsTime = 0
 local testingAllConfigsOnAllSpawns = false
-local testingConfig = 0
-local testingSpawn = 0
+local testingConfig = 1
+local testingSpawn = 1
+local testingArena = 1
+local testingClass = 1
+local waitTimeBetweenTests = 20
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -341,7 +344,7 @@ function sumoGameSetup()
 		}
 	local playerCount = 0
 	for ID,Player in pairs(MP.GetPlayers()) do
-		if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+		if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
 			playerCount = playerCount + 1
 		end
 	end
@@ -534,6 +537,19 @@ function sumo(player, argument)
 	elseif argument == "show all" then
 		onSumoArenaChange()
 		showSumoPrefabs(player, true)
+	elseif argument == "test" then
+		readAllowedConfigs()
+		requestedArena = arenaNames[testingArena]
+		onSumoArenaChange()
+		print('Testing starting')
+		testingAllConfigsOnAllSpawns = true
+	elseif string.find(argument, "test %d") then
+		readAllowedConfigs()
+		requestedArena = arenaNames[testingArena]
+		onSumoArenaChange()
+		print('Testing starting with specified wait time')
+		testingAllConfigsOnAllSpawns = true
+		waitTimeBetweenTests = tonumber(string.sub(argument,6,10000))
 	elseif argument == "show arena" then
 		onSumoArenaChange()
 		showSumoPrefabs(player, false)
@@ -647,7 +663,7 @@ function sumoGameRunningLoop()
 	if gameState.time < -3 and gameState.time > -10 then
 		local possibleSpawns = {}
 		for ID,Player in pairs(MP.GetPlayers()) do
-			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
 				if amountOfSpawnsOnArena and chosenArena and amountOfSpawnsOnArena[chosenArena] then
 					if #possibleSpawns == 0 then
 						for i=1, amountOfSpawnsOnArena[chosenArena] do
@@ -758,7 +774,7 @@ function sumoTimer()
 	elseif autoStart and MP.GetPlayerCount() >= playersNeededForGame then
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
-			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
 				playerCount = playerCount + 1
 			end
 		end
@@ -775,16 +791,50 @@ function sumoTimer()
 			sumoGameSetup()
 		end
 	elseif testingAllConfigsOnAllSpawns then
-			-- testingConfigSpawnsTime = testingConfigSpawnsTime + 1
-			-- if testingConfig > #allowedConfigs then
-			-- 	testingConfig = 0	
-		 --  end
-			-- for i = , #arenaNames do
-			-- 	chosenArena = arenaNames[1]
-			-- 	onSumoArenaChange()
-			-- 	showSumoPrefabs(player, false)
-			-- end
-		 --  testingConfig = testingConfig + 1
+		testingConfigSpawnsTime = testingConfigSpawnsTime + 1
+		-- spawn arena	
+		if testingConfigSpawnsTime % waitTimeBetweenTests == 0 then 
+			testingConfigSpawnsTime = 0
+		end --exit when not enough seconds haven't passed (to make sure every config loads and has the chance to break)
+		print('testing iteration')
+		
+		MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'goal')
+		for ID, _ in pairs(MP.GetPlayers()) do
+			local player = {}
+			player.playerID = ID
+			showSumoPrefabs(player, true)
+		end
+		local class = ""
+		local keys = {}
+		for k,_ in pairs(allowedConfigs) do
+			if k ~= class then
+				table.insert(keys, k)
+			end
+		end
+		if #keys > 0 then
+			class = keys[testingClass]
+		end
+		print('allowedConfigs: ' .. dump(allowedConfigs))
+		print('testingConfig: ' .. dump(allowedConfigs[class][testingConfig]))
+		MP.TriggerClientEvent(0, 'spawnConfigOnEverySpawn', '' .. allowedConfigs[class][testingConfig])	
+		testingConfig = testingConfig + 1
+		if testingConfig > #allowedConfigs[class] then
+			testingClass = testingClass + 1
+			testingConfig = 1
+			if testingClass > #allowedConfigs then
+				testingArena = testingArena + 1
+				testingClass = 1
+				MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'all')
+				requestedArena = arenaNames[testingArena]
+				onSumoArenaChange()
+				if testingArena > #arenaNames then
+					testingArena = 1
+					testingAllConfigsOnAllSpawns = false
+					MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'all')
+					MP.TriggerClientEvent(-1, 'removeAllVehicles', 'nil') 
+				end
+			end
+		end
 	end
 end
 
@@ -874,7 +924,7 @@ function onVehicleSpawn(playerID, vehID,  data)
 	if autoStart then
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
-			if MP.IsPlayerConnected(ID) and MP.GetPlayerVehicles(ID) then
+			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
 				playerCount = playerCount + 1
 			end
 		end
@@ -927,11 +977,11 @@ function requestSumoGameState(localPlayerID)
 end
 
 -- function onSumoGoal(playerID)
--- 	MP.TriggerClientEvent(-1, "removeSumoPrefabs", "goal")
--- 	MP.TriggerClientEvent(playerID, "onScore", "nil")
--- 	updateSumoClients()
--- 	MP.SendChatMessage(-1,"".. MP.GetPlayerName(playerID) .." Scored a point!")
--- 	spawnSumoGoal()
+--	MP.TriggerClientEvent(-1, "removeSumoPrefabs", "goal")
+--	MP.TriggerClientEvent(playerID, "onScore", "nil")
+--	updateSumoClients()
+--	MP.SendChatMessage(-1,"".. MP.GetPlayerName(playerID) .." Scored a point!")
+--	spawnSumoGoal()
 -- end
 
 function setSumoArenaNames(playerID, data)
@@ -945,10 +995,10 @@ function setSumoArenaNames(playerID, data)
 end
 
 -- function setSumoLevels(playerID, data)
--- 	levels = {}
--- 	for name in data:gmatch("%S+") do 
--- 		table.insert(levels, name) 
--- 	end
+--	levels = {}
+--	for name in data:gmatch("%S+") do 
+--		table.insert(levels, name) 
+--	end
 -- end
 function onSumoPlayerExplode(playerID, playerName)
 	print(playerName .. "   " .. dump(gameState))
@@ -1027,9 +1077,9 @@ function saveAddedScores() -- reads the scores.json file and adds the new scores
 		-- if not content then content = "{}" end
 		-- local storedScores = Util.JsonDecode(content)
 		-- for playername, player in pairs(gameState.players) do
-		-- 	if not player.score then player.score = 0 end
-		-- 	if not scores[playername] then scores[playername] = 0 end
-		-- 	scores[playername] = scores[playername] + player.score
+		--	if not player.score then player.score = 0 end
+		--	if not scores[playername] then scores[playername] = 0 end
+		--	scores[playername] = scores[playername] + player.score
 		-- end
 		for playername, player in pairs(gameState.players) do
 			if not player.score then player.score = 0 end
