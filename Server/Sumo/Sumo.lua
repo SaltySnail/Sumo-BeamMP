@@ -61,7 +61,10 @@ local testingAllConfigsOnAllSpawns = false
 local testingConfig = 1
 local testingSpawn = 1
 local testingArena = 1
-local testingClass = 1
+local testingClassIndex = 1
+local testingClass = ""
+local testingStep = 0
+local testingStepTimer = 0
 local waitTimeBetweenTests = 20
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
@@ -550,6 +553,8 @@ function sumo(player, argument)
 		print('Testing starting with specified wait time')
 		testingAllConfigsOnAllSpawns = true
 		waitTimeBetweenTests = tonumber(string.sub(argument,6,10000))
+	elseif argument == "stop test" then
+		testingAllConfigsOnAllSpawns = false
 	elseif argument == "show arena" then
 		onSumoArenaChange()
 		showSumoPrefabs(player, false)
@@ -791,49 +796,88 @@ function sumoTimer()
 			sumoGameSetup()
 		end
 	elseif testingAllConfigsOnAllSpawns then
-		testingConfigSpawnsTime = testingConfigSpawnsTime + 1
-		-- spawn arena	
-		if testingConfigSpawnsTime % waitTimeBetweenTests == 0 then 
-			testingConfigSpawnsTime = 0
-		end --exit when not enough seconds haven't passed (to make sure every config loads and has the chance to break)
-		print('testing iteration')
-		
-		MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'goal')
-		for ID, _ in pairs(MP.GetPlayers()) do
-			local player = {}
-			player.playerID = ID
-			showSumoPrefabs(player, true)
-		end
-		local class = ""
-		local keys = {}
-		for k,_ in pairs(allowedConfigs) do
-			if k ~= class then
-				table.insert(keys, k)
+		testingStepTimer = testingStepTimer + 1
+
+		if testingStep == 0 and testingStepTimer >= 2 then
+			MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'all')
+			MP.TriggerClientEvent(-1, 'removeAllVehicles', 'nil')
+			testingStep = 2
+			testingStepTimer = 0
+
+		elseif testingStep == 1 and testingStepTimer >= 1 then
+			onSumoArenaChange()
+			testingStep = 1
+			testingStepTimer = 0
+
+		elseif testingStep == 2 and testingStepTimer >= 5 then
+			for ID, _ in pairs(MP.GetPlayers()) do
+				local player = {}
+				player.playerID = ID
+				showSumoPrefabs(player, true)
 			end
-		end
-		if #keys > 0 then
-			class = keys[testingClass]
-		end
-		print('allowedConfigs: ' .. dump(allowedConfigs))
-		print('testingConfig: ' .. dump(allowedConfigs[class][testingConfig]))
-		MP.TriggerClientEvent(0, 'spawnConfigOnEverySpawn', '' .. allowedConfigs[class][testingConfig])	
-		testingConfig = testingConfig + 1
-		if testingConfig > #allowedConfigs[class] then
-			testingClass = testingClass + 1
-			testingConfig = 1
-			if testingClass > #allowedConfigs then
-				testingArena = testingArena + 1
-				testingClass = 1
-				MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'all')
-				requestedArena = arenaNames[testingArena]
-				onSumoArenaChange()
-				if testingArena > #arenaNames then
-					testingArena = 1
-					testingAllConfigsOnAllSpawns = false
-					MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'all')
-					MP.TriggerClientEvent(-1, 'removeAllVehicles', 'nil') 
+			testingStep = 3
+			testingStepTimer = 0
+			local keys = {}
+			for k,_ in pairs(allowedConfigs) do
+				if k ~= testingClass then
+					table.insert(keys, k)
 				end
 			end
+			if #keys > 0 then
+				testingClass = keys[testingClassIndex]
+			end
+
+		elseif testingStep == 3 and testingStepTimer >= 1 then
+			MP.TriggerClientEvent(-1, 'removeAllVehicles', 'nil')
+			testingStep = 4
+			testingStepTimer = 0
+
+		elseif testingStep == 4 and testingStepTimer >= 4 then
+			currentConfig = allowedConfigs[testingClass][testingConfig] -- Track config for following steps
+			-- print('allowedConfigs: ' .. dump(allowedConfigs))
+			print('testingConfig: ' .. dump(currentConfig))
+			MP.TriggerClientEvent(0, 'spawnVehicleConfig', '' .. currentConfig)
+			
+			testingStep = 5
+			testingStepTimer = 0
+
+		elseif testingStep == 5 and testingStepTimer >= 3 then
+			MP.TriggerClientEvent(-1, 'cloneVehicleToSpawns', 'nil')
+			testingStep = 6
+			testingStepTimer = 0
+
+		elseif testingStep == 6 and testingStepTimer >= 10 then
+			MP.TriggerClientEvent(-1, 'teleportToSumoArena', 'nil')
+			testingStep = 7
+			testingStepTimer = 0
+
+		elseif testingStep == 7 and testingStepTimer >= waitTimeBetweenTests then
+			-- Move to next config
+			testingConfig = testingConfig + 1
+			if testingConfig > #allowedConfigs[testingClass] then
+				testingClassIndex = testingClassIndex + 1
+				testingConfig = 1
+				if testingClassIndex > #allowedConfigs then
+					testingArena = testingArena + 1
+					testingClassIndex = 1
+
+					if testingArena > #arenaNames then
+						testingArena = 1
+						testingAllConfigsOnAllSpawns = false
+						MP.TriggerClientEvent(-1, 'removeSumoPrefabs', 'all')
+						MP.TriggerClientEvent(-1, 'removeAllVehicles', 'nil')
+						return
+					end
+
+					requestedArena = arenaNames[testingArena]
+					testingStep = 0
+					testingStepTimer = 0
+					return
+				end
+			end
+			-- Restart config testing sequence
+			testingStep = 3
+			testingStepTimer = 0
 		end
 	end
 end

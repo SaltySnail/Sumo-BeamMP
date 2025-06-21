@@ -447,6 +447,25 @@ function removeSumoPrefabs(type)
 end
 
 function teleportToSumoArena(spawnPointID)
+	print("" .. tostring(spawnPointID))
+	if spawnPointID == 'nil' then --teleportCars to as many spawns as possible for testing
+		print('teleporting all vehicles.... ')
+		local arenaData = mapData.arenaData[currentArena]
+		local spawnIndex = 0
+		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
+			spawnIndex = spawnIndex + 1
+			local veh = be:getObjectByID(vehID)
+			local chosenLocation = (spawnIndex % #arenaData.spawnLocations) + 1
+			if arenaData.spawnLocations[chosenLocation] then
+				-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
+				local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
+				veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
+				teleported = true
+			end
+			veh:queueLuaCommand("recovery.recoverInPlace()")
+		end
+		return
+	end
 	print("teleportToSumoArena Called")
 	if teleported == true then return end -- only teleport once per round
 	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
@@ -1055,25 +1074,15 @@ local function spawnVehicleConfig(configPath)
 	core_vehicles.replaceVehicle(configPath:match("^vehicles/([^/]+)/") , {config = configPath})
 end
 
-local function spawnConfigOnEverySpawn(configPath)
-	print('spawnConfigOnEverySpawn called: ' .. configPath)
-	for vehID, theCar in pairs(MPVehicleGE.getOwnMap()) do
-		local vehicle = scenetree.findObjectById(theCar.gameVehicleID)
-		if vehicle then
-			vehicle:delete()
-		end
-	end
-	spawnVehicleConfig(configPath)
-	for i=1,#mapData.arenaData[currentArena] do
-		core_vehicles.clone_current()
-	end
-	for id, veh in pairs(MPVehicleGE.GetOwnMap()) do
-		teleported = false
-		teleportToSumoArena(id)
-	end
+local function cloneVehicleToSpawns() -- clones vehicles for how ever many spawns are on the map
+	print('cloneVehicleToSpawns called ' .. dump(mapData))
+	for i=2, #mapData.arenaData[currentArena].spawnLocations do
+		core_vehicles.cloneCurrent()
+	end	
 end
 
 local function removeAllVehicles()
+	print('removeAllVehicles')
 	for vehID, veh in pairs(MPVehicleGE.getOwnMap()) do
 		local vehicle = scenetree.findObjectById(veh.gameVehicleID)
 		if vehicle then
@@ -1354,6 +1363,10 @@ if MPGameNetwork then AddEventHandler("onSumoShowScoreboard", onSumoShowScoreboa
 if MPGameNetwork then AddEventHandler("onSumoRemoveSpawns", onSumoRemoveSpawns) end
 if MPGameNetwork then AddEventHandler("blockConsole", blockConsole) end
 if MPGameNetwork then AddEventHandler("blockEditor", blockEditor) end
+if MPGameNetwork then AddEventHandler("removeAllVehicles",removeAllVehicles) end
+if MPGameNetwork then AddEventHandler("spawnConfigOnEverySpawn",spawnConfigOnEverySpawn) end
+if MPGameNetwork then AddEventHandler("spawnVehicleConfig",spawnVehicleConfig) end
+if MPGameNetwork then AddEventHandler("cloneVehicleToSpawns",cloneVehicleToSpawns) end
 
 M.requestSumoGameState = requestSumoGameState
 M.receiveSumoGameState = receiveSumoGameState
@@ -1409,6 +1422,7 @@ M.onSumoStartResetting = onSumoStartResetting
 M.spawnVehicleConfig = spawnVehicleConfig
 M.spawnConfigOnEverySpawn = spawnConfigOnEverySpawn
 M.removeAllVehicles = removeAllVehicles
+M.cloneVehicleToSpawns = cloneVehicleToSpawns
 
 return M
 --
