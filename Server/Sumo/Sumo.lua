@@ -22,6 +22,7 @@ local chosenTeams = {}
 local vehiclesToExplode = {}
 local goalID = -1
 local neededPlayers = 0
+local class = ""
 
 gameState.gameRunning = false
 gameState.gameEnding = false
@@ -135,6 +136,7 @@ function onInit()
 
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
+	math.randomseed(os.time())
 end
 
 function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code from https://stackoverflow.com/questions/45364628/lua-4-script-to-convert-seconds-elapsed-to-days-hours-minutes-seconds
@@ -327,7 +329,6 @@ function sumoTeamAlreadyChosen(team)
 end
 
 function sumoGameSetup()
-	math.randomseed(os.time())
 	onSumoArenaChange()
 	alivePlayers = {}
 	if teams then
@@ -360,7 +361,6 @@ function sumoGameSetup()
 	end
 	local chosenTeam = possibleTeams[rand(1,#possibleTeams)]
 	local teamCount = 0
-	local class = ""
 	local possibleConfigs = {}
 	if randomVehicles then
 		local keys = {}
@@ -489,6 +489,7 @@ function sumoGameEnd(reason)
 			end
 		end
 	end
+	if not gameState.time then gameState.time = -9 end
 	gameState.endtime = gameState.time + 10
 
 	if scoringSystem then
@@ -941,7 +942,7 @@ end
 function onPlayerDisconnect(playerID)
 	gameState.players[MP.GetPlayerName(playerID)] = nil
 	players[MP.GetPlayerName(playerID)] = nil
-	if amountOfPlayersJoiningNextRound > 0 then 
+	if amountOfPlayersJoiningNextRound and amountOfPlayersJoiningNextRound > 0 then 
 		amountOfPlayersJoiningNextRound = amountOfPlayersJoiningNextRound - 1 
 	end
 end
@@ -977,8 +978,8 @@ function onVehicleSpawn(playerID, vehID,  data)
 			neededPlayers = 0
 		end
 	end
-	if autoStart and neededPlayers > 0 then
-		MP.SendChatMessage(-1, "Not enough players to start a game, " .. neededPlayers .. " more player(s) need to spawn a car.")
+	if autoStart and neededPlayers > 1 then
+		MP.SendChatMessage(-1, "Not enough players to start a game, " .. neededPlayers - 1 .. " more player(s) need to spawn a car.")
 	end
 end
 

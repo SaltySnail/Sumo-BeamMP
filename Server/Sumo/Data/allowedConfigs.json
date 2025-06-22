@@ -40,5 +40,23 @@
     "vehicles/etkc/highend_etk-k_sumo.pc",
     "vehicles/etk800/highend_etk-800_sumo.pc",
     "vehicles/sbr/highend_sbr_sumo.pc"
+  ],
+  "Low End": [
+    "vehicles/pessima/lowend_pessimaold_sumo.pc",
+    "vehicles/pigeon/lowend_pigeon_sumo.pc",
+    "vehicles/barstow/lowend_barstow_sumo.pc",
+    "vehicles/bx/lowend_bx_sumo.pc",
+    "vehicles/covet/lowend_covet_sumo.pc",
+    "vehicles/hopper/lowend_hopper_sumo.pc",
+    "vehicles/legran/lowend_legran_sumo.pc", 
+    "vehicles/mirimar/lowend_mirimar_sumo.pc"
+  ],
+  "Heavy Class": [
+    "vehicles/pickup/heavyclass_D-series1_sumo.pc",
+    "vehicles/pickup/heavyclass_D-series2_sumo.pc",
+    "vehicles/roamer/heavyclass_roamer_sumo.pc",
+    "vehicles/van/heavyclass_H-series_sumo.pc",
+    "vehicles/lansdale/heavyclass_lansdale_sumo.pc",
+    "vehicles/midtruck/heavyclass_stambecco_sumo.pc"
   ]
 }

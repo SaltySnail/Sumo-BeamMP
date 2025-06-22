@@ -1028,9 +1028,10 @@ function onExtensionUnloaded()
 end
 
 function onExtensionLoaded()
-	-- gui_module.initialize(gui)
-	-- gui.registerWindow("Sumo Menu", im.ImVec2(256, 256))
-	-- gui.showWindow("Sumo Menu")
+	if gamestate and gamestate.gameRunning then
+		setSumoLayout('scenario')
+	end
+	-- check ingame path for if this person has the configs overwritten somehow
 end
 
 function onSumoVehicleSpawned(vehID)
