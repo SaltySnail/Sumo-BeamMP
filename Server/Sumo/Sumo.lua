@@ -67,6 +67,7 @@ local testingClass = ""
 local testingStep = 0
 local testingStepTimer = 0
 local waitTimeBetweenTests = 20
+local SCORES_LOCK_FILE = 'scores.lock'
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -87,7 +88,7 @@ end
 local function readAllowedConfigs()
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "allowedConfigs.json", "r")
 	if not file then 
-		print("allowedConfigs.json not found")
+		print("allowedconfigs.json not found")
 		return
 	end
 	local contents = file:read("*a")
@@ -400,7 +401,14 @@ function sumoGameSetup()
 				local chosenConfig = rand(1,#possibleConfigs)
 				print("chosenConfig: " .. chosenConfig)
 				print(dump(allowedConfigs[class]))
-				gameState.players[Name].chosenConfig = allowedConfigs[class][chosenConfig]
+				local configFile = io.open(SUMO_SERVER_DATA_PATH .. allowedConfigs[class][chosenConfig], 'r')
+				if not configFile then 
+					print(SUMO_SERVER_DATA_PATH .. allowedConfigs[class][chosenConfig] .. " not found")
+					return
+				end
+				local contents = configFile:read("*a")
+				configFile:close()
+				gameState.players[Name].chosenConfig = Util.JsonDecode(contents) 
 				table.remove(possibleConfigs, chosenConfig)
 				print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
 			end
@@ -834,7 +842,14 @@ function sumoTimer()
 			testingStepTimer = 0
 
 		elseif testingStep == 4 and testingStepTimer >= 4 then
-			currentConfig = allowedConfigs[testingClass][testingConfig] -- Track config for following steps
+			local configFile = io.open(SUMO_SERVER_DATA_PATH .. allowedConfigs[testingClass][testingConfig], 'r')
+			if not configFile then 
+				print(SUMO_SERVER_DATA_PATH .. allowedConfigs[testingClass][testingConfig] .. " not found")
+				return
+			end
+			local contents = configFile:read("*a")
+			configFile:close()
+			currentConfig = Util.JsonDecode(contents)			
 			-- print('allowedConfigs: ' .. dump(allowedConfigs))
 			print('testingConfig: ' .. dump(currentConfig))
 			MP.TriggerClientEvent(0, 'spawnVehicleConfig', '' .. currentConfig)
@@ -1097,7 +1112,37 @@ function loadSettings()
 	end
 end
 
+function aqcuireFileLock(lockFileName)
+	local initialFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName, 'r')
+	local waitingForLock = false
+	if initialFileLock then
+	 	waitingForLock = true
+	 	initialFileLock:close()
+	end
+	while(waitingForLock) do -- block while another process is accessing the file
+		print(lockFileName .. ' is locked by another process')
+		fileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName, 'r')
+		if fileLock then
+			fileLock:close()
+			local timeNow = os.time()
+			while(os.time() - timeNow < 3) do end -- wait three seconds to lower the chance of two threads waiting and thinking they aqcuired the lock at the same time
+		else
+			waitingForLock = false
+			print('Aqcuired lock: ' .. lockFileName)
+		end
+	end 	local newFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName,'w')
+	if not newFileLock then print('making the file lock didnt work') return end
+	newFileLock:write('locked')
+	newFileLock:close()
+end
+
+function releaseFileLock(lockFileName)
+  os.remove(SUMO_SERVER_DATA_PATH .. lockFileName)
+  print(lockFileName .. ' is released')
+end
+
 function loadScores()
+	aqcuireFileLock(SCORES_LOCK_FILE)
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "r")
     if file then
         local content = file:read("*all")
@@ -1105,36 +1150,40 @@ function loadScores()
 		if not content then content = "{}" end
         local data = Util.JsonDecode(content)
 		if data then
+			releaseFileLock(SCORES_LOCK_FILE)
 			return data
 		end
     else
         print("Cannot open file:", path)
     end
+  releaseFileLock(SCORES_LOCK_FILE)
 	return {}
 end
 
 function saveAddedScores() -- reads the scores.json file and adds the new scores to it
 	-- local scores = loadScores()
+	aqcuireFileLock(SCORES_LOCK_FILE)
 	local scores = {}
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
-    if file then
-		-- local content = file:read("*a")
-		-- if not content then content = "{}" end
-		-- local storedScores = Util.JsonDecode(content)
-		-- for playername, player in pairs(gameState.players) do
-		--	if not player.score then player.score = 0 end
-		--	if not scores[playername] then scores[playername] = 0 end
-		--	scores[playername] = scores[playername] + player.score
-		-- end
-		for playername, player in pairs(gameState.players) do
-			if not player.score then player.score = 0 end
-			scores[playername] = player.score
-		end
-		file:write(Util.JsonPrettify(Util.JsonEncode(scores)))
-		file:close()
-    else
-        print("Cannot open file:", path)
-    end
+  if file then
+	-- local content = file:read("*a")
+	-- if not content then content = "{}" end
+	-- local storedScores = Util.JsonDecode(content)
+	-- for playername, player in pairs(gameState.players) do
+	--	if not player.score then player.score = 0 end
+	--	if not scores[playername] then scores[playername] = 0 end
+	--	scores[playername] = scores[playername] + player.score
+	-- end
+	for playername, player in pairs(gameState.players) do
+		if not player.score then player.score = 0 end
+		scores[playername] = player.score
+	end
+	file:write(Util.JsonPrettify(Util.JsonEncode(scores)))
+	file:close()
+  else
+      print("Cannot open file:", path)
+  end
+	releaseFileLock(SCORES_LOCK_FILE)
 end
 
 function sumoSaveArena(playerID, data)

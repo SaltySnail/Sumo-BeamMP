@@ -459,7 +459,8 @@ function teleportToSumoArena(spawnPointID)
 			if arenaData.spawnLocations[chosenLocation] then
 				-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
 				local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
-				veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
+				-- veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
+				spawn.safeTeleport(veh, arenaData.spawnLocations[chosenLocation], q) 
 				teleported = true
 			end
 			veh:queueLuaCommand("recovery.recoverInPlace()")
@@ -479,7 +480,8 @@ function teleportToSumoArena(spawnPointID)
 		if arenaData.spawnLocations[chosenLocation] then
 			-- print(dump(quatFromEuler(arenaData.spawnLocations[chosenLocation].rx, arenaData.spawnLocations[chosenLocation].ry, arenaData.spawnLocations[chosenLocation].rz)))
 			local q = quatFromEuler(math.rad(arenaData.spawnLocations[chosenLocation].rx), math.rad(arenaData.spawnLocations[chosenLocation].ry), math.rad(arenaData.spawnLocations[chosenLocation].rz))
-			veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
+			-- veh:setPositionRotation(arenaData.spawnLocations[chosenLocation].x, arenaData.spawnLocations[chosenLocation].y, arenaData.spawnLocations[chosenLocation].z, q.x, q.y, q.z, q.w)
+			spawn.safeTeleport(veh, arenaData.spawnLocations[chosenLocation], q) 
 			teleported = true
 		end
 		veh:queueLuaCommand("recovery.recoverInPlace()")
@@ -1071,8 +1073,8 @@ function isInTable(tbl, value)
     return false
 end
 
-local function spawnVehicleConfig(configPath)
-	core_vehicles.replaceVehicle(configPath:match("^vehicles/([^/]+)/") , {config = configPath})
+local function spawnVehicleConfig(config)
+	core_vehicles.replaceVehicle(config.model or config.mainPartName, {model = config.model or config.mainPartName, config = config})
 end
 
 local function cloneVehicleToSpawns() -- clones vehicles for how ever many spawns are on the map
