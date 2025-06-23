@@ -58,5 +58,13 @@
     "vehicles/van/heavyclass_H-series_sumo.pc",
     "vehicles/lansdale/heavyclass_lansdale_sumo.pc",
     "vehicles/midtruck/heavyclass_stambecco_sumo.pc"
+  ],
+  "Drag Class": [
+    "vehicles/bluebuck/drag_bluebuck_sumo.pc",
+    "vehicles/burnside/drag_burnside_sumo.pc",
+    "vehicles/fullzise/drag_marshal_sumo.pc",
+    "vehicles/moonhawk/drag_moonhawk_sumo.pc",
+    "vehicles/nine/drag_nine_sumo.pc",
+    "vehicles/barstow/drag_barstow_sumo.pc"
   ]
 }
