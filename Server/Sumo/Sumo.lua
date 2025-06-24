@@ -133,7 +133,7 @@ function onInit()
 	MP.RegisterEvent("onNewRconClient", "onNewRconClient")
 	MP.RegisterEvent("onStopServer", "onStopServer")
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
-	MP.RegisterEvent("setJoinNextRound", "setJoinNextRound")
+	MP.RegisterEvent("setSumoJoinNextRound", "setSumoJoinNextRound")
 
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
@@ -410,7 +410,7 @@ function sumoGameSetup()
 				configFile:close()
 				gameState.players[Name].chosenConfig = Util.JsonDecode(contents) 
 				table.remove(possibleConfigs, chosenConfig)
-				print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
+				--print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
 			end
 			if MP.GetPlayerVehicles(ID) then
 				gameState.players[Name].ID = ID
@@ -472,6 +472,7 @@ function sumoGameEnd(reason)
 						else
 							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].survivedSafezones
 						end
+						gameState.players[alivePlayers[i]].survivedSafezones = 0
 						gameState.players[alivePlayers[i]].isRoundWinner = true
 					end
 				end
@@ -492,6 +493,7 @@ function sumoGameEnd(reason)
 					end
 					gameState.players[alivePlayers[1]].isRoundWinner = true
 				end
+				gameState.players[alivePlayers[1]].survivedSafezones = 0
 			else
 				MP.SendChatMessage(-1,"Game over, everyone died!")
 			end
@@ -1199,7 +1201,7 @@ function sumoSaveArena(playerID, data)
 	file:close()
 end
 
-local function setJoinNextRound(playerID, state)
+function setSumoJoinNextRound(playerID, state)
 	print("" .. MP.GetPlayerName(playerID) .. "changed state to " .. tostring(state))
 	if state then
 		playerJoinsNextRound[MP.GetPlayerName(playerID)] = true
@@ -1251,7 +1253,7 @@ M.SUMO = SUMO
 M.sumoSaveArena = sumoSaveArena
 M.loadScores = loadScores
 M.saveAddedScores = saveAddedScores
-M.setJoinNextRound = setJoinNextRound
+M.setSumoJoinNextRound = setSumoJoinNextRound
 M.loadSettings = loadSettings
 
 return M

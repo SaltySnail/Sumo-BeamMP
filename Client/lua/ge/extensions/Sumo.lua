@@ -1253,7 +1253,7 @@ end
 local function setJoinNextRound(state)
 	print("setJoinNextRound called")
 	joinNextRound = state
-	if TriggerServerEvent then TriggerServerEvent('Sumo.setJoinNextRound', tostring(state)) end 
+	if TriggerServerEvent then TriggerServerEvent("setSumoJoinNextRound", tostring(state)) end 
 end
 
 local function getSumoMenuState()
