@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"NSE-5278",
+  "licenseName":"SUMO",
   "mainPartName":"etk800",
   "mainPartPath":"/etk800",
   "model":"etk800",

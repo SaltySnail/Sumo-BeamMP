@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"OWI-4511",
+  "licenseName":"SUMO",
   "mainPartName":"vivace",
   "mainPartPath":"/vivace",
   "model":"vivace",

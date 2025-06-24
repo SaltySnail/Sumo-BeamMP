@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"JOG-3781",
+  "licenseName":"SUMO",
   "mainPartName":"barstow",
   "mainPartPath":"/barstow",
   "model":"barstow",

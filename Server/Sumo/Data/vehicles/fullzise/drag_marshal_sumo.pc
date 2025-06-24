@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"SUMo",
+  "licenseName":"SUMO",
   "mainPartName":"fullsize",
   "mainPartPath":"/fullsize",
   "model":"fullsize",

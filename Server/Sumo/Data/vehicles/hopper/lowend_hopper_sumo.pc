@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"SUB-6182",
+  "licenseName":"SUMO",
   "mainPartName":"hopper",
   "mainPartPath":"/hopper",
   "model":"hopper",

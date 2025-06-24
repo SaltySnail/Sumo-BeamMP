@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"UQR-2585",
+  "licenseName":"SUMO",
   "mainPartName":"bx",
   "mainPartPath":"/bx",
   "model":"bx",

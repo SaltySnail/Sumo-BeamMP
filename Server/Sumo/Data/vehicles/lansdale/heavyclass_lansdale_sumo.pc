@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"1GHE743",
+  "licenseName":"SUMO",
   "mainPartName":"lansdale",
   "mainPartPath":"/lansdale",
   "model":"lansdale",

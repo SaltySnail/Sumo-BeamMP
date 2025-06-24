@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"JYE-8715",
+  "licenseName":"SUMO",
   "mainPartName":"sbr",
   "mainPartPath":"/sbr",
   "model":"sbr",

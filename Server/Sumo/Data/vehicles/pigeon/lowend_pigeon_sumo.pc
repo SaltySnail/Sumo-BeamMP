@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"QLA-5217",
+  "licenseName":"SUMO",
   "mainPartName":"pigeon",
   "mainPartPath":"/pigeon",
   "model":"pigeon",

@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"NQV-4736",
+  "licenseName":"SUMO",
   "mainPartName":"legran",
   "mainPartPath":"/legran",
   "model":"legran",

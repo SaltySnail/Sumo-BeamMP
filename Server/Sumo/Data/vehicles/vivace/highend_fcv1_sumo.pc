@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"180-FWO",
+  "licenseName":"SUMO",
   "mainPartName":"vivace",
   "mainPartPath":"/vivace",
   "model":"vivace",

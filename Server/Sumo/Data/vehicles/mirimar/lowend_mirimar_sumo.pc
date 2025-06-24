@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"HWG-8853",
+  "licenseName":"SUMO",
   "mainPartName":"miramar",
   "mainPartPath":"/miramar",
   "model":"miramar",

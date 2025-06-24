@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"MYB-7588",
+  "licenseName":"SUMO",
   "mainPartName":"sunburst2",
   "mainPartPath":"/sunburst2",
   "model":"sunburst2",

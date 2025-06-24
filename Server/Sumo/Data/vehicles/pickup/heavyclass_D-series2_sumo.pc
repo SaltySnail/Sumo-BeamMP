@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"JOL-7888",
+  "licenseName":"SUMO",
   "mainPartName":"pickup",
   "mainPartPath":"/pickup",
   "model":"pickup",

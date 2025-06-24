@@ -1,6 +1,6 @@
 {
   "format":2,
-  "licenseName":"PDU-8881",
+  "licenseName":"SUMO",
   "mainPartName":"pickup",
   "mainPartPath":"/pickup",
   "model":"pickup",
