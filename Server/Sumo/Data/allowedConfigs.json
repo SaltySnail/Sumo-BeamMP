@@ -66,5 +66,21 @@
     "vehicles/moonhawk/drag_moonhawk_sumo.pc",
     "vehicles/nine/drag_nine_sumo.pc",
     "vehicles/barstow/drag_barstow_sumo.pc"
+  ],
+  "Police Class": [
+    "vehicles/bastion/police_bastion_sumo.pc",
+    "vehicles/etk800/police_etk800_sumo.pc",
+    "vehicles/fullsize/police_marshal_sumo.pc",
+    "vehicles/sunburst2/police_suburst_sumo.pc",
+    "vehicles/vivace/police_fcv_sumo.pc",
+    "vehicles/wendover/police_wendover_sumo.pc"
+  ]
+  "PigWig": [
+    "vehicles/wigeon/pigwig_wigeon1_sumo.pc",
+    "vehicles/wigeon/pigwig_wigeon2_sumo.pc",
+    "vehicles/wigeon/pigwig_wigeon3_sumo.pc",
+    "vehicles/pigeon/pigwig_pigeon1_sumo.pc",
+    "vehicles/pigeon/pigwig_pigeon2_sumo.pc",
+    "vehicles/pigeon/pigwig_pigeon3_sumo.pc"
   ]
 }
