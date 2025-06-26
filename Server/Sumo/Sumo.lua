@@ -9,10 +9,8 @@ local rand = math.random
 local gameState = {players = {}}
 local players = {}
 local laststate = gameState
--- local levelName = ""
 local arena = ""
 local arenaNames = {}
--- local levels = {}
 local requestedArena = ""
 local goalPrefabCount = 1
 local timeSinceLastContact = 0
@@ -30,7 +28,6 @@ gameState.goalCount = 1
 gameState.goalScale = 1
 gameState.safezoneEndAlarm = true
 gameState.randomVehicleCountdown = 0
--- gameState.goalScaleResize = 0
 
 local roundLength = 5*60 -- length of the game in seconds
 local safezoneLength = 30
@@ -49,6 +46,7 @@ local autoStart = false
 local commandsAllowed = true
 local safezoneEndAlarm = true
 local scoringSystem = true
+local totalScore = {}
 local blockConsole = false 
 local blockEditor = false
 local autoStartTimer = 0
@@ -126,7 +124,6 @@ function onInit()
 	MP.RegisterEvent("onPlayerDisconnect", "onPlayerDisconnect")
 	MP.RegisterEvent("onVehicleSpawn", "onVehicleSpawn")
 	MP.RegisterEvent("onVehicleEdited", "onVehicleEdited")
-	MP.RegisterEvent("onVehicleEdited", "onVehicleEdited")
 	MP.RegisterEvent("onVehicleReset", "onVehicleReset")
 	MP.RegisterEvent("onVehicleDeleted", "onVehicleDeleted")
 	MP.RegisterEvent("onRconCommand", "onRconCommand")
@@ -135,6 +132,7 @@ function onInit()
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
 	MP.RegisterEvent("setSumoJoinNextRound", "setSumoJoinNextRound")
 
+	
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
 	math.randomseed(os.time())
@@ -336,7 +334,6 @@ function sumoGameSetup()
 		for k,v in pairs(possibleTeams) do
 			chosenTeams[v] = {}
 			chosenTeams[v].chosen = false
-			-- chosenTeams[v].score = 0  
 		end
 	end
 	gameState = {}
@@ -390,17 +387,17 @@ function sumoGameSetup()
 				table.insert(possibleConfigs, v)
 			end
 		end
-		print(dump(possibleConfigs))
+		--print(dump(possibleConfigs))
 		if MP.IsPlayerConnected(ID) then
 			local player = {}
-			if not gameState then gameState = {} end
-			if not gameState.players then gameState.players = {} end
-			if not gameState.players[Name] then gameState.players[Name] = {} end
 			if randomVehicles and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Name]) then		
+				if not gameState then gameState = {} end
+				if not gameState.players then gameState.players = {} end
+				if not gameState.players[Name] then gameState.players[Name] = {} end
 				print("Chosen class: " .. class)
 				local chosenConfig = rand(1,#possibleConfigs)
 				print("chosenConfig: " .. chosenConfig)
-				print(dump(allowedConfigs[class]))
+				--print(dump(allowedConfigs[class]))
 				local configFile = io.open(SUMO_SERVER_DATA_PATH .. allowedConfigs[class][chosenConfig], 'r')
 				if not configFile then 
 					print(SUMO_SERVER_DATA_PATH .. allowedConfigs[class][chosenConfig] .. " not found")
@@ -413,6 +410,9 @@ function sumoGameSetup()
 				--print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
 			end
 			if MP.GetPlayerVehicles(ID) then
+				if not gameState then gameState = {} end
+				if not gameState.players then gameState.players = {} end
+				if not gameState.players[Name] then gameState.players[Name] = {} end
 				gameState.players[Name].ID = ID
 				gameState.players[Name].team = chosenTeam
 				gameState.players[Name].dead = false
@@ -467,12 +467,8 @@ function sumoGameEnd(reason)
 					MP.SendChatMessage(-1, alivePlayers[i])
 					if scoringSystem then
 						if not gameState.players[alivePlayers[i]].survivedSafezones then gameState.players[alivePlayers[i]].survivedSafezones = 0 end 
-						if gameState.players[alivePlayers[i]].score then
-							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + gameState.players[alivePlayers[i]].survivedSafezones
-						else
-							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].survivedSafezones
-						end
-						gameState.players[alivePlayers[i]].survivedSafezones = 0
+						if not gameState.players[alivePlayers[i]].roundScore then gameState.players[alivePlayers[i]].roundScore = 0 end 
+						gameState.players[alivePlayers[i]].roundScore = gameState.players[alivePlayers[i]].roundScore + gameState.players[alivePlayers[i]].survivedSafezones + 1 -- +1 to make it fair for the +1 below
 						gameState.players[alivePlayers[i]].isRoundWinner = true
 					end
 				end
@@ -486,14 +482,11 @@ function sumoGameEnd(reason)
 			if #alivePlayers > 0 then
 				MP.SendChatMessage(-1,"Game over, " .. alivePlayers[1] .. " wins!") --FIXME: if MAX_ALIVE is more than 1 this is fucked, don't think you should set it to more though
 				if scoringSystem then
-					if gameState.players[alivePlayers[1]].score then
-						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].score + gameState.players[alivePlayers[1]].survivedSafezones
-					else
-						gameState.players[alivePlayers[1]].score = gameState.players[alivePlayers[1]].survivedSafezones
-					end
+					if not gameState.players[alivePlayers[1]].survivedSafezones then gameState.players[alivePlayers[1]].survivedSafezones = 0 end 
+					if not gameState.players[alivePlayers[1]].roundScore then gameState.players[alivePlayers[1]].roundScore = 0 end 
+					gameState.players[alivePlayers[1]].roundScore = gameState.players[alivePlayers[1]].roundScore + gameState.players[alivePlayers[1]].survivedSafezones + 1 -- +1 to not have 0 points when everyone falls off in the first 30 seconds
 					gameState.players[alivePlayers[1]].isRoundWinner = true
 				end
-				gameState.players[alivePlayers[1]].survivedSafezones = 0
 			else
 				MP.SendChatMessage(-1,"Game over, everyone died!")
 			end
@@ -503,25 +496,28 @@ function sumoGameEnd(reason)
 	gameState.endtime = gameState.time + 10
 
 	if scoringSystem then
-		local prevScore = loadScores()
+		local totalScore = loadScores()
 		MP.SendChatMessage(-1,"The total scores are now: ")
 		local data = { players = {} }
 		for playername, player in pairs(gameState.players) do
-			if not player.score then player.score = 0 end
-			if not prevScore[playername] then prevScore[playername] = 0 end
-			if prevScore[playername] > player.score then
-				player.score = player.score + prevScore[playername] -- show the total score over all rounds, including server restarts
-			end
-			MP.SendChatMessage(-1, "" .. playername .. " : " .. player.score)
+			if not totalScore then totalScore = {} end
+			if not totalScore[playername] then totalScore[playername] = 0 end
+			if not player then player = {} end
+			if not player.roundScore then player.roundScore = 0 end
+			-- print(dump(player))
+			totalScore[playername] = totalScore[playername] + player.roundScore
+			MP.SendChatMessage(-1, "" .. playername .. " : " .. totalScore[playername])
 			table.insert(data.players, {
 				name  = playername,
-				totalScore = player.score,
-				roundScore = player.score - prevScore[playername],
+				totalScore = totalScore[playername],
+				roundScore = player.roundScore,
 				isRoundWinner = player.isRoundWinner
 			})
+			player.roundScore = 0
+			player.survivedSafezones = 0
 		end
 		MP.TriggerClientEvent(-1, "onSumoShowScoreboard", Util.JsonEncode(data))
-		saveAddedScores()
+		saveScores(totalScore)
 	end
 	alivePlayers = {}
 end
@@ -710,7 +706,7 @@ function sumoGameRunningLoop()
 		aliveCount = 0
 		local playercount = 0
 		alivePlayers = {}
-		print(dump(players))
+		--print(dump(players))
 		for playername,player in pairs(players) do
 			playercount = playercount + 1
 			-- print(dump(player))
@@ -747,16 +743,10 @@ function sumoGameRunningLoop()
 			if #alivePlayers > 0 then
 				for i=1,#alivePlayers do
 					if scoringSystem then
-						if gameState.players[alivePlayers[i]].survivedSafezones then
-							gameState.players[alivePlayers[i]].survivedSafezones = gameState.players[alivePlayers[i]].survivedSafezones + 1
-						else
-							gameState.players[alivePlayers[i]].survivedSafezones = 1
-						end					
-						if gameState.players[alivePlayers[i]].score then
-							gameState.players[alivePlayers[i]].score = gameState.players[alivePlayers[i]].score + 1
-						else
-							gameState.players[alivePlayers[i]].score = 1
-						end
+						if not gameState.players[alivePlayers[i]].survivedSafezones then gameState.players[alivePlayers[i]].survivedSafezones = 0 end
+						if not gameState.players[alivePlayers[i]].roundScore then gameState.players[alivePlayers[i]].roundScore = 0 end
+						gameState.players[alivePlayers[i]].survivedSafezones = gameState.players[alivePlayers[i]].survivedSafezones + 1
+						gameState.players[alivePlayers[i]].roundScore = gameState.players[alivePlayers[i]].roundScore + 1
 					end
 				end
 			end
@@ -983,6 +973,13 @@ end
 
 --called whenever a player spawns a vehicle.
 function onVehicleSpawn(playerID, vehID,  data)
+	print('onVehicleSpawn called')
+	if (not randomVehicles and gameState and gameState.gameRunning) 
+		or (randomVehicles and gameState and gameState.gameRunning and gameState.time and gameState.randomVehicleStartWaitTime 
+		and gameState.time > (gameState.randomVehicleStartWaitTime + 6)) then
+		MP.SendChatMessage(playerID, "You can't spawn during a round, press \'ctrl+s\' and check join next round.")
+		return 1
+	end 	
 	if autoStart then
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
@@ -1063,7 +1060,7 @@ end
 --	end
 -- end
 function onSumoPlayerExplode(playerID, playerName)
-	print(playerName .. "   " .. dump(gameState))
+	--print(playerName .. "   " .. dump(gameState))
 	gameState.players[playerName].dead = true
 end
 
@@ -1114,7 +1111,7 @@ function loadSettings()
 	end
 end
 
-function aqcuireFileLock(lockFileName)
+function aqcuireFileLock(lockFileName) --blocking
 	local initialFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName, 'r')
 	local waitingForLock = false
 	if initialFileLock then
@@ -1132,7 +1129,8 @@ function aqcuireFileLock(lockFileName)
 			waitingForLock = false
 			print('Aqcuired lock: ' .. lockFileName)
 		end
-	end 	local newFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName,'w')
+	end 	
+	local newFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName,'w')
 	if not newFileLock then print('making the file lock didnt work') return end
 	newFileLock:write('locked')
 	newFileLock:close()
@@ -1162,28 +1160,14 @@ function loadScores()
 	return {}
 end
 
-function saveAddedScores() -- reads the scores.json file and adds the new scores to it
-	-- local scores = loadScores()
+function saveScores(totalScore) -- reads the scores.json file and adds the new scores to it
 	aqcuireFileLock(SCORES_LOCK_FILE)
-	local scores = {}
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
   if file then
-	-- local content = file:read("*a")
-	-- if not content then content = "{}" end
-	-- local storedScores = Util.JsonDecode(content)
-	-- for playername, player in pairs(gameState.players) do
-	--	if not player.score then player.score = 0 end
-	--	if not scores[playername] then scores[playername] = 0 end
-	--	scores[playername] = scores[playername] + player.score
-	-- end
-	for playername, player in pairs(gameState.players) do
-		if not player.score then player.score = 0 end
-		scores[playername] = player.score
-	end
-	file:write(Util.JsonPrettify(Util.JsonEncode(scores)))
-	file:close()
+		file:write(Util.JsonPrettify(Util.JsonEncode(totalScore)))
+		file:close()
   else
-      print("Cannot open file:", path)
+      print("Cannot open file:", SUMO_SERVER_DATA_PATH .. "scores.json")
   end
 	releaseFileLock(SCORES_LOCK_FILE)
 end
@@ -1204,6 +1188,7 @@ end
 function setSumoJoinNextRound(playerID, state)
 	print("" .. MP.GetPlayerName(playerID) .. "changed state to " .. tostring(state))
 	if state then
+		MP.SendChatMessage(-1, "" .. MP.GetPlayerName(playerID) .. " signed up for a round of sumo! press \'ctrl+s\' to do the same")
 		playerJoinsNextRound[MP.GetPlayerName(playerID)] = true
 	else
 		playerJoinsNextRound[MP.GetPlayerName(playerID)] = nil	
@@ -1252,7 +1237,7 @@ M.sumo = sumo
 M.SUMO = SUMO
 M.sumoSaveArena = sumoSaveArena
 M.loadScores = loadScores
-M.saveAddedScores = saveAddedScores
+M.saveScores = saveScores
 M.setSumoJoinNextRound = setSumoJoinNextRound
 M.loadSettings = loadSettings
 

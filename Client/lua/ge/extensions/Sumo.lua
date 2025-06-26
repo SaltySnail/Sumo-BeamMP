@@ -602,7 +602,7 @@ function explodeSumoCar(playername)
 	for vid, vehData in pairs(MPVehicleGE.getVehicles()) do
 		-- local veh = be:getObjectByID(vehData.gameVehicleID)
 		local serverVeh = MPVehicleGE.getVehicleByGameID(vehData.gameVehicleID)
-		print('explodeSumoCar - checking if player ' .. playername .. ' is the same as ' .. serverVeh.ownerName .. ' \n ' .. dump(veh))
+		print('explodeSumoCar - checking if player ' .. playername .. ' is the same as ' .. serverVeh.ownerName .. '  ' .. dump(serverVeh))
 		if serverVeh.ownerName == playername then
 			local veh = be:getObjectByID(vehData.gameVehicleID)
 			veh:queueLuaCommand("fire.explodeVehicle()")
