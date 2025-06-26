@@ -1029,10 +1029,10 @@ function onExtensionUnloaded()
 	-- resetSumoCarColors()
 end
 
-function onExtensionLoaded()
-	if gamestate and gamestate.gameRunning then
-		setSumoLayout('scenario')
-	end
+function onExtensionLoaded() --this function gets called each time you close the menu (press esc twice)
+	-- if gamestate and gamestate.gameRunning then --don't do this
+	-- 	setSumoLayout('scenario')
+	-- end
 	-- check ingame path for if this person has the configs overwritten somehow
 end
 
@@ -1204,7 +1204,7 @@ local function onGameStateUpdate(state)
 		setSumoLayout(ogUIState['state'],ogUIState['appLayout'],ogUIState['menuItems'])
 		return
 	end
-	if state["appLayout"] ~= "sumo" and state["appLayout"] ~= "sumomenu" then
+	if state["appLayout"] ~= "sumo" and state["appLayout"] ~= "sumomenu" and state["appLayout"] ~= "scenario" then
 		ogUIState = state
 	end
 	if state["appLayout"] ~= "sumomenu" then
