@@ -33,6 +33,14 @@
     "vehicles/pickup/D-Sumo.pc",
     "vehicles/van/H-Sumo.pc"
   ],
+  "High End": [
+    "vehicles/sunburst2/highend_sunburst2_sumo.pc",
+    "vehicles/vivace/highend_fcv2_sumo.pc",
+    "vehicles/vivace/highend_fcv1_sumo.pc",
+    "vehicles/etkc/highend_etk-k_sumo.pc",
+    "vehicles/etk800/highend_etk-800_sumo.pc",
+    "vehicles/sbr/highend_sbr_sumo.pc"
+  ],
   "Low End": [
     "vehicles/pessima/lowend_pessimaold_sumo.pc",
     "vehicles/pigeon/lowend_pigeon_sumo.pc",
@@ -43,6 +51,14 @@
     "vehicles/legran/lowend_legran_sumo.pc", 
     "vehicles/mirimar/lowend_mirimar_sumo.pc"
   ],
+  "Heavy Class": [
+    "vehicles/pickup/heavyclass_D-series1_sumo.pc",
+    "vehicles/pickup/heavyclass_D-series2_sumo.pc",
+    "vehicles/roamer/heavyclass_roamer_sumo.pc",
+    "vehicles/van/heavyclass_H-series_sumo.pc",
+    "vehicles/lansdale/heavyclass_lansdale_sumo.pc",
+    "vehicles/midtruck/heavyclass_stambecco_sumo.pc"
+  ],
   "Drag Class": [
     "vehicles/bluebuck/drag_bluebuck_sumo.pc",
     "vehicles/burnside/drag_burnside_sumo.pc",
@@ -51,7 +67,23 @@
     "vehicles/nine/drag_nine_sumo.pc",
     "vehicles/barstow/drag_barstow_sumo.pc"
   ],
-  "Bangers Super Light": [
+  "Police Class": [
+    "vehicles/bastion/police_bastion_sumo.pc",
+    "vehicles/etk800/police_etk800_sumo.pc",
+    "vehicles/fullsize/police_marshal_sumo.pc",
+    "vehicles/sunburst2/police_suburst_sumo.pc",
+    "vehicles/vivace/police_fcv_sumo.pc",
+    "vehicles/wendover/police_wendover_sumo.pc"
+  ],
+  "PigWig": [
+    "vehicles/wigeon/pigwig_wigeon1_sumo.pc",
+    "vehicles/wigeon/pigwig_wigeon2_sumo.pc",
+    "vehicles/wigeon/pigwig_wigeon3_sumo.pc",
+    "vehicles/pigeon/pigwig_pigeon1_sumo.pc",
+    "vehicles/pigeon/pigwig_pigeon2_sumo.pc",
+    "vehicles/pigeon/pigwig_pigeon3_sumo.pc"
+  ],
+  "Light Pro": [
     "vehicles/autobello/Light Pro Sumo Pickle.pc",
     "vehicles/pigeon/Light Pro Sumo Pigeon Box.pc",
     "vehicles/pigeon/Light Pro Sumo Pigeon.pc",
