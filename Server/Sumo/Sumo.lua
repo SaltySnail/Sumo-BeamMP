@@ -844,7 +844,7 @@ function sumoTimer()
 			currentConfig = Util.JsonDecode(contents)			
 			-- print('allowedConfigs: ' .. dump(allowedConfigs))
 			print('testingConfig: ' .. dump(currentConfig))
-			MP.TriggerClientEvent(0, 'spawnVehicleConfig', '' .. currentConfig)
+			MP.TriggerClientEvent(0, 'spawnVehicleConfig',  Util.JsonEncode(currentConfig))
 			
 			testingStep = 5
 			testingStepTimer = 0

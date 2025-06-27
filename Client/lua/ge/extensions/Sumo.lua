@@ -1074,6 +1074,7 @@ function isInTable(tbl, value)
 end
 
 local function spawnVehicleConfig(config)
+	if type(config) ~= 'table' then config = jsonDecode(config) end
 	core_vehicles.replaceVehicle(config.model or config.mainPartName, {model = config.model or config.mainPartName, config = config})
 end
 
