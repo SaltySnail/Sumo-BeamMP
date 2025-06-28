@@ -10,6 +10,7 @@ local gameState = {players = {}}
 local laststate = gameState
 local arena = ""
 local arenaNames = {}
+local possibleArenas = {}
 local requestedArena = ""
 local goalPrefabCount = 1
 local timeSinceLastContact = 0
@@ -20,6 +21,7 @@ local vehiclesToExplode = {}
 local goalID = -1
 local neededPlayers = 0
 local class = ""
+local arenaData = {}
 
 gameState.gameRunning = false
 gameState.gameEnding = false
@@ -80,6 +82,16 @@ function dump(o)
     else
        return tostring(o)
     end
+end
+
+local function randomizeArray(array)
+    math.randomseed(os.time())
+    local newArray = array
+    for i = #newArray, 2, -1 do
+        local j = math.random(1, i)
+        newArray[i], newArray[j] = newArray[j], newArray[i]
+    end
+    return newArray
 end
 
 local function readAllowedConfigs()
@@ -315,6 +327,12 @@ function onSumoArenaChange()
 			if arenaNames == {} then MP.TriggerClientEvent(-1, "requestSumoArenaNames", "nil") end
 		end
 	end
+	if arena and arenaData and arenaData[arena] and arenaData[arena].spawnLocations then
+		amountOfSpawnsOnArena[arena] = #arenaData[arena].spawnLocations
+		print('SET THE AMOUNT OF SPAWNS!!!!!')
+	else
+		print('No freaking spawns on arena ' .. arena .. " Look for yourself: " .. dump(arenaData))
+	end
 	MP.TriggerClientEvent(-1, "setSumoCurrentArena", arena)
 	MP.TriggerClientEvent(-1, "requestSumoGoalCount", "nil")
 end
@@ -336,7 +354,6 @@ function sumoGameSetup()
 		end
 	end
 	gameState = {}
-	print("Previous rounds players: " .. dump(players))
 	gameState.settings = {
 		redFadeDistance = defaultRedFadeDistance,
 		ColorPulse = defaultColorPulse,
@@ -366,6 +383,7 @@ function sumoGameSetup()
 				table.insert(keys, k)
 			end
 		end
+		keys = randomizeArray(keys)
 		if #keys > 0 then
 			class = keys[rand(1,#keys)]
 		end
@@ -386,6 +404,7 @@ function sumoGameSetup()
 				table.insert(possibleConfigs, v)
 			end
 		end
+		possibleConfigs = randomizeArray(possibleConfigs)
 		--print(dump(possibleConfigs))
 		if MP.IsPlayerConnected(ID) then
 			local player = {}
@@ -395,11 +414,11 @@ function sumoGameSetup()
 				if not gameState.players[Name] then gameState.players[Name] = {} end
 				print("Chosen class: " .. class)
 				local chosenConfig = rand(1,#possibleConfigs)
-				print("chosenConfig: " .. chosenConfig)
+				-- print("chosenConfig: " .. chosenConfig .. " possibleConfigs: " .. dump(possibleConfigs) .. " allowedConfigs: " .. dump(allowedConfigs))
 				--print(dump(allowedConfigs[class]))
-				local configFile = io.open(SUMO_SERVER_DATA_PATH .. allowedConfigs[class][chosenConfig], 'r')
+				local configFile = io.open(SUMO_SERVER_DATA_PATH .. possibleConfigs[chosenConfig], 'r')
 				if not configFile then 
-					print(SUMO_SERVER_DATA_PATH .. allowedConfigs[class][chosenConfig] .. " not found")
+					print(SUMO_SERVER_DATA_PATH .. possibleConfigs[chosenConfig] .. " not found")
 					return
 				end
 				local contents = configFile:read("*a")
@@ -675,18 +694,19 @@ function sumoGameRunningLoop()
 		local possibleSpawns = {}
 		for ID,Player in pairs(MP.GetPlayers()) do
 			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
-				if amountOfSpawnsOnArena and chosenArena and amountOfSpawnsOnArena[chosenArena] then
+				if amountOfSpawnsOnArena and requestedArena and amountOfSpawnsOnArena[arena] then
 					if #possibleSpawns == 0 then
-						for i=1, amountOfSpawnsOnArena[chosenArena] do
+						for i=1, amountOfSpawnsOnArena[arena] do
 							table.insert(possibleSpawns, i) 
 						end
 					end
-					local chosenSpawn = rand(1,amountOfSpawnsOnArena[chosenArena]) --chosenSpawn is the index so that we can remove it by index from possibleSpawns
-					MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. tostring(possibleSpawns[chosenSpawn % possibleSpawns + 1]))
+					possibleSpawns = randomizeArray(possibleSpawns)
+					local chosenSpawn = rand(1,amountOfSpawnsOnArena[arena]) --chosenSpawn is the index so that we can remove it by index from possibleSpawns
+					MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. tostring(possibleSpawns[chosenSpawn % #possibleSpawns + 1]))
 					table.remove(possibleSpawns, chosenSpawn)
 				else
-					if not chosenArena then chosenArena = "" end
-					print("Warning! the amountOfSpawnsOnArena wasn't filled correctly " .. chosenArena .. " " .. dump(amountOfSpawnsOnArena))
+					if not arena then requestedArena = "" end
+					print("Warning! the amountOfSpawnsOnArena wasn't filled correctly " .. arena .. " " .. dump(amountOfSpawnsOnArena))
 					MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. tostring(ID))
 				end
 			end
@@ -921,11 +941,12 @@ function onPlayerJoin(playerID)
 	file:close()
 	-- print("onPlayerJoin" .. playerID .. ": " .. Util.JsonPrettify(contents))
 	MP.TriggerClientEvent(playerID, "setSumoArenasData", Util.JsonMinify(contents))
+	arenaData = Util.JsonDecode(contents)
 	if next(arenaNames) == nil then --fill arenaNames
-		for name, value in pairs(Util.JsonDecode(contents)) do
+		for name, value in pairs(arenaData) do
 			table.insert(arenaNames, name)
-			if value.spawns then
-				amountOfSpawnsOnArena[name] = #value.spawns
+			if value.spawnLocations then
+				amountOfSpawnsOnArena[name] = #value.spawnLocations
 			end
 		end
 	end
@@ -1075,10 +1096,17 @@ function unmarkSumoVehicleToExplode(playerID, playername)
 end
 
 function selectRandomArena()
-	-- Check if the arenaNames table is not empty
-	if next(arenaNames) ~= nil then
+	if #possibleArenas == 0 then
+		for k,name in pairs(arenaNames) do
+			table.insert(possibleArenas, name)
+		end 
+	end
+	possibleArenas = randomizeArray(possibleArenas)
+	if next(possibleArenas) ~= nil then
 		-- math.random(#arenaNames) will generate a random index in the range of the arenaNames table
-		requestedArena = arenaNames[math.random(#arenaNames)]
+		local chosenIndex = math.random(1,#possibleArenas)
+		requestedArena = possibleArenas[chosenIndex]
+		table.remove(possibleArenas, chosenIndex)
 	end
 	print("selectRandomArena: " .. requestedArena)
 	onSumoArenaChange()

@@ -13,6 +13,9 @@ local alivePlayers = {}
 --blocked inputs when dead
 local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					         "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 local allInputActions = 								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+--for testing with nodegrabber:
+-- local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					         "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+-- local allInputActions = 								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
@@ -572,7 +575,11 @@ function onSumoGameEnd()
 		if not veh then return end
 		local spawnPos = spawnPoint:getPosition()
 		local spawnQuat = quat(spawnPoint:getRotation()) * quat(0,0,1,0)
-		veh:setPositionRotation(spawnPos.x + rand(-10,10), spawnPos.y + rand(-10,10), spawnPos.z + rand(1,10), spawnQuat.x, spawnQuat.y, spawnQuat.z, spawnQuat.w) -- random offset to make it less likely to spawn inside of each other
+		spawnPos.x = spawnPos.x + rand(-10,10)
+		spawnPos.y = spawnPos.y + rand(-10,10)
+		spawnPos.z = spawnPos.z + rand(1,10)
+		spawn.safeTeleport(veh, spawnPos, spawnQuat)
+		-- veh:setPositionRotation(spawnPos.x + rand(-10,10), spawnPos.y + rand(-10,10), spawnPos.z + rand(1,10), spawnQuat.x, spawnQuat.y, spawnQuat.z, spawnQuat.w) -- random offset to make it less likely to spawn inside of each other
 		veh:queueLuaCommand("recovery.recoverInPlace()")
 	end
 	teleported = false
@@ -807,6 +814,9 @@ function updateSumoGameState(data)
 		-- 	veh:queueLuaCommand('controller.setFreeze(1)')
 		-- end
 		disallowSumoResets(allInputActions)
+		core_environment.setGravity(-9.81)
+		core_environment.setWindSpeed(0)
+		--core_environment.enableChanges(false) -- this disables lua controls as well
 		isPlayerDead = false
 	end
 	if gamestate.gameRunning and time and time == 0 then 
@@ -1170,7 +1180,8 @@ function onVehicleResetted(vehID)
     		
 				-- Apply position and new rotation
 				playerPressedReset = false -- make sure we now when this function is called recursively and cancel that
-				veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+				spawn.safeTeleport(veh, currentPos, newRot)
+				-- veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
 				return
 			end
 		end
