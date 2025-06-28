@@ -7,7 +7,6 @@ local mod = math.fmod
 local rand = math.random
 
 local gameState = {players = {}}
-local players = {}
 local laststate = gameState
 local arena = ""
 local arenaNames = {}
@@ -337,7 +336,7 @@ function sumoGameSetup()
 		end
 	end
 	gameState = {}
-	gameState.players = players
+	print("Previous rounds players: " .. dump(players))
 	gameState.settings = {
 		redFadeDistance = defaultRedFadeDistance,
 		ColorPulse = defaultColorPulse,
@@ -699,15 +698,13 @@ function sumoGameRunningLoop()
 		gameState.endtime = gameState.time + 2
 	end
 
-	local players = gameState.players
-
 	local aliveCount = 2 
 	if gameState.gameRunning and not gameState.gameEnding and gameState.time > 0 then
 		aliveCount = 0
 		local playercount = 0
 		alivePlayers = {}
 		--print(dump(players))
-		for playername,player in pairs(players) do
+		for playername,player in pairs(gameState.players) do
 			playercount = playercount + 1
 			-- print(dump(player))
 			if not player.dead then
@@ -948,7 +945,6 @@ end
 --called whenever a player disconnects from the server
 function onPlayerDisconnect(playerID)
 	gameState.players[MP.GetPlayerName(playerID)] = nil
-	players[MP.GetPlayerName(playerID)] = nil
 	if amountOfPlayersJoiningNextRound and amountOfPlayersJoiningNextRound > 0 then 
 		amountOfPlayersJoiningNextRound = amountOfPlayersJoiningNextRound - 1 
 	end
