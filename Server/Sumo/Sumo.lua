@@ -1210,11 +1210,15 @@ function sumoSaveArena(playerID, data)
 	file:close()
 end
 
+local missingItem = ""
 local function tables_equal(t1, t2) --unordered
 	local ignore_list = {
 		core_vehicle_partmgmt = true,
-		ui_gameBlur = true
+		ui_gameBlur = true,
+		ui_console = true,
+		core_repository = true
 	}
+	missingItem = ""
 	local set1, set2 = {}, {}
 	for _, v in ipairs(t1) do
 		if not ignore_list[v] then set1[v] = true end
@@ -1225,12 +1229,14 @@ local function tables_equal(t1, t2) --unordered
 	for k in pairs(set1) do
 		if not set2[k] then
 			print("Missing in t2: " .. k)
+			missingItem = k
 			return false
 		end
 	end
 	for k in pairs(set2) do
 		if not set1[k] then
 			print("Missing in t1: " .. k)
+			missingItem = k
 			return false
 		end
 	end
@@ -1244,7 +1250,7 @@ function setSumoList(playerID, data)
 	data = Util.JsonDecode(data)
 	if tables_equal(data, contents.stuff) then return end --same stuff
 	-- print("DATA:   " .. dump(data) .. "    CONTENTS:   " .. dump(contents.stuff))
-	MP.DropPlayer(playerID, "Unknown mods detected")
+	MP.DropPlayer(playerID, "Unknown mod detected: " .. missingItem)
 end
 
 function setSumoJoinNextRound(playerID, state)

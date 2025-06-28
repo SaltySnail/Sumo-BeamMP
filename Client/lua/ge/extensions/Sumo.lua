@@ -1351,7 +1351,6 @@ core_quickAccess.toggle = function(level) -- overwrite in-game function to disab
   end
 end
 
-extensions.load("simTimeAuthority")
 local ogTogglePause = simTimeAuthority.togglePause
 simTimeAuthority.togglePause = function()
 	if gameState and gamestate.gameRunning then return end
