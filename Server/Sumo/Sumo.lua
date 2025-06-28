@@ -142,6 +142,7 @@ function onInit()
 	MP.RegisterEvent("onStopServer", "onStopServer")
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
 	MP.RegisterEvent("setSumoJoinNextRound", "setSumoJoinNextRound")
+	MP.RegisterEvent("setSumoList", "setSumoList")
 
 	
 	print("--------------Sumo Loaded------------------")
@@ -996,7 +997,7 @@ function onVehicleSpawn(playerID, vehID,  data)
 		and gameState.time > (gameState.randomVehicleStartWaitTime + 6)) then
 		MP.SendChatMessage(playerID, "You can't spawn during a round, press \'ctrl+s\' and check join next round.")
 		return 1
-	end 	
+	end		
 	if autoStart then
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
@@ -1139,8 +1140,8 @@ function aqcuireFileLock(lockFileName) --blocking
 	local initialFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName, 'r')
 	local waitingForLock = false
 	if initialFileLock then
-	 	waitingForLock = true
-	 	initialFileLock:close()
+		waitingForLock = true
+		initialFileLock:close()
 	end
 	while(waitingForLock) do -- block while another process is accessing the file
 		print(lockFileName .. ' is locked by another process')
@@ -1153,7 +1154,7 @@ function aqcuireFileLock(lockFileName) --blocking
 			waitingForLock = false
 			print('Aqcuired lock: ' .. lockFileName)
 		end
-	end 	
+	end		
 	local newFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName,'w')
 	if not newFileLock then print('making the file lock didnt work') return end
 	newFileLock:write('locked')
@@ -1207,6 +1208,43 @@ function sumoSaveArena(playerID, data)
 	file = io.open(SUMO_SERVER_DATA_PATH .. "arenas.json", "w")
 	file:write(Util.JsonPrettify(Util.JsonEncode(jsonTable)))
 	file:close()
+end
+
+local function tables_equal(t1, t2) --unordered
+	local ignore_list = {
+		core_vehicle_partmgmt = true,
+		ui_gameBlur = true
+	}
+	local set1, set2 = {}, {}
+	for _, v in ipairs(t1) do
+		if not ignore_list[v] then set1[v] = true end
+	end
+	for _, v in ipairs(t2) do
+		if not ignore_list[v] then set2[v] = true end
+	end
+	for k in pairs(set1) do
+		if not set2[k] then
+			print("Missing in t2: " .. k)
+			return false
+		end
+	end
+	for k in pairs(set2) do
+		if not set1[k] then
+			print("Missing in t1: " .. k)
+			return false
+		end
+	end
+	return true
+end
+
+function setSumoList(playerID, data)
+	local file = io.open(SUMO_SERVER_DATA_PATH .. "normalStuff.json", "r")
+	local contents = Util.JsonDecode(file:read("*a"))
+	file:close()
+	data = Util.JsonDecode(data)
+	if tables_equal(data, contents.stuff) then return end --same stuff
+	-- print("DATA:   " .. dump(data) .. "    CONTENTS:   " .. dump(contents.stuff))
+	MP.DropPlayer(playerID, "Unknown mods detected")
 end
 
 function setSumoJoinNextRound(playerID, state)
@@ -1264,5 +1302,6 @@ M.loadScores = loadScores
 M.saveScores = saveScores
 M.setSumoJoinNextRound = setSumoJoinNextRound
 M.loadSettings = loadSettings
+M.setSumoList = setSumoList
 
 return M

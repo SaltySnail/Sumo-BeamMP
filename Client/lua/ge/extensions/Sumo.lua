@@ -874,6 +874,7 @@ function updateSumoGameState(data)
 		guihooks.trigger('sumoRemoveTimer', 0)
 		sumoStartTime = nil
 	end
+	if TriggerServerEvent then TriggerServerEvent('setSumoList', jsonEncode(extensions.getLoadedExtensionsNames())) end
 	if txt ~= "" then
 		guihooks.message({txt = txt}, 1, "Sumo.time")
 	end
@@ -1039,7 +1040,7 @@ function onExtensionUnloaded()
 	-- resetSumoCarColors()
 end
 
-function onExtensionLoaded() --this function gets called each time you close the menu (press esc twice)
+function onExtensionLoaded(extensionName) --this function gets called each time you close the menu (press esc twice)
 	-- if gamestate and gamestate.gameRunning then --don't do this
 	-- 	setSumoLayout('scenario')
 	-- end
@@ -1201,12 +1202,14 @@ function blockConsole()
 	-- print("blockConsole called")
 	extensions.core_input_actionFilter.setGroup('sumoConsole', {"toggleConsoleNG"})
 	extensions.core_input_actionFilter.addAction(0, 'sumoConsole', true)
+	toggleCEFDevConsole = nil --kills the ui console until you restart the game or reload lua
 end
 
 function blockEditor()
 	-- print("blockEditor called")
 	extensions.core_input_actionFilter.setGroup('sumoEditor', {"editorToggle", "objectEditorToggle", "editorSafeModeToggle"}) 
 	extensions.core_input_actionFilter.addAction(0, 'sumoEditor', true)
+
 end
 
 local function onGameStateUpdate(state)
@@ -1346,6 +1349,13 @@ core_quickAccess.toggle = function(level) -- overwrite in-game function to disab
   else
     setEnabled(true, level)
   end
+end
+
+extensions.load("simTimeAuthority")
+local ogTogglePause = simTimeAuthority.togglePause
+simTimeAuthority.togglePause = function()
+	if gameState and gamestate.gameRunning then return end
+	ogTogglePause()
 end
 
 if MPGameNetwork then AddEventHandler("resetSumoCarColors", resetSumoCarColors) end
