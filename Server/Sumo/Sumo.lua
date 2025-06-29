@@ -704,7 +704,7 @@ function sumoGameRunningLoop()
 					possibleSpawns = randomizeArray(possibleSpawns)
 					local chosenSpawn = rand(1,amountOfSpawnsOnArena[arena]) --chosenSpawn is the index so that we can remove it by index from possibleSpawns
 					MP.TriggerClientEvent(ID, "teleportToSumoArena", "" .. tostring(possibleSpawns[chosenSpawn % #possibleSpawns + 1]))
-					table.remove(possibleSpawns, chosenSpawn)
+					table.remove(possibleSpawns, chosenSpawn % #possibleSpawns + 1)
 				else
 					if not arena then requestedArena = "" end
 					print("Warning! the amountOfSpawnsOnArena wasn't filled correctly " .. arena .. " " .. dump(amountOfSpawnsOnArena))
@@ -994,7 +994,7 @@ function onVehicleSpawn(playerID, vehID,  data)
 	print('onVehicleSpawn called')
 	if (not randomVehicles and gameState and gameState.gameRunning) 
 		or (randomVehicles and gameState and gameState.gameRunning and gameState.time and gameState.randomVehicleStartWaitTime 
-		and gameState.time > (gameState.randomVehicleStartWaitTime + 6)) then
+		and gameState.time > (gameState.randomVehicleStartWaitTime + 20)) then -- 20 seconds to allow slower PC's to spawn a car
 		MP.SendChatMessage(playerID, "You can't spawn during a round, press \'ctrl+s\' and check join next round.")
 		return 1
 	end		
@@ -1079,6 +1079,9 @@ end
 -- end
 function onSumoPlayerExplode(playerID, playerName)
 	--print(playerName .. "   " .. dump(gameState))
+	if not gameState then print('No gameState onSumoPlayerExplode') return end
+	if not gameState.players then print('No gameState.players onSumoPlayerExplode') return end
+	if not gameState.players[playerName] then print('No gameState onSumoPlayerExplode ' .. playerName) return end
 	gameState.players[playerName].dead = true
 end
 
@@ -1216,7 +1219,8 @@ local function tables_equal(t1, t2) --unordered
 		core_vehicle_partmgmt = true,
 		ui_gameBlur = true,
 		ui_console = true,
-		core_repository = true
+		core_repository = true,
+		core_metrics = true
 	}
 	missingItem = ""
 	local set1, set2 = {}, {}
@@ -1250,7 +1254,7 @@ function setSumoList(playerID, data)
 	data = Util.JsonDecode(data)
 	if tables_equal(data, contents.stuff) then return end --same stuff
 	-- print("DATA:   " .. dump(data) .. "    CONTENTS:   " .. dump(contents.stuff))
-	MP.DropPlayer(playerID, "Unknown mod detected: " .. missingItem)
+	-- MP.DropPlayer(playerID, "Unknown mod detected: " .. missingItem)
 end
 
 function setSumoJoinNextRound(playerID, state)

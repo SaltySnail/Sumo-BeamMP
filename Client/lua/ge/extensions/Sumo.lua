@@ -831,6 +831,7 @@ function updateSumoGameState(data)
 		disallowSumoResets(blockedInputActionsOnRound)
 	end
 	if gamestate.gameRunning and time and time <= 0 and time > -4 then
+		if gamestate.players[MPConfig.getNickname()] and #MPVehicleGE.getOwnMap() == 0 then gamestate.players[MPConfig.getNickname()] = nil end -- failsafe for people without vehicles counting in game
 		guihooks.trigger('sumoCountdown', math.abs(time))
 		if time < 0 then
 			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 30})
@@ -852,7 +853,6 @@ function updateSumoGameState(data)
 			local timeLeft = seconds_to_days_hours_minutes_seconds(gamestate.roundLength - time)
 			txt = "Sumo Time Left: ".. timeLeft --game is still going
 		end
-
 		if time and time > 0 and time % gamestate.safezoneLength >= gamestate.safezoneLength - 6 and time % gamestate.safezoneLength <= gamestate.safezoneLength - 1 then
 			guihooks.trigger('sumoAnimateCircleSize', gamestate.safezoneLength)
 			if gamestate.safezoneEndAlarm then
@@ -1149,11 +1149,11 @@ function onVehicleResetted(vehID)
   	return
   end
 	if MPVehicleGE 
-		and isPlayerInReverseGravity 
-		and gamestate 
-		and gamestate.gameRunning 
-		and gamestate.time 
-		and gamestate.time > 0 then -- roll the vehicle so the wheels touch the ground when resetting in the reverse gravity area
+		and isPlayerInReverseGravity then 
+		-- and gamestate 
+		-- and gamestate.gameRunning 
+		-- and gamestate.time 
+		-- and gamestate.time > 0 then -- roll the vehicle so the wheels touch the ground when resetting in the reverse gravity area
 		if MPVehicleGE.isOwn(vehID) then
 			local veh = be:getObjectByID(reverseGravitySubjectId)
 			-- Get current rotation and position
@@ -1181,8 +1181,8 @@ function onVehicleResetted(vehID)
     		
 				-- Apply position and new rotation
 				playerPressedReset = false -- make sure we now when this function is called recursively and cancel that
-				spawn.safeTeleport(veh, currentPos, newRot)
-				-- veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
+				-- spawn.safeTeleport(veh, currentPos, newRot)
+				veh:setPositionRotation(currentPos.x, currentPos.y, currentPos.z, newRot.x, newRot.y, newRot.z, newRot.w)
 				return
 			end
 		end
