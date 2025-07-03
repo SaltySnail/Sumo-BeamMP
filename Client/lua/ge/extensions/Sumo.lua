@@ -584,17 +584,27 @@ function onSumoGameEnd()
 	end
 	teleported = false
 end
+	
+local function onSumoStartResetting()
+	playerIsResetting = true
+	startResettingTime = sock.gettime()
+end
+
+local function onSumoStopResetting()
+	playerIsResetting = false
+	startResettingTime = 0
+end
 
 function handleResetState()
 	-- print("handleResetState called player in circle: " .. tostring(isPlayerInCircle) .. " below speed limit: " .. tostring(isPlayerBelowSpeedLimit) .. " dead: " .. tostring(isPlayerDead))
 	guihooks.trigger('sumoSetRuleStatus', {rule='Safe Zone', status=isPlayerInCircle})
 	guihooks.trigger('sumoSetRuleStatus', {rule='Speed Limit', status=(isPlayerBelowSpeedLimit==false)}) --somehow this is inverted
 	if not isPlayerInCircle and isPlayerBelowSpeedLimit and not isPlayerDead then
-		-- allowSumoResets(allInputActions)
-		disallowSumoResets(blockedInputActionsOnRound)
+		disallowSumoResets(blockedInputActionsOnRound) -- player can reset in place
 		guihooks.trigger('sumoSetRuleStatus', {rule='Car Repair', status=false})
 	else		
-		disallowSumoResets(allInputActions)
+		disallowSumoResets(allInputActions) -- player can't reset in place
+		onSumoStopResetting()
 		if not isPlayerDead then
 			guihooks.trigger('sumoSetRuleStatus', {rule='Car Repair', status=true})
 		else
@@ -798,8 +808,10 @@ function updateSumoGameState(data)
 	end
 	if gamestate.gameRunning and gamestate.randomVehicles and time and time >= gamestate.randomVehicleStartWaitTime + 12 and time <= gamestate.randomVehicleStartWaitTime + 22 then 
 		MPVehicleGE.applyQueuedEvents()
+		--TODO: find a better spot for the gravity and collision stuff
 		be:queueAllObjectLua("obj:setGravity(-9.81)")
 		core_environment.setWindSpeed(0)
+		be:setDynamicCollisionEnabled(true)
 	end
 	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == -8 then 
 		setSumoLayout('sumo')
@@ -977,7 +989,9 @@ function onPreRender(dt)
 				local veh = be:getObjectByID(vehID)
 				veh:queueLuaCommand("Sumo.setTryResettingTime(" .. tostring(timeNow - startResettingTime) .. ")")
 			end
-			guihooks.trigger('resetSyncProgress', (timeNow - startResettingTime) / resetDelay)
+			local progress = (timeNow - startResettingTime) / resetDelay
+			if progress == 0 then progress = 0.000001 end
+			guihooks.trigger('resetSyncProgress', progress)
 		end
 	else
 		startResettingTime =0
@@ -1229,7 +1243,7 @@ local function onGameStateUpdate(state)
 	end
 end
 
-local function onWorldReadyState(state) -- FIXME: re-enable this to make the MOTD work again and figure out how to make it not block change state scenario-start
+local function onWorldReadyState(state) 
 	if motd.enabled then
 	 	guihooks.trigger("ChangeState", {state = "scenario-start"})
 	end
@@ -1275,16 +1289,6 @@ end
 
 local function getSumoMenuState()
 	setSumoMenuSettings()
-end
-	
-local function onSumoStartResetting()
-	playerIsResetting = true
-	startResettingTime = sock.gettime()
-end
-
-local function onSumoStopResetting()
-	playerIsResetting = false
-	startResettingTime = 0
 end
 
 local ogRemoveCurrent = core_vehicles.removeCurrent
