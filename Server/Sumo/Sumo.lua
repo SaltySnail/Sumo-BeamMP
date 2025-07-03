@@ -692,9 +692,9 @@ function sumoGameRunningLoop()
 				playerCount = playerCount + 1
 			end
 		end
-		if playerCount < playersNeededForGame then
+		if not gameState.gameEnding and playerCount < playersNeededForGame then
 			sumoGameEnd('manual')
-		end 
+		end
 	elseif gameState.time == 0 then
 		sumoGameStarting()
 	end
