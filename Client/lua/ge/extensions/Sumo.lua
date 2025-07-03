@@ -710,7 +710,8 @@ function onReverseGravityTrigger(data)
 					core_camera.setByName(0,"chase")
 					core_camera.resetCamera(0)
 				end
-				core_environment.setGravity(9.81)
+				be:getObjectByID(vehData.gameVehicleID):queueLuaCommand("obj:setGravity(9.81)")
+				-- core_environment.setGravity(9.81)
 				isPlayerInReverseGravity = true
 				reverseGravitySubjectId = data.subjectID
 			elseif data.event == "exit" then
@@ -719,7 +720,8 @@ function onReverseGravityTrigger(data)
 					core_camera.resetCamera(0)
 					ogCamName = ""
 				end
-				core_environment.setGravity(-9.81)
+				-- core_environment.setGravity(-9.81)
+				be:getObjectByID(vehData.gameVehicleID):queueLuaCommand("obj:setGravity(-9.81)")
 				isPlayerInReverseGravity = false
 			end
 		end
@@ -796,6 +798,8 @@ function updateSumoGameState(data)
 	end
 	if gamestate.gameRunning and gamestate.randomVehicles and time and time >= gamestate.randomVehicleStartWaitTime + 12 and time <= gamestate.randomVehicleStartWaitTime + 22 then 
 		MPVehicleGE.applyQueuedEvents()
+		be:queueAllObjectLua("obj:setGravity(-9.81)")
+		core_environment.setWindSpeed(0)
 	end
 	if gamestate.gameRunning and not gamestate.randomVehicles and time and time == -8 then 
 		setSumoLayout('sumo')
@@ -814,8 +818,6 @@ function updateSumoGameState(data)
 		-- 	veh:queueLuaCommand('controller.setFreeze(1)')
 		-- end
 		disallowSumoResets(allInputActions)
-		core_environment.setGravity(-9.81)
-		core_environment.setWindSpeed(0)
 		--core_environment.enableChanges(false) -- this disables lua controls as well
 		isPlayerDead = false
 	end

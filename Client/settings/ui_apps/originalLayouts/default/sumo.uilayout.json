@@ -93,16 +93,6 @@
       }
     },
     {
-      "appName":"multiplayerplayerlist",
-      "placement":{
-        "height":"527px",
-        "min-width":"240px",
-        "right":"0px",
-        "top":"90px",
-        "width":"240px"
-      }
-    },
-    {
       "appName":"multiplayersession",
       "placement":{
         "bottom":"",

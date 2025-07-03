@@ -1097,6 +1097,7 @@ end
 function unmarkSumoVehicleToExplode(playerID, playername)
 	vehiclesToExplode["" .. playername] = false
   --print("Veh unmarked for exploding: " .. playername)
+			print(dump(playerJoinsNextRound))
 end
 
 function selectRandomArena()
@@ -1258,8 +1259,8 @@ function setSumoList(playerID, data)
 end
 
 function setSumoJoinNextRound(playerID, state)
-	print("" .. MP.GetPlayerName(playerID) .. "changed state to " .. tostring(state))
-	if state then
+	print("" .. MP.GetPlayerName(playerID) .. "changed state to " .. state)
+	if state == "true" then
 		MP.SendChatMessage(-1, "" .. MP.GetPlayerName(playerID) .. " signed up for a round of sumo! press \'ctrl+s\' to do the same")
 		playerJoinsNextRound[MP.GetPlayerName(playerID)] = true
 	else
