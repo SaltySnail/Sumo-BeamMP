@@ -686,7 +686,15 @@ end
 function sumoGameRunningLoop()
 	if gameState.time < 0 then
 		MP.SendChatMessage(-1,"Sumo game starting in "..math.abs(gameState.time).." second")
-
+		local playerCount = 0
+		for ID,Player in pairs(MP.GetPlayers()) do
+			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
+				playerCount = playerCount + 1
+			end
+		end
+		if playerCount < playersNeededForGame then
+			sumoGameEnd('manual')
+		end 
 	elseif gameState.time == 0 then
 		sumoGameStarting()
 	end
@@ -967,9 +975,7 @@ end
 --called whenever a player disconnects from the server
 function onPlayerDisconnect(playerID)
 	gameState.players[MP.GetPlayerName(playerID)] = nil
-	if amountOfPlayersJoiningNextRound and amountOfPlayersJoiningNextRound > 0 then 
-		amountOfPlayersJoiningNextRound = amountOfPlayersJoiningNextRound - 1 
-	end
+	playerJoinsNextRound[MP.GetPlayerName(playerID)] = nil
 end
 
 --called whenever a player sends a chat message
@@ -1097,7 +1103,6 @@ end
 function unmarkSumoVehicleToExplode(playerID, playername)
 	vehiclesToExplode["" .. playername] = false
   --print("Veh unmarked for exploding: " .. playername)
-			print(dump(playerJoinsNextRound))
 end
 
 function selectRandomArena()

@@ -1355,7 +1355,7 @@ end
 
 local ogTogglePause = simTimeAuthority.togglePause
 simTimeAuthority.togglePause = function()
-	if gameState and gamestate.gameRunning then return end
+	if gamestate and gamestate.gameRunning then return end
 	ogTogglePause()
 end
 
