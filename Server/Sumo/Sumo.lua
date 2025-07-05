@@ -67,6 +67,7 @@ local testingStep = 0
 local testingStepTimer = 0
 local waitTimeBetweenTests = 20
 local SCORES_LOCK_FILE = 'scores.lock'
+local unknown = {}
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -686,14 +687,16 @@ end
 function sumoGameRunningLoop()
 	if gameState.time < 0 then
 		MP.SendChatMessage(-1,"Sumo game starting in "..math.abs(gameState.time).." second")
-		local playerCount = 0
-		for ID,Player in pairs(MP.GetPlayers()) do
-			if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
-				playerCount = playerCount + 1
+		if gameState.time > gameState.randomVehicleStartWaitTime + 20 then 
+			local playerCount = 0
+			for ID,Player in pairs(MP.GetPlayers()) do
+				if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
+					playerCount = playerCount + 1
+				end
 			end
-		end
-		if not gameState.gameEnding and playerCount < playersNeededForGame then
-			sumoGameEnd('manual')
+			if not gameState.gameEnding and playerCount < playersNeededForGame then
+				sumoGameEnd('manual')
+			end
 		end
 	elseif gameState.time == 0 then
 		sumoGameStarting()
@@ -1238,14 +1241,12 @@ local function tables_equal(t1, t2) --unordered
 	end
 	for k in pairs(set1) do
 		if not set2[k] then
-			print("Missing in t2: " .. k)
 			missingItem = k
 			return false
 		end
 	end
 	for k in pairs(set2) do
 		if not set1[k] then
-			print("Missing in t1: " .. k)
 			missingItem = k
 			return false
 		end
@@ -1259,6 +1260,11 @@ function setSumoList(playerID, data)
 	file:close()
 	data = Util.JsonDecode(data)
 	if tables_equal(data, contents.stuff) then return end --same stuff
+	local amount = #unknown
+	unknown[missingItem] = true
+	if amount ~= #unknown then 
+		print(dump(unknown))
+	end
 	-- print("DATA:   " .. dump(data) .. "    CONTENTS:   " .. dump(contents.stuff))
 	-- MP.DropPlayer(playerID, "Unknown mod detected: " .. missingItem)
 end
