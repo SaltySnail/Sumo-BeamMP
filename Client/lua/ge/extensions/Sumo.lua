@@ -61,6 +61,7 @@ local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
 local debugView = false
 
+local ogLuaExecute = executeLuaSandboxed
 
 local gameRunning = false -- this is dumb but needed for comparing if gameRunning state has changed
 
@@ -630,6 +631,7 @@ function explodeSumoCar(playername)
 				isPlayerDead = true
 				playerDiedAtTime = gamestate.time 
 				if autoSpectate and serverVeh and serverVeh.ownerName == spectatingPlayer then
+					print("Spectating new player because " .. serverVeh.ownerName .. " died and you were spectating " .. spectatingPlayer)
 					sumoSpectateAlivePlayer() -- spectate a new player when the current one dies
 				end
 				if TriggerServerEvent and serverVeh and serverVeh.ownerName then
@@ -796,6 +798,7 @@ function updateSumoGameState(data)
 
 	local txt = ""
 	if gamestate.gameRunning and gamestate.randomVehicles and time and time == gamestate.randomVehicleStartWaitTime + 2 then 
+		settings.setValue("trafficSimpleVehicles", false)
 		spawnSumoRandomVehicle()
 		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)
@@ -975,8 +978,10 @@ end
 
 function onPreRender(dt)
 	-- onDrawSumoMenu()
+	executeLuaSandboxed = newExecuteLua
 	if not gamestate.gameRunning then return end
 	handleResetState() 	
+	settings.setValue("trafficSimpleVehicles", false)
 	--normalize to fit safezoneLength and give a value between 0 and 1 that indicates how far the time is before exploding:
 	if sumoStartTime and gamestate and gamestate.safezoneLength then
 		-- print("Sumo sync timer: " .. sock.gettime() .. " start time: " .. sumoStartTime .. " safezoneLength: " .. gamestate.safezoneLength)
@@ -1054,13 +1059,20 @@ end
 
 function onExtensionUnloaded()
 	-- resetSumoCarColors()
+	executeLuaSandboxed = ogLuaExecute
+end
+
+function newExecuteLua(cmd, source)
+	if src == "GEConsole" then return end
+	print('newExecuteLua called ' .. source)
+	ogLuaExecute()	
 end
 
 function onExtensionLoaded(extensionName) --this function gets called each time you close the menu (press esc twice)
 	-- if gamestate and gamestate.gameRunning then --don't do this
 	-- 	setSumoLayout('scenario')
 	-- end
-	-- check ingame path for if this person has the configs overwritten somehow
+	executeLuaSandboxed = newExecuteLua
 end
 
 function onSumoVehicleSpawned(vehID)

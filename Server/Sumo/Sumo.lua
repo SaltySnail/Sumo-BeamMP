@@ -52,7 +52,8 @@ local blockConsole = false
 local blockEditor = false
 local autoStartTimer = 0
 local SUMO_SERVER_DATA_PATH = "Resources/Server/Sumo/Data/" --this is the path from beammp-server.exe (change this if it is in a different path)
-local SCORE_FOLDER_OVERWRITE = "" --use this to store the scores between different servers (TODO check if that would work with file locks)
+local SCORE_FOLDER_OVERWRITE = ""
+local BANNED_PLAYERS_FOLDER_OVERWRITE = ""
 local allowedConfigs = {}
 local amountOfSpawnsOnArena = {}
 local playerJoinsNextRound = {}
@@ -67,7 +68,9 @@ local testingStep = 0
 local testingStepTimer = 0
 local waitTimeBetweenTests = 20
 local SCORES_LOCK_FILE = 'scores.lock'
+local BANNED_PLAYERS_LOCK_FILE = 'banned.lock'
 local unknown = {}
+local bannedPlayers = {}
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -109,11 +112,11 @@ end
 
 --called whenever the extension is loaded
 function onInit()
-    MP.RegisterEvent("requestSumoGameState","requestSumoGameState")
-    MP.RegisterEvent("sumo","sumo")
-    MP.RegisterEvent("SUMO","SUMO")
-    MP.TriggerClientEventJson(-1, "receiveSumoGameState", gameState)
-	
+  MP.RegisterEvent("requestSumoGameState","requestSumoGameState")
+  MP.RegisterEvent("sumo","sumo")
+  MP.RegisterEvent("SUMO","SUMO")
+  MP.TriggerClientEventJson(-1, "receiveSumoGameState", gameState)
+
 	MP.CancelEventTimer("counter")
 	MP.CancelEventTimer("sumoSecond")
 	MP.CreateEventTimer("sumoSecond",1000)
@@ -144,10 +147,10 @@ function onInit()
 	MP.RegisterEvent("sumoSaveArena", "sumoSaveArena")
 	MP.RegisterEvent("setSumoJoinNextRound", "setSumoJoinNextRound")
 	MP.RegisterEvent("setSumoList", "setSumoList")
-
 	
 	print("--------------Sumo Loaded------------------")
 	loadSettings()
+	syncBannedPlayers()
 	math.randomseed(os.time())
 end
 
@@ -691,6 +694,7 @@ function sumoGameRunningLoop()
 			local playerCount = 0
 			for ID,Player in pairs(MP.GetPlayers()) do
 				if MP.IsPlayerConnected(ID) and (MP.GetPlayerVehicles(ID) or playerJoinsNextRound[Player]) then
+					print(MP.GetPlayerName(ID) .. " counted as in the game during countdown")
 					playerCount = playerCount + 1
 				end
 			end
@@ -930,8 +934,10 @@ function onPlayerFirstAuth(playerID)
 end
 
 --called whenever the player is authenticated by the server.
-function onPlayerAuth(playerID)
-
+function onPlayerAuth(name)
+	if bannedPlayers[name] == true then
+		return "You are banned from this server"
+	end
 end
 
 --called when a player begins loading
@@ -941,7 +947,7 @@ end
 
 --called whenever a player has fully joined the session
 function onPlayerJoin(playerID)
-	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow
+	-- MP.TriggerClientEvent(-1, "requestSumoLevelName", "nil") --TODO: fix this when changing levels somehow - EDIT: is this even an issue anymore?
 	print("sumo: onPlayerJoin called")
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "arenas.json", "r")
 	if not file then 
@@ -1149,7 +1155,11 @@ function loadSettings()
 end
 
 function aqcuireFileLock(lockFileName) --blocking
-	local initialFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName, 'r')
+	local path = SUMO_SERVER_DATA_PATH .. lockFileName
+	if lockFileName == "scores.json" and SCORE_FOLDER_OVERWRITE then 
+		path = SCORE_FOLDER_OVERWRITE .. lockFileName
+	end	
+	local initialFileLock = io.open(path, 'r')
 	local waitingForLock = false
 	if initialFileLock then
 		waitingForLock = true
@@ -1157,7 +1167,7 @@ function aqcuireFileLock(lockFileName) --blocking
 	end
 	while(waitingForLock) do -- block while another process is accessing the file
 		print(lockFileName .. ' is locked by another process')
-		fileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName, 'r')
+		fileLock = io.open(path, 'r')
 		if fileLock then
 			fileLock:close()
 			local timeNow = os.time()
@@ -1167,46 +1177,93 @@ function aqcuireFileLock(lockFileName) --blocking
 			print('Aqcuired lock: ' .. lockFileName)
 		end
 	end		
-	local newFileLock = io.open(SUMO_SERVER_DATA_PATH .. lockFileName,'w')
+	local newFileLock = io.open(path, 'w')
 	if not newFileLock then print('making the file lock didnt work') return end
 	newFileLock:write('locked')
 	newFileLock:close()
 end
 
 function releaseFileLock(lockFileName)
-  os.remove(SUMO_SERVER_DATA_PATH .. lockFileName)
+	local path = SUMO_SERVER_DATA_PATH .. lockFileName
+	if lockFileName == "scores.json" and SCORE_FOLDER_OVERWRITE then 
+		path = SCORE_FOLDER_OVERWRITE .. lockFileName
+	end
+  os.remove(path)
   print(lockFileName .. ' is released')
 end
 
 function loadScores()
 	aqcuireFileLock(SCORES_LOCK_FILE)
-	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "r")
-    if file then
-        local content = file:read("*all")
-        file:close()
+	local file
+	if SCORE_FOLDER_OVERWRITE == "" then
+		file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "r")
+	else
+		file = io.open(SCORE_FOLDER_OVERWRITE .. "scores.json", "r")
+	end
+  if file then
+    local content = file:read("*all")
+    file:close()
 		if not content then content = "{}" end
-        local data = Util.JsonDecode(content)
+    local data = Util.JsonDecode(content)
 		if data then
 			releaseFileLock(SCORES_LOCK_FILE)
 			return data
 		end
-    else
-        print("Cannot open file:", path)
-    end
+  else
+    print("Cannot open file:", path)
+  end
   releaseFileLock(SCORES_LOCK_FILE)
 	return {}
 end
 
 function saveScores(totalScore) -- reads the scores.json file and adds the new scores to it
 	aqcuireFileLock(SCORES_LOCK_FILE)
-	local file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
+	local file
+	if SCORE_FOLDER_OVERWRITE == "" then
+		file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
+	else
+		file = io.open(SCORE_FOLDER_OVERWRITE .. "scores.json", "w")
+	end
   if file then
 		file:write(Util.JsonPrettify(Util.JsonEncode(totalScore)))
 		file:close()
   else
-      print("Cannot open file:", SUMO_SERVER_DATA_PATH .. "scores.json")
+    print("Cannot open file:", SUMO_SERVER_DATA_PATH .. "scores.json")
   end
 	releaseFileLock(SCORES_LOCK_FILE)
+end
+
+function syncBannedPlayers()
+	aqcuireFileLock(BANNED_PLAYERS_LOCK_FILE)
+	local data = {}
+	local path = SUMO_SERVER_DATA_PATH .. "bannedPlayers.json"
+	local file = io.open(path, "r")
+	if file == nil then 
+		releaseFileLock(BANNED_PLAYERS_LOCK_FILE)
+		return
+	end
+	local content = file:read("*all")
+	file:close()
+	if not content then content = "{}" end
+	data = Util.JsonDecode(content)
+	if data then
+		for k,v in pairs(data) do
+			if v == true then
+				bannedPlayers[k] = v
+			end
+		end
+		for k,v in pairs(bannedPlayers) do
+			if v == true then
+				data[k] = v
+			end
+		end
+	end
+	file = io.open(path, "w")
+	if file then
+		file:write(Util.JsonPrettify(Util.JsonEncode(content)))
+		file:close()
+	end
+	releaseFileLock(BANNED_PLAYERS_LOCK_FILE)
 end
 
 function sumoSaveArena(playerID, data)
@@ -1279,6 +1336,20 @@ function setSumoJoinNextRound(playerID, state)
 	end
 end
 
+function banPlayer(name)
+	print(name .. " " .. dump(bannedPlayers))
+	bannedPlayers[name] = true
+	for ID,Player in pairs(MP.GetPlayers()) do
+		if bannedPlayers[Player] == true then
+			MP.DropPlayer(ID, 'You are banned from this server')
+		end
+	end
+end
+
+function unbanPlayer(name)
+	bannedPlayers[tostring(name)] = nil
+end
+
 M.onInit = onInit
 M.onUnload = onUnload
 
@@ -1325,5 +1396,8 @@ M.saveScores = saveScores
 M.setSumoJoinNextRound = setSumoJoinNextRound
 M.loadSettings = loadSettings
 M.setSumoList = setSumoList
+M.banPlayer = banPlayer
+M.unbanPlayer = unbanPlayer
+M.syncBannedPlayers = syncBannedPlayers
 
 return M
