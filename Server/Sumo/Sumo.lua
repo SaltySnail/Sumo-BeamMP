@@ -13,7 +13,6 @@ local arenaNames = {}
 local possibleArenas = {}
 local requestedArena = ""
 local goalPrefabCount = 1
-local timeSinceLastContact = 0
 local teamSize = 1
 local possibleTeams = {"Red", "LightBlue", "Green", "Yellow", "Purple"}
 local chosenTeams = {}
@@ -71,6 +70,12 @@ local SCORES_LOCK_FILE = 'scores.lock'
 local BANNED_PLAYERS_LOCK_FILE = 'banned.lock'
 local unknown = {}
 local bannedPlayers = {}
+local waitingForVehiclesToSpawn = false
+local vehicleSpawnWaitTime = 0
+local MAX_VEHICLE_SPAWN_WAIT_TIME = 60 -- if after 60 seconds it still didn't spawn your car, stop waiting and remove player from round
+local waitingForVehicleOf = {}
+local randomVehicleStartWaitTime = -45 --should be equal or less than -30, tested a bunch with -45 so leaving it at that, but with some restructuring this could be closer to -10 I believe (doesn't work great on Magneto n)
+
 -- The following line was used to generate the allowedConfigs.json file.
 -- local f=io.open("car_configs.json","w") f:write(jsonEncode((function() local t={} local allowedConfigs={'autobello','miramar','etk800','vivace','etkc','etki','bluebuck','nine','sbr','bx','utv','burnside','moonhawk','barstow','covet','bolide','legran','pigeon','wigeon','bastion','scintilla','midsize','pessima','fullsize','sunburst2','lansdale','wendover'} for _,c in pairs(core_vehicles.getConfigList(true)) do if c[1] then print(dump(c)) for _,config in pairs(c) do local isAllowed=false for _,key in ipairs(allowedConfigs) do if config.model_key == key then isAllowed=true break end end if config.aggregates and config.aggregates.Type and config.aggregates.Type.Car and isAllowed then table.insert(t,config) end end end end return t end)())) f:close()
 -- hand picked allowedConfigs using for _, model in pairs(core_vehicles.getModelList(true).models) do if model.Type == "Car" then print(dump(model)) end end
@@ -137,6 +142,7 @@ function onInit()
 	MP.RegisterEvent("onPlayerJoining", "onPlayerJoining")
 	MP.RegisterEvent("onPlayerJoin", "onPlayerJoin")
 	MP.RegisterEvent("onPlayerDisconnect", "onPlayerDisconnect")
+	MP.RegisterEvent("postVehicleSpawn", "postVehicleSpawn")
 	MP.RegisterEvent("onVehicleSpawn", "onVehicleSpawn")
 	MP.RegisterEvent("onVehicleEdited", "onVehicleEdited")
 	MP.RegisterEvent("onVehicleReset", "onVehicleReset")
@@ -429,6 +435,8 @@ function sumoGameSetup()
 				local contents = configFile:read("*a")
 				configFile:close()
 				gameState.players[Name].chosenConfig = Util.JsonDecode(contents) 
+				waitingForVehicleOf[Name] = true
+				waitingForVehiclesToSpawn = true
 				table.remove(possibleConfigs, chosenConfig)
 				--print("Chosen config: " .. dump(gameState.players[Name].chosenConfig))
 			end
@@ -452,7 +460,7 @@ function sumoGameSetup()
 
 	gameState.playerCount = playerCount
 	gameState.randomVehicles = randomVehicles
-	gameState.randomVehicleStartWaitTime = -45 --should be equal or less than -30
+	gameState.randomVehicleStartWaitTime = randomVehicleStartWaitTime
 	if randomVehicles then
 		gameState.time = gameState.randomVehicleStartWaitTime + 1
 	else
@@ -689,7 +697,9 @@ end
 
 function sumoGameRunningLoop()
 	if gameState.time < 0 then
-		MP.SendChatMessage(-1,"Sumo game starting in "..math.abs(gameState.time).." second")
+		if not waitingForVehiclesToSpawn then
+			MP.SendChatMessage(-1,"Sumo game starting in "..math.abs(gameState.time).." second")
+		end
 		if gameState.time > gameState.randomVehicleStartWaitTime + 20 then 
 			local playerCount = 0
 			for ID,Player in pairs(MP.GetPlayers()) do
@@ -787,14 +797,38 @@ function sumoGameRunningLoop()
 			goalEndTime = gameState.time + goalTime
 			print("It's time to blow some stuff up " .. dump(vehiclesToExplode))
 		end
-		timeSinceLastContact = timeSinceLastContact + 1
-		gameState.time = gameState.time + 1
+		print("TEST: " .. tostring(randomVehicles) .. " and (" .. tostring(not waitingForVehiclesToSpawn) .. " or " .. tostring(gameState.time < randomVehicleStartWaitTime + 3) .. ")")
+		if randomVehicles and (not waitingForVehiclesToSpawn or gameState.time < randomVehicleStartWaitTime + 3) then
+			gameState.time = gameState.time + 1
+		end
+		if not randomVehicles then
+			gameState.time = gameState.time + 1
+		end
 	end
 
 	updateSumoClients()
 end
 
 function sumoTimer()
+	if randomVehicles and waitingForVehiclesToSpawn then
+		vehicleSpawnWaitTime = vehicleSpawnWaitTime + 1
+		if vehicleSpawnWaitTime > MAX_VEHICLE_SPAWN_WAIT_TIME then
+			vehicleSpawnWaitTime = 0
+			waitingForVehiclesToSpawn = false
+			for name, _ in pairs(waitingForVehicleOf) do
+				if gameState and gameState.players and gameState.players[name] then
+					gameState.players[name] = nil
+					MP.SendChatMessage(-1, "Player: " .. name .. " took too long to spawn a vehicle, removing them from the round.")
+				end
+			end
+			waitingForVehicleOf = {}
+		else
+			MP.SendChatMessage(-1, "Waiting " .. MAX_VEHICLE_SPAWN_WAIT_TIME - vehicleSpawnWaitTime .. "s on these people to confirm to have spawned a car: ")
+			for name, _ in pairs(waitingForVehicleOf) do
+				MP.SendChatMessage(-1, "" .. name)
+			end
+		end
+	end
 	if gameState.gameRunning then
 		sumoGameRunningLoop()
 		--force stopping the game when there are less players than MAX_ALIVE:
@@ -829,7 +863,7 @@ function sumoTimer()
 			selectRandomArena()
 			sumoGameSetup()
 		end
-	elseif testingAllConfigsOnAllSpawns then
+	elseif testingAllConfigsOnAllSpawns then -- TODO: make this a defined state machine, so that it easier to maintain
 		testingStepTimer = testingStepTimer + 1
 
 		if testingStep == 0 and testingStepTimer >= 2 then
@@ -1004,15 +1038,23 @@ function onChatMessage(playerID, playerName, chatMessage)
 	end
 end
 
+function postVehicleSpawn(spawnConfirmed, playerID, vehID, data)
+	if not spawnConfirmed then return end
+	if waitingForVehicleOf[MP.GetPlayerName(playerID)] then
+		waitingForVehicleOf[MP.GetPlayerName(playerID)] = nil
+	end
+	if #waitingForVehicleOf == 0 then waitingForVehiclesToSpawn = false end
+end
+
 --called whenever a player spawns a vehicle.
-function onVehicleSpawn(playerID, vehID,  data)
+function onVehicleSpawn(spawnConfirmed, playerID, vehID,  data)
 	print('onVehicleSpawn called')
 	if (not randomVehicles and gameState and gameState.gameRunning) 
 		or (randomVehicles and gameState and gameState.gameRunning and gameState.time and gameState.randomVehicleStartWaitTime 
 		and gameState.time > (gameState.randomVehicleStartWaitTime + 20)) then -- 20 seconds to allow slower PC's to spawn a car
 		MP.SendChatMessage(playerID, "You can't spawn during a round, press \'ctrl+s\' and check join next round.")
 		return 1
-	end		
+	end	
 	if autoStart then
 		local playerCount = 0
 		for ID,Player in pairs(MP.GetPlayers()) do
@@ -1134,9 +1176,9 @@ end
 function loadSettings()
 	local file = io.open(SUMO_SERVER_DATA_PATH .. "settings.json", "r")
     if file then
-        local content = file:read("*all") -- Read the entire file content
-        file:close()
-        local data = Util.JsonDecode(content) -- Decode the JSON data
+      local content = file:read("*all") -- Read the entire file content
+      file:close()
+      local data = Util.JsonDecode(content) -- Decode the JSON data
 		if data then
 			autoStart = data["autoStart"]
 			commandsAllowed = data["chatCommands"]
@@ -1363,6 +1405,7 @@ M.onPlayerDisconnect = onPlayerDisconnect
 
 M.onChatMessage = onChatMessage
 
+M.postVehicleSpawn = postVehicleSpawn
 M.onVehicleSpawn = onVehicleSpawn
 M.onVehicleEdited = onVehicleEdited
 M.onVehicleReset = onVehicleReset
