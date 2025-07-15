@@ -5,7 +5,7 @@ local tryResettingTime = 0
 local resetDelay = 0
 
 local function setSumoGameRunning(isGameRunning)
-    print('setSumoGameRunning called ' .. tostring(gameRunning))
+    --print('setSumoGameRunning called ' .. tostring(gameRunning))
     gameRunning = isGameRunning
 end
 
@@ -27,6 +27,7 @@ end
 
 local ogStartRecovering = recovery.startRecovering
 recovery.startRecovering = function(useAltMode) -- overwrite in-game function to disable rewinding during rounds
+    print("Starting reset")
     if gameRunning then 
         if tryResettingTime == 0 then
             obj:queueGameEngineLua('Sumo.onSumoStartResetting()')
@@ -39,6 +40,7 @@ end
 
 local ogStopRecovering = recovery.stopRecovering
 recovery.stopRecovering = function() -- overwrite in-game function to add reset delay functionality
+    print("Stopping reset")
     if gameRunning then
         tryResettingTime = 0
         obj:queueGameEngineLua('Sumo.onSumoStopResetting()')

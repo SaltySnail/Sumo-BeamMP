@@ -1063,7 +1063,7 @@ function onExtensionUnloaded()
 end
 
 function newExecuteLua(cmd, source)
-	if src == "GEConsole" then return end
+	if blockConsole and src == "GEConsole" then return end
 	print('newExecuteLua called ' .. source)
 	ogLuaExecute()	
 end

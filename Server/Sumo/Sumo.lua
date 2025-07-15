@@ -797,7 +797,7 @@ function sumoGameRunningLoop()
 			goalEndTime = gameState.time + goalTime
 			print("It's time to blow some stuff up " .. dump(vehiclesToExplode))
 		end
-		print("TEST: " .. tostring(randomVehicles) .. " and (" .. tostring(not waitingForVehiclesToSpawn) .. " or " .. tostring(gameState.time < randomVehicleStartWaitTime + 3) .. ")")
+		-- print("TEST: " .. tostring(randomVehicles) .. " and (" .. tostring(not waitingForVehiclesToSpawn) .. " or " .. tostring(gameState.time < randomVehicleStartWaitTime + 3) .. ")")
 		if randomVehicles and (not waitingForVehiclesToSpawn or gameState.time < randomVehicleStartWaitTime + 3) then
 			gameState.time = gameState.time + 1
 		end
