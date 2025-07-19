@@ -2,34 +2,30 @@ angular.module('beamng.apps')
 .directive('sumoresetrules', function () {
   return {
     template: `
-      <div style="
-        display: grid;
-        grid-template-columns: 1fr; /* Single column */
-        gap: 10px;
-        width: 100%;
-        background: transparent;
-      ">
-        <div
-          ng-repeat="item in statusItems"
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            box-sizing: border-box;
-          ">
-          <img
-            ng-src="{{item.image}}"
-            alt="{{item.name}}"
-            ng-style="{
-              'opacity': (item.status === 'ok' ? '1' : '0.5')
-            }"
-            style="
-              width: 140px;
-              height: 140px;
-              transition: opacity 0.2s ease-in-out;
-            "
-            ng-click="toggleStatus(item)">
+      <div style="padding: 10px; font-family: sans-serif; color: white; width: 100%;">
+        <!-- Reset Status -->
+        <div style="text-align: center; margin-bottom: 20px; font-size: 20px;">
+          <strong style="color: {{isResetAllowed() ? '#0f0' : '#f00'}};">
+            {{isResetAllowed() ? '✔  Reset Available' : '✖  Cannot Reset'}}
+          </strong>
+        </div>
+
+        <!-- Status Items (excluding Car Repair) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="text-align: center;" ng-repeat="item in visibleItems">
+            <div style="margin-bottom: 5px;">{{item.description}}</div>
+            <img
+              ng-src="{{item.image}}"
+              alt="{{item.name}}"
+              style="width: 100px; height: 100px; opacity: {{item.status === 'ok' ? 1 : 0.4}};"
+            >
+            <div style="margin-top: 5px;">
+              <strong>{{item.name}}</strong><br>
+              <span style="color: {{item.status === 'ok' ? '#0f0' : '#f00'}};">
+                {{item.status === 'ok' ? '✔' : '✖'}}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     `,
@@ -37,13 +33,33 @@ angular.module('beamng.apps')
     replace: true,
     link: function (scope) {
       scope.statusItems = [
-        { name: 'Car Repair', image: 'carRepairIcon.png', status: 'ok' },
-        { name: 'Speed Limit', image: 'speedLimitIcon.png', status: 'ok' },
-        { name: 'Safe Zone', image: 'safezoneIcon.png', status: 'ok' }
+        {
+          name: 'Car Repair',
+          image: '', // Hidden
+          status: 'ok',
+          description: '' // Not shown
+        },
+        {
+          name: 'Speed Limit',
+          image: 'speedLimitIcon.png',
+          status: 'ok',
+          description: 'Must be going under 20 km/h'
+        },
+        {
+          name: 'Outside Safe Zone',
+          image: 'safezoneIcon.png',
+          status: 'ok',
+          description: 'Must be outside a safe zone'
+        }
       ];
 
-      scope.toggleStatus = function(item) {
-        item.status = (item.status === 'ok') ? 'not_ok' : 'ok';
+      // Only visible items (hide Car Repair)
+      scope.visibleItems = scope.statusItems.filter(item => item.name !== 'Car Repair');
+
+      // Reset allowed only if Car Repair is ok
+      scope.isResetAllowed = function () {
+        const carRepair = scope.statusItems.find(item => item.name === 'Car Repair');
+        return carRepair && carRepair.status === 'ok';
       };
 
       scope.$on('sumoSetRuleStatus', function (event, data) {

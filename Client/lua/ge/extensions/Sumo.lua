@@ -598,7 +598,7 @@ end
 
 function handleResetState()
 	-- print("handleResetState called player in circle: " .. tostring(isPlayerInCircle) .. " below speed limit: " .. tostring(isPlayerBelowSpeedLimit) .. " dead: " .. tostring(isPlayerDead))
-	guihooks.trigger('sumoSetRuleStatus', {rule='Safe Zone', status=isPlayerInCircle})
+	guihooks.trigger('sumoSetRuleStatus', {rule='Outside Safe Zone', status=isPlayerInCircle})
 	guihooks.trigger('sumoSetRuleStatus', {rule='Speed Limit', status=(isPlayerBelowSpeedLimit==false)}) --somehow this is inverted
 	if not isPlayerInCircle and isPlayerBelowSpeedLimit and not isPlayerDead then
 		disallowSumoResets(blockedInputActionsOnRound) -- player can reset in place
@@ -799,6 +799,7 @@ function updateSumoGameState(data)
 	local txt = ""
 	if gamestate.gameRunning and gamestate.randomVehicles and time and time == gamestate.randomVehicleStartWaitTime + 2 then 
 		settings.setValue("trafficSimpleVehicles", false)
+		settings.setValue("simplifyRemoteVehicles", false)
 		spawnSumoRandomVehicle()
 		setSumoLayout('sumo')
 		disallowSumoResets(allInputActions)

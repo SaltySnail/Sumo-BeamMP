@@ -135,14 +135,14 @@
       "appName":"sumoresetrules",
       "placement":{
         "bottom":"",
-        "height":"600px",
+        "height":"370px",
         "left":"",
         "margin":"auto",
         "position":"absolute",
         "right":"0px",
         "top":"50%",
         "transform":"translateY(-50%)",
-        "width":"150px"
+        "width":"370px"
       }
     },
     {
