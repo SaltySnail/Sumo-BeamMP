@@ -968,7 +968,10 @@ function onPlayerFirstAuth(playerID)
 end
 
 --called whenever the player is authenticated by the server.
-function onPlayerAuth(name)
+function onPlayerAuth(name, _, isGuest, _)
+	if isGuest then
+    return "No guests allowed, please use a BeamMP account"
+  end
 	if bannedPlayers[name] == true then
 		return "You are banned from this server"
 	end
