@@ -11,11 +11,11 @@ local gamestate = {players = {}, settings = {}}
 local alivePlayers = {}
 
 --blocked inputs when dead
-local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					         "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
-local allInputActions = 								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+local blockedInputActionsOnRound =			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic',										 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+local allInputActions =									{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 --for testing with nodegrabber:
--- local blockedInputActionsOnRound = 			{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', 					         "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
--- local allInputActions = 								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+-- local blockedInputActionsOnRound =				{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic',										 "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
+-- local allInputActions =								{'slower_motion','faster_motion','toggle_slow_motion','modify_vehicle','vehicle_selector','saveHome','loadHome', 'reset_all_physics','toggleTraffic', "recover_vehicle", "recover_vehicle_alt", "recover_to_last_road", "reload_vehicle", "reload_all_vehicles", "parts_selector", "dropPlayerAtCamera",'reset_physics','dropPlayerAtCameraNoReset',"forceField", "funBoom", "funBreak", "funExtinguish", "funFire", "funHinges", "funTires", "funRandomTire", "latchesOpen", "latchesClose","toggleWalkingMode","photomode","toggleTrackBuilder","toggleBigMap","toggleRadialMenuSandbox", "toggleRadialMenuPlayerVehicle", "toggleRadialMenuFavorites", "toggleRadialMenuMulti","appedit","pause"}
 
 local colors = {["Red"] = {255,50,50,255},["LightBlue"] = {50,50,160,255},["Green"] = {50,255,50,255},["Yellow"] = {200,200,25,255},["Purple"] = {150,50,195,255}}
 local mapData = {}
@@ -114,9 +114,9 @@ function seconds_to_days_hours_minutes_seconds(total_seconds) --modified code fr
         time_seconds = "0" .. time_seconds
     end
 	if time_minutes > 0 then
-    	return time_minutes .. ":" .. time_seconds
+			return time_minutes .. ":" .. time_seconds
 	else
-    	return time_seconds
+			return time_seconds
 	end
 end
 
@@ -133,9 +133,9 @@ end
 local function updateAlivePlayers()
 	alivePlayers = {}
 	for playername, player in pairs(gamestate.players) do
-  	if not player.dead and playername ~= MPConfig.getNickname then
-    	table.insert(alivePlayers, playername)
-  	end
+		if not player.dead and playername ~= MPConfig.getNickname then
+			table.insert(alivePlayers, playername)
+		end
 	end
 	--guihooks.trigger('setSumoPlayerList', alivePlayers)
 end
@@ -273,7 +273,7 @@ function spawnSumoGoal(filepath, offset, rotation)
 	goalPrefabPath   = filepath
 	goalPrefabName   = string.gsub(filepath, "(.*/)(.*)", "%2"):sub(1, -13)
 	local goalNumber = tonumber(string.match(goalPrefabName, "%d+"))
-	if 		goalNumber
+	if		goalNumber
 		and mapData.arenaData
 		and mapData.arenaData[currentArena]
 		and mapData.arenaData[currentArena].goals
@@ -286,7 +286,7 @@ function spawnSumoGoal(filepath, offset, rotation)
 	local rotationString = '0 0 1'
 	local scaleString = '1 1 1'
 	print("Spawning goal: " .. currentArena .. " " .. goalNumber)
-	if 		mapData.arenaData 
+	if		mapData.arenaData 
 		and mapData.arenaData[currentArena] 
 		and mapData.arenaData[currentArena].goals 
 		and mapData.arenaData[currentArena].goals[goalNumber] then
@@ -311,7 +311,7 @@ function spawnSumoGoal(filepath, offset, rotation)
 	local newObj = createObject('TSStatic')
 	if offset then
 		newObj:setPosition(vec3(offset.x, offset.y, offset.z))
-	elseif 		mapData.arenaData
+	elseif		mapData.arenaData
 			and mapData.arenaData[currentArena]
 			and mapData.arenaData[currentArena].goals
 			and mapData.arenaData[currentArena].goals[goalNumber] then
@@ -501,33 +501,33 @@ local function pickSpawnPoint(spawnName)
 	local defaultSpawnPoint = setSpawnpoint.loadDefaultSpawnpoint()
 	local spawnDefaultGroups = {"CameraSpawnPoints", "PlayerSpawnPoints", "PlayerDropPoints"}
 	if defaultSpawnPoint then
-	  local spawnPoint = scenetree.findObject(defaultSpawnPoint)
-	  if spawnPoint then
+		local spawnPoint = scenetree.findObject(defaultSpawnPoint)
+		if spawnPoint then
 		return spawnPoint
-	  else
+		else
 		log('W', logTag, 'No SpawnPointName in mission file vehicle spawn in the default position')
-	  end
+		end
 	end
 	--Walk through the groups until we find a valid object
 	for i,v in pairs(spawnDefaultGroups) do
-	  if scenetree.findObject(spawnDefaultGroups[i]) then
+		if scenetree.findObject(spawnDefaultGroups[i]) then
 		local spawngroupPoint = scenetree.findObject(spawnDefaultGroups[i]):getRandom()
 		if not spawngroupPoint then
-		  break
+			break
 		end
 		local sgPpointID = scenetree.findObjectById(spawngroupPoint:getId())
 		if not sgPpointID then
-		  break
+			break
 		end
 		return sgPpointID
-	  end
+		end
 	end
   
 	--[[ ensuring backward compability with mods
 	]]
 	local dps = scenetree.findObject("DefaultPlayerSpawnSphere")
 	if dps then
-	  return scenetree.findObjectById(dps.obj:getId())
+		return scenetree.findObjectById(dps.obj:getId())
 	end
   
 	--[[Didn't find a spawn point by looking for the groups so let's return the
@@ -535,28 +535,28 @@ local function pickSpawnPoint(spawnName)
 	]]
 	playerSP = createObject('SpawnSphere')
 	if not playerSP then
-	  log('E', logTag, 'could not create playerSP')
-	  return
+		log('E', logTag, 'could not create playerSP')
+		return
 	end
 	playerSP.dataBlock = scenetree.findObject('SpawnSphereMarker')
 	if spawnName == "player" then
-	  playerSP.spawnClass = "BeamNGVehicle"
-	  playerSP.spawnDatablock = "default_vehicle"
-	  spawnPointName = "DefaultPlayerSpawnSphere"
-	  playerSP:registerObject(spawnPointName)
+		playerSP.spawnClass = "BeamNGVehicle"
+		playerSP.spawnDatablock = "default_vehicle"
+		spawnPointName = "DefaultPlayerSpawnSphere"
+		playerSP:registerObject(spawnPointName)
 	elseif spawnName == 'camera' then
-	  playerSP.spawnClass = "Camera"
-	  playerSP.spawnDatablock = "Observer"
-	  spawnPointName = "DefaultCameraSpawnSphere"
-	  playerSP:registerObject(spawnPointName)
+		playerSP.spawnClass = "Camera"
+		playerSP.spawnDatablock = "Observer"
+		spawnPointName = "DefaultCameraSpawnSphere"
+		playerSP:registerObject(spawnPointName)
 	end
 	local missionCleanup = scenetree.MissionCleanup
 	if not missionCleanup then
-	  log('E', logTag, 'MissionCleanup does not exist')
-	  return
+		log('E', logTag, 'MissionCleanup does not exist')
+		return
 	end
 	--[[ Add it to the MissionCleanup group so that it doesn't get saved
-	  to the Mission (and gets cleaned up of course)
+		to the Mission (and gets cleaned up of course)
 	]]
 	missionCleanup:addObject(playerSP.obj)
 	return playerSP
@@ -688,7 +688,7 @@ function onSumoTrigger(data)
 			-- print( "Marked " .. data.subjectID .. " for exploding")
 			--mark player to explode
 		-- else
-		-- 	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
+		--	if TriggerServerEvent then TriggerServerEvent("unmarkSumoVehicleToExplode", data.subjectID) end
 		end
 	elseif string.find(trigger, "outOfBoundTrigger") then
 		if gamestate and (gamestate.time and gamestate.time < -3) or not gamestate.gameRunning then return end
@@ -715,9 +715,9 @@ end
 
 function onReverseGravityTrigger(data)
 	if data.event == "enter" then
-  	local vehicle = getObjectByID(data.subjectID)
-  	vehicle:queueLuaCommand("obj:setGravity(9.81)")
-  	if MPVehicleGE.isOwn(data.subjectID) then
+		local vehicle = getObjectByID(data.subjectID)
+		vehicle:queueLuaCommand("obj:setGravity(9.81)")
+		if MPVehicleGE.isOwn(data.subjectID) then
 			ogCamName = core_camera.getActiveCamName(0)
 			if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
 				core_camera.setByName(0,"chase")
@@ -727,9 +727,9 @@ function onReverseGravityTrigger(data)
 			reverseGravitySubjectId = data.subjectID
 		end
 	elseif data.event == "exit" then
-  	local vehicle = getObjectByID(data.subjectID)
-  	vehicle:queueLuaCommand("obj:setGravity(-9.81)")
-  	if MPVehicleGE.isOwn(data.subjectID) then
+		local vehicle = getObjectByID(data.subjectID)
+		vehicle:queueLuaCommand("obj:setGravity(-9.81)")
+		if MPVehicleGE.isOwn(data.subjectID) then
 			if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
 				core_camera.setByName(0,ogCamName)
 				core_camera.resetCamera(0)
@@ -758,7 +758,7 @@ function requestSumoArenaNames()
 end
 
 -- function requestSumoLevels()
--- 	if TriggerServerEvent then TriggerServerEvent("setSumoLevels", mapData.levels) end
+--	if TriggerServerEvent then TriggerServerEvent("setSumoLevels", mapData.levels) end
 -- end
 
 function requestSumoGoalCount()
@@ -830,8 +830,8 @@ function updateSumoGameState(data)
 		be:queueAllObjectLua("controller.setFreeze(1)")
 		be:queueAllObjectLua("Sumo.setResetDelay(" .. resetDelay .. ")")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-		-- 	local veh = be:getObjectByID(vehID)
-		-- 	veh:queueLuaCommand('controller.setFreeze(1)')
+		--	local veh = be:getObjectByID(vehID)
+		--	veh:queueLuaCommand('controller.setFreeze(1)')
 		-- end
 		disallowSumoResets(allInputActions)
 		--core_environment.enableChanges(false) -- this disables lua controls as well
@@ -842,8 +842,8 @@ function updateSumoGameState(data)
 		sumoStartTime = sock.gettime()
 		be:queueAllObjectLua("controller.setFreeze(0)")
 		-- for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-		-- 	local veh = be:getObjectByID(vehID)
-		-- 	veh:queueLuaCommand('controller.setFreeze(0)')
+		--	local veh = be:getObjectByID(vehID)
+		--	veh:queueLuaCommand('controller.setFreeze(0)')
 		-- end
 		-- allowSumoResets(allInputActions)
 		disallowSumoResets(blockedInputActionsOnRound)
@@ -981,7 +981,7 @@ function onPreRender(dt)
 	-- onDrawSumoMenu()
 	executeLuaSandboxed = newExecuteLua
 	if not gamestate.gameRunning then return end
-	handleResetState() 	
+	handleResetState()	
 	settings.setValue("trafficSimpleVehicles", false)
 	--normalize to fit safezoneLength and give a value between 0 and 1 that indicates how far the time is before exploding:
 	if sumoStartTime and gamestate and gamestate.safezoneLength then
@@ -1022,7 +1022,7 @@ function onPreRender(dt)
 	-- this checks if player has transistioned from inside to outside the safezone or vice versa or it is the first time checking
 	if not playerVehicle.isInsideSafezone 
 		or isInsideSafezone == true
-	    or playerVehicle.isInsideSafezone ~= isInsideSafezone 
+			or playerVehicle.isInsideSafezone ~= isInsideSafezone 
 		then 
 			
 		playerVehicle.isInsideSafezone = isInsideSafezone
@@ -1066,12 +1066,12 @@ end
 function newExecuteLua(cmd, source)
 	if blockConsole and src == "GEConsole" then return end
 	print('newExecuteLua called ' .. source)
-	ogLuaExecute()	
+	return ogLuaExecute(cmd, source)	
 end
 
 function onExtensionLoaded(extensionName) --this function gets called each time you close the menu (press esc twice)
 	-- if gamestate and gamestate.gameRunning then --don't do this
-	-- 	setSumoLayout('scenario')
+	--	setSumoLayout('scenario')
 	-- end
 	executeLuaSandboxed = newExecuteLua
 end
@@ -1174,8 +1174,8 @@ end
 function onVehicleResetted(vehID)
 	print( "onVehicleResetted called")
   if not playerPressedReset then 
-  	playerPressedReset = true
-  	return
+		playerPressedReset = true
+		return
   end
 	if MPVehicleGE 
 		and isPlayerInReverseGravity then 
@@ -1204,10 +1204,10 @@ function onVehicleResetted(vehID)
 			local newRot = currentRot 
 			print("Angle is: " .. angle)
 			if angle > 0.001 then
-    		rotAxis = rotAxis:normalized()
-    		local alignQuat = quatFromAxisAngle(rotAxis, angle)
-    		newRot = alignQuat * currentRot
-    		
+				rotAxis = rotAxis:normalized()
+				local alignQuat = quatFromAxisAngle(rotAxis, angle)
+				newRot = alignQuat * currentRot
+				
 				-- Apply position and new rotation
 				playerPressedReset = false -- make sure we now when this function is called recursively and cancel that
 				-- spawn.safeTeleport(veh, currentPos, newRot)
@@ -1258,17 +1258,87 @@ end
 
 local function onWorldReadyState(state) 
 	if motd.enabled then
-	 	guihooks.trigger("ChangeState", {state = "scenario-start"})
+		guihooks.trigger("ChangeState", {state = "scenario-start"})
+	end
+	extensions.load("core_funstuff") --TODO: make these function again when extension is unloaded
+	core_funstuff.boost = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.boostBackwards = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.flingDownward = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.flingUpward = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.closeLatches = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.openLatches = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.toggleForceField = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.explodeVehicle = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.extinguishVehicle = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.igniteVehicle = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.deflateRandomTire = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.deflateTires = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.breakHinges = function()
+		print("Custom funstuff function called")
+		return
+	end
+
+	core_funstuff.breakAllBreakgroups = function()
+		print("Custom funstuff function called")
+		return
 	end
 end
 
 local function onScenarioUIReady(state)
 	print("        onScenarioUIReady called " .. tostring(state))
 	if state == "start" then
-	 	guihooks.trigger('ScenarioChange', {name = motd.title, description = motd.description, introType = motd.type})
+		guihooks.trigger('ScenarioChange', {name = motd.title, description = motd.description, introType = motd.type})
   end
   if state == "play" then	
- 		guihooks.trigger("ChangeState", {state = "play"}) 
+		guihooks.trigger("ChangeState", {state = "play"}) 
   end
 end
 
@@ -1321,8 +1391,8 @@ core_vehicles.removeAll = function()
   if MPGameNetwork then
 		for vehID, serverVeh in pairs(MPVehicleGE.getOwnMap()) do
 			local veh = be:getObjectByID(vehID)
-    	if veh then
-    		commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
+			if veh then
+				commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
 				veh:delete()
 			end
 		end
@@ -1343,8 +1413,8 @@ core_vehicles.removeAllExceptCurrent = function()
 		for vehID, serverVeh in pairs(MPVehicleGE.getOwnMap()) do
 			if vehID ~= vid then
 				local veh = be:getObjectByID(vehID)
-    		if veh then
-    			commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
+				if veh then
+					commands.setFreeCamera() -- reuse current vehicle camera position for free camera, before removing vehicles
 					veh:delete()
 				end
 			end
@@ -1364,7 +1434,7 @@ core_quickAccess.toggle = function(level) -- overwrite in-game function to disab
   if core_quickAccess.isEnabled() then
     setEnabled(false)
   elseif gamestate and gamestate.gameRunning then
-  		return 
+			return 
   else
     setEnabled(true, level)
   end
