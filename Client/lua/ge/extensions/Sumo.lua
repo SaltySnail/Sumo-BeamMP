@@ -714,28 +714,28 @@ function onSumoTrigger(data)
 end
 
 function onReverseGravityTrigger(data)
-	for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
-		if vehID == data.subjectID then
-			if data.event == "enter" then
-				ogCamName = core_camera.getActiveCamName(0)
-				if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
-					core_camera.setByName(0,"chase")
-					core_camera.resetCamera(0)
-				end
-				be:getObjectByID(vehData.gameVehicleID):queueLuaCommand("obj:setGravity(9.81)")
-				-- core_environment.setGravity(9.81)
-				isPlayerInReverseGravity = true
-				reverseGravitySubjectId = data.subjectID
-			elseif data.event == "exit" then
-				if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
-					core_camera.setByName(0,ogCamName)
-					core_camera.resetCamera(0)
-					ogCamName = ""
-				end
-				-- core_environment.setGravity(-9.81)
-				be:getObjectByID(vehData.gameVehicleID):queueLuaCommand("obj:setGravity(-9.81)")
-				isPlayerInReverseGravity = false
+	if data.event == "enter" then
+  	local vehicle = getObjectByID(data.subjectID)
+  	vehicle:queueLuaCommand("obj:setGravity(9.81)")
+  	if MPVehicleGE.isOwn(data.subjectID) then
+			ogCamName = core_camera.getActiveCamName(0)
+			if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
+				core_camera.setByName(0,"chase")
+				core_camera.resetCamera(0)
 			end
+			isPlayerInReverseGravity = true
+			reverseGravitySubjectId = data.subjectID
+		end
+	elseif data.event == "exit" then
+  	local vehicle = getObjectByID(data.subjectID)
+  	vehicle:queueLuaCommand("obj:setGravity(-9.81)")
+  	if MPVehicleGE.isOwn(data.subjectID) then
+			if ogCamName ~= "chase" and ogCamName ~= "onboard_hood" and ogCamName ~= "driver" then
+				core_camera.setByName(0,ogCamName)
+				core_camera.resetCamera(0)
+				ogCamName = ""
+			end
+			isPlayerInReverseGravity = false
 		end
 	end
 end

@@ -1251,18 +1251,15 @@ function loadScores()
 		if not content then content = "{}" end
     local data = Util.JsonDecode(content)
 		if data then
-			releaseFileLock(SCORES_LOCK_FILE)
 			return data
 		end
   else
     print("Cannot open file:", path)
   end
-  releaseFileLock(SCORES_LOCK_FILE)
 	return {}
 end
 
 function saveScores(totalScore) -- reads the scores.json file and adds the new scores to it
-	aqcuireFileLock(SCORES_LOCK_FILE)
 	local file
 	if SCORE_FOLDER_OVERWRITE == "" then
 		file = io.open(SUMO_SERVER_DATA_PATH .. "scores.json", "w")
