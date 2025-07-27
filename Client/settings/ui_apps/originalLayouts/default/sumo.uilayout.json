@@ -159,7 +159,7 @@
       }
     },
     {
-      "appName":"raceCountdown",
+      "appName":"sumoprecountdown",
       "placement":{
         "bottom":"",
         "height":"290px",

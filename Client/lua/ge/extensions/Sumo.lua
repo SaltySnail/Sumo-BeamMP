@@ -857,6 +857,7 @@ function updateSumoGameState(data)
 	if gamestate.gameRunning and time and time <= 0 and time > -4 then
 		if gamestate.players[MPConfig.getNickname()] and #MPVehicleGE.getOwnMap() == 0 then gamestate.players[MPConfig.getNickname()] = nil end -- failsafe for people without vehicles counting in game
 		guihooks.trigger('sumoCountdown', math.abs(time))
+		guihooks.trigger('sumoPreCountdown', "")
 		if time < 0 then
 			Engine.Audio.playOnce('AudioGui', "/art/sound/countdownTick", {volume = 30})
 		else
@@ -868,7 +869,7 @@ function updateSumoGameState(data)
 	end
 
 	if gamestate.gameRunning and time and time < -3 then
-		guihooks.trigger('ScenarioFlashMessage', {{"Game in "..math.abs(time).."s", 1, "", true}}) -- inside the "" was: Engine.Audio.playOnce('AudioGui', 'event:UI_CountdownGo')
+		guihooks.trigger('sumoPreCountdown', "Game starts in: " .. math.abs(time) .. "s")
 	elseif gamestate.gameRunning and time and time < -0 then
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehData.ownerName) end
