@@ -697,9 +697,6 @@ end
 
 function sumoGameRunningLoop()
 	if gameState.time < 0 then
-		if not waitingForVehiclesToSpawn then
-			MP.SendChatMessage(-1,"Sumo game starting in "..math.abs(gameState.time).." second")
-		end
 		if gameState.time > gameState.randomVehicleStartWaitTime + 20 then 
 			local playerCount = 0
 			for ID,Player in pairs(MP.GetPlayers()) do
@@ -856,8 +853,10 @@ function sumoTimer()
 			return
 		end
 		autoStartTimer = autoStartTimer + 1
-		MP.SendChatMessage(-1, "Waiting to start next round for: " .. 30 - autoStartTimer .. "s")
-		MP.SendChatMessage(-1, "Spawn a car or press ctrl+s and check \'Join Next Round\' to join")
+		MP.TriggerClientEvent(-1, "sumoTopLeftText", "Waiting to start next round for: " .. 30 - autoStartTimer .. "s") --TODO: trigger top left message
+		MP.TriggerClientEvent(-1, "sumoTopLeftText", "Spawn a car or press ctrl+s and check \'Join Next Round\' to join") --TODO: trigger top left message
+		-- MP.SendChatMessage(-1, "Waiting to start next round for: " .. 30 - autoStartTimer .. "s")
+		-- MP.SendChatMessage(-1, "Spawn a car or press ctrl+s and check \'Join Next Round\' to join")
 		if autoStartTimer >= 30 then
 			autoStartTimer = 0
 			selectRandomArena()

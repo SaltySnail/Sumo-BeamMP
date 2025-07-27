@@ -786,6 +786,10 @@ function setSumoLayout(appLayout)
 	end
 end
 
+function sumoTopLeftText(txt)
+	guihooks.message({txt = txt}, 1, "Sumo.message")
+end
+
 function updateSumoGameState(data)
 	print('updateSumoGameState called: ' .. data)
 	mergeSumoTable(jsonDecode(data),gamestate)
@@ -863,8 +867,9 @@ function updateSumoGameState(data)
 		guihooks.trigger('sumoClearCountdown', 0)
 	end
 
-	if gamestate.gameRunning and time and time < 0 then
-		txt = "Game starts in "..math.abs(time).." seconds"
+	if gamestate.gameRunning and time and time < -3 then
+		guihooks.trigger('ScenarioFlashMessage', {{"Game in "..math.abs(time).."s", 1, "", true}}) -- inside the "" was: Engine.Audio.playOnce('AudioGui', 'event:UI_CountdownGo')
+	elseif gamestate.gameRunning and time and time < -0 then
 		for vehID, vehData in pairs(MPVehicleGE.getOwnMap()) do
 			if TriggerServerEvent then TriggerServerEvent("markSumoVehicleToExplode", vehData.ownerName) end
 		end
@@ -1490,6 +1495,7 @@ if MPGameNetwork then AddEventHandler("removeAllVehicles",removeAllVehicles) end
 if MPGameNetwork then AddEventHandler("spawnConfigOnEverySpawn",spawnConfigOnEverySpawn) end
 if MPGameNetwork then AddEventHandler("spawnVehicleConfig",spawnVehicleConfig) end
 if MPGameNetwork then AddEventHandler("cloneVehicleToSpawns",cloneVehicleToSpawns) end
+if MPGameNetwork then AddEventHandler("sumoTopLeftText",sumoTopLeftText) end
 
 M.requestSumoGameState = requestSumoGameState
 M.receiveSumoGameState = receiveSumoGameState
@@ -1546,6 +1552,7 @@ M.spawnVehicleConfig = spawnVehicleConfig
 M.spawnConfigOnEverySpawn = spawnConfigOnEverySpawn
 M.removeAllVehicles = removeAllVehicles
 M.cloneVehicleToSpawns = cloneVehicleToSpawns
+M.sumoTopLeftText = sumoTopLeftText
 
 return M
 --

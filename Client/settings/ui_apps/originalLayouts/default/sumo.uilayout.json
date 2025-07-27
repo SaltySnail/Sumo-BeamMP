@@ -157,6 +157,19 @@
         "top":"",
         "width":"500px"
       }
+    },
+    {
+      "appName":"raceCountdown",
+      "placement":{
+        "bottom":"",
+        "height":"290px",
+        "left":0,
+        "margin":"auto",
+        "position":"absolute",
+        "right":0,
+        "top":"70px",
+        "width":"950px"
+      }
     }
   ],
   "title":"Sumo",
