@@ -59,7 +59,7 @@ local spawnedObstaclePrefabs = {}
 
 local debugSphereColorTriggered = ColorF(0,1,0,1)
 local debugSphereColorNeutral = ColorF(1,0,0,1)
-local debugView = false
+local debugView = false --make sure to set this to false for release!
 
 local ogLuaExecute = executeLuaSandboxed
 
@@ -338,7 +338,9 @@ function spawnSumoGoal(filepath, offset, rotation)
 	goalVecZ, goalVecY, goalVecX = rot*vecZ*scl.z, rot*vecY*scl.y, rot*vecX*scl.x
 	goalVecX = goalVecX * 1.5 --make the hitbox of the safezone the same size as the visual safezone
 	goalVecY = goalVecY * 3
-	goalVecZ = goalVecZ * 2
+	goalVecZ = goalVecZ * 1.15
+	--make the positions based on the center:
+	goalPos.z = goalPos.z + goalVecZ.z
 end
 
 function onSumoCreateGoal()
@@ -1032,6 +1034,10 @@ function onPreRender(dt)
 				debugDrawer:drawSphere(goalPos + goalVecX, 0.1, debugSphereColorTriggered)
 				debugDrawer:drawSphere(goalPos + goalVecY, 0.1, debugSphereColorTriggered)
 				debugDrawer:drawSphere(goalPos + goalVecZ, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawTextAdvanced(goalPos, 						"goalPos", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
+				debugDrawer:drawTextAdvanced(goalPos + goalVecX, "goalVecX", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
+				debugDrawer:drawTextAdvanced(goalPos + goalVecY, "goalVecY", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
+				debugDrawer:drawTextAdvanced(goalPos + goalVecZ, "goalVecZ", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
 			end
 			trigger = {}
 			trigger.event = "enter"
@@ -1044,6 +1050,10 @@ function onPreRender(dt)
 				debugDrawer:drawSphere(goalPos + goalVecX, 0.1, debugSphereColorNeutral)
 				debugDrawer:drawSphere(goalPos + goalVecY, 0.1, debugSphereColorNeutral)
 				debugDrawer:drawSphere(goalPos + goalVecZ, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawTextAdvanced(goalPos, 						"goalPos", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
+				debugDrawer:drawTextAdvanced(goalPos + goalVecX, "goalVecX", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
+				debugDrawer:drawTextAdvanced(goalPos + goalVecY, "goalVecY", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
+				debugDrawer:drawTextAdvanced(goalPos + goalVecZ, "goalVecZ", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
 			end
 			trigger = {}
 			trigger.event = "exit"
