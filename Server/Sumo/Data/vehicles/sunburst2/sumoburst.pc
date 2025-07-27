@@ -60,7 +60,7 @@
     "sunburst2_DSE":"",
     "sunburst2_antenna":"",
     "sunburst2_backlight":"",
-    "sunburst2_bashbar_F_lightbar":"sunburst2_bashbar_F_lightbar",
+    "sunburst2_bashbar_F_lightbar":"",
     "sunburst2_bashbar_F_shackles":"",
     "sunburst2_bashbar_F_skidplate":"sunburst2_bashbar_F_skidplate",
     "sunburst2_body":"sunburst2_body_sedan",

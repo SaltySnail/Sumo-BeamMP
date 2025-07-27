@@ -112,7 +112,7 @@
     "lansdale_lettering_sport":"",
     "lansdale_lettering_trim":"",
     "lansdale_licenseplate_R":"",
-    "lansdale_lightbar":"lansdale_lightbar_LED",
+    "lansdale_lightbar":"",
     "lansdale_mirror_L":"",
     "lansdale_mirror_R":"",
     "lansdale_mod":"",

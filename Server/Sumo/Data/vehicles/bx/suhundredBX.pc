@@ -90,7 +90,7 @@
     "bx_lettering_hood_fixed":"",
     "bx_lettering_tailgate_hatch":"",
     "bx_lightbar":"",
-    "bx_lightbar_LED":"bx_lightbar_LED",
+    "bx_lightbar_LED":"",
     "bx_mirror_L":"",
     "bx_mirror_R":"",
     "bx_mod":"",
