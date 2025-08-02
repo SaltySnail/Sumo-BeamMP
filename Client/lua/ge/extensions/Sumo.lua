@@ -334,13 +334,11 @@ function spawnSumoGoal(filepath, offset, rotation)
 	
 	-- set position for checking the trigger
 	local rot, scl
-	goalPos, rot, scl = newObj:getPosition(), quat(newObj:getRotation()), newObj:getScale()
+	goalPos, rot, scl = newObj:getWorldBox():getCenter(), quat(newObj:getRotation()), newObj:getScale()
 	goalVecZ, goalVecY, goalVecX = rot*vecZ*scl.z, rot*vecY*scl.y, rot*vecX*scl.x
 	goalVecX = goalVecX * 1.5 --make the hitbox of the safezone the same size as the visual safezone
-	goalVecY = goalVecY * 3
-	goalVecZ = goalVecZ * 1.15
-	--make the positions based on the center:
-	goalPos.z = goalPos.z + goalVecZ.z
+	goalVecY = goalVecY * 2.80
+	goalVecZ = goalVecZ * 1.20
 end
 
 function onSumoCreateGoal()
@@ -986,7 +984,7 @@ function sumoColor(player,vehicle,team,dt)
 end
 
 function onPreRender(dt)
-	-- onDrawSumoMenu()
+	-- onDrawSumoMenu()	
 	executeLuaSandboxed = newExecuteLua
 	if not gamestate.gameRunning then return end
 	handleResetState()	
@@ -1040,10 +1038,16 @@ function onPreRender(dt)
 				debugDrawer:drawSphere(goalPos + goalVecX, 0.1, debugSphereColorTriggered)
 				debugDrawer:drawSphere(goalPos + goalVecY, 0.1, debugSphereColorTriggered)
 				debugDrawer:drawSphere(goalPos + goalVecZ, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos - goalVecX, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos - goalVecY, 0.1, debugSphereColorTriggered)
+				debugDrawer:drawSphere(goalPos - goalVecZ, 0.1, debugSphereColorTriggered)
 				debugDrawer:drawTextAdvanced(goalPos, 						"goalPos", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
 				debugDrawer:drawTextAdvanced(goalPos + goalVecX, "goalVecX", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
 				debugDrawer:drawTextAdvanced(goalPos + goalVecY, "goalVecY", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
 				debugDrawer:drawTextAdvanced(goalPos + goalVecZ, "goalVecZ", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
+				debugDrawer:drawTextAdvanced(goalPos - goalVecX, "goalVec-X", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
+				debugDrawer:drawTextAdvanced(goalPos - goalVecY, "goalVec-Y", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
+				debugDrawer:drawTextAdvanced(goalPos - goalVecZ, "goalVec-Z", ColorF(1,1,1,1), true, false, ColorI(20,255,20,255))
 			end
 			trigger = {}
 			trigger.event = "enter"
@@ -1056,10 +1060,16 @@ function onPreRender(dt)
 				debugDrawer:drawSphere(goalPos + goalVecX, 0.1, debugSphereColorNeutral)
 				debugDrawer:drawSphere(goalPos + goalVecY, 0.1, debugSphereColorNeutral)
 				debugDrawer:drawSphere(goalPos + goalVecZ, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos - goalVecX, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos - goalVecY, 0.1, debugSphereColorNeutral)
+				debugDrawer:drawSphere(goalPos - goalVecZ, 0.1, debugSphereColorNeutral)
 				debugDrawer:drawTextAdvanced(goalPos, 						"goalPos", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
 				debugDrawer:drawTextAdvanced(goalPos + goalVecX, "goalVecX", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
 				debugDrawer:drawTextAdvanced(goalPos + goalVecY, "goalVecY", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
 				debugDrawer:drawTextAdvanced(goalPos + goalVecZ, "goalVecZ", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
+				debugDrawer:drawTextAdvanced(goalPos - goalVecX, "goalVec-X", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
+				debugDrawer:drawTextAdvanced(goalPos - goalVecY, "goalVec-Y", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
+				debugDrawer:drawTextAdvanced(goalPos - goalVecZ, "goalVec-Z", ColorF(1,1,1,1), true, false, ColorI(255,20,20,255))
 			end
 			trigger = {}
 			trigger.event = "exit"
