@@ -854,7 +854,7 @@ function sumoTimer()
 		end
 		autoStartTimer = autoStartTimer + 1
 		MP.TriggerClientEvent(-1, "sumoTopLeftText", "Waiting to start next round for: " .. 30 - autoStartTimer .. "s") --TODO: trigger top left message
-		MP.TriggerClientEvent(-1, "sumoTopLeftText", "Spawn a car or press ctrl+s and check \'Join Next Round\' to join") --TODO: trigger top left message
+		--MP.TriggerClientEvent(-1, "sumoTopLeftText", "Spawn a car or press ctrl+s and check \'Join Next Round\' to join") --TODO: trigger top left message
 		-- MP.SendChatMessage(-1, "Waiting to start next round for: " .. 30 - autoStartTimer .. "s")
 		-- MP.SendChatMessage(-1, "Spawn a car or press ctrl+s and check \'Join Next Round\' to join")
 		if autoStartTimer >= 30 then
@@ -1045,7 +1045,10 @@ function postVehicleSpawn(spawnConfirmed, playerID, vehID, data)
 	if waitingForVehicleOf[MP.GetPlayerName(playerID)] then
 		waitingForVehicleOf[MP.GetPlayerName(playerID)] = nil
 	end
-	if #waitingForVehicleOf == 0 then waitingForVehiclesToSpawn = false end
+	if #waitingForVehicleOf == 0 then 
+		waitingForVehiclesToSpawn = false
+		vehicleSpawnWaitTime = 0
+	end
 end
 
 --called whenever a player spawns a vehicle.
